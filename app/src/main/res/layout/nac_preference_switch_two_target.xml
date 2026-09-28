@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Une rangee a deux commandes, comme le Wi-Fi des reglages d'Android : toucher le
+	texte ouvre la page, toucher l'interrupteur bascule seul, sans y entrer. Le trait
+	vertical est ce qui dit a l'oeil qu'il y a deux cibles et non une. -->
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:paddingStart="?android:attr/listPreferredItemPaddingLeft"
+	android:paddingTop="?android:attr/listPreferredItemPaddingLeft"
+	android:paddingBottom="?android:attr/listPreferredItemPaddingLeft"
+	android:minHeight="?android:attr/listPreferredItemHeight"
+	android:baselineAligned="false"
+	android:gravity="center_vertical"
+	android:orientation="horizontal"
+	tools:ignore="RtlSymmetry,UselessParent">
+
+	<!-- Icon frame, to set padding and width without affecting image size -->
+	<LinearLayout
+		android:id="@+id/icon_frame"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:paddingTop="@dimen/nudge"
+		android:paddingBottom="@dimen/nudge"
+		android:paddingEnd="@dimen/tiny"
+		android:minWidth="56dp"
+		android:visibility="gone"
+		tools:ignore="RtlSymmetry">
+
+		<!-- Icon -->
+		<ImageView
+			android:id="@+id/icon"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:contentDescription="@string/cd_preference_icon"
+			/>
+	</LinearLayout>
+
+	<!-- Title and summary -->
+	<include layout="@layout/nac_preference_text" />
+
+	<!-- The line that says these are two controls and not one -->
+	<View
+		android:layout_width="1dp"
+		android:layout_height="32dp"
+		android:layout_marginStart="@dimen/normal"
+		android:background="?android:attr/textColorSecondary"
+		android:alpha="0.35"
+		/>
+
+	<!-- Switch, in a frame of its own so that it takes the touch alone and the row
+		underneath keeps the click that opens the page -->
+	<FrameLayout
+		android:id="@+id/widget_frame"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:paddingStart="@dimen/normal"
+		android:paddingEnd="?android:attr/listPreferredItemPaddingLeft"
+		android:background="?android:attr/selectableItemBackground"
+		android:clickable="true"
+		android:focusable="true"
+		android:contentDescription="@string/title_shake_to_say_time_switch"
+		tools:ignore="RtlSymmetry">
+
+		<androidx.appcompat.widget.SwitchCompat
+			android:id="@+id/widget"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_vertical"
+			android:clickable="false"
+			android:focusable="false"
+			/>
+	</FrameLayout>
+
+</LinearLayout>

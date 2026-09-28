@@ -58,6 +58,25 @@
 				android:layout_weight="1"
 				/>
 
+			<!-- Settings of this alarm -->
+			<com.google.android.material.button.MaterialButton
+				style="@style/Widget.Button.Icon"
+				android:id="@+id/nac_alarm_options"
+				android:contentDescription="@string/cd_alarm_options"
+				android:layout_width="@dimen/touch"
+				android:layout_height="@dimen/touch"
+				android:layout_gravity="center_vertical"
+				app:iconSize="@dimen/isz_normal"
+				app:iconTint="@color/white"
+				app:icon="@drawable/tune"
+				/>
+
+			<!-- Gap, so that the switch is not hit by accident -->
+			<Space
+				android:layout_width="@dimen/large"
+				android:layout_height="0dp"
+				/>
+
 			<!-- Enable/disable switch -->
 			<androidx.appcompat.widget.SwitchCompat
 				android:id="@+id/nac_switch"
@@ -168,56 +187,77 @@
 				android:id="@+id/nac_extra_below_summary"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
+				android:paddingTop="@dimen/tiny"
+				android:paddingBottom="@dimen/tiny"
 				android:orientation="horizontal"
 				android:gravity="center_vertical"
 				android:visibility="gone">
 
-				<!-- Dismiss snoozed alarm -->
+				<!-- Dismiss a snoozed or ringing alarm. Filled, because it acts on an
+				     alarm that is happening right now -->
 				<com.google.android.material.button.MaterialButton
 					style="@style/Widget.Button.Text.Row"
 					android:id="@+id/nac_dismiss"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
+					android:layout_width="0dp"
+					android:layout_height="@dimen/card_action"
+					android:layout_weight="1"
 					android:minWidth="@dimen/zero"
 					android:minHeight="@dimen/zero"
-					android:layout_marginStart="@dimen/nudge"
-					android:alpha="0.8"
-					android:textSize="@dimen/tsz_small"
-					android:text="@string/action_alarm_dismiss"
-					android:visibility="visible"
-					app:iconSize="@dimen/isz_small"
+					android:paddingStart="@dimen/small"
+					android:paddingEnd="@dimen/small"
+					android:gravity="center"
+					android:textSize="@dimen/tsz_normal"
+					android:textStyle="bold"
+					android:text="@string/action_alarm_dismiss_snoozed"
+					android:visibility="gone"
+					app:cornerRadius="@dimen/card_action_radius"
+					app:iconGravity="textStart"
+					app:iconPadding="@dimen/tiny"
+					app:iconSize="@dimen/isz_normal"
 					app:icon="@drawable/dismiss"
 					/>
 
-				<!-- Dismiss early -->
+				<!-- Call off the alarm that is about to go off. Outlined, because it
+				     acts on something that has not happened yet -->
 				<com.google.android.material.button.MaterialButton
 					style="@style/Widget.Button.Text.Row"
 					android:id="@+id/nac_dismiss_early"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
+					android:layout_width="0dp"
+					android:layout_height="@dimen/card_action"
+					android:layout_weight="1"
 					android:minWidth="@dimen/zero"
 					android:minHeight="@dimen/zero"
-					android:layout_marginStart="@dimen/nudge"
-					android:alpha="0.8"
-					android:textSize="@dimen/tsz_small"
-					android:text="@string/action_alarm_dismiss_early"
+					android:paddingStart="@dimen/small"
+					android:paddingEnd="@dimen/small"
+					android:gravity="center"
+					android:textSize="@dimen/tsz_normal"
+					android:textStyle="bold"
+					android:text="@string/action_alarm_dismiss_next"
 					android:visibility="gone"
-					app:iconSize="@dimen/isz_small"
+					app:cornerRadius="@dimen/card_action_radius"
+					app:iconGravity="textStart"
+					app:iconPadding="@dimen/tiny"
+					app:iconSize="@dimen/isz_normal"
+					app:strokeWidth="1.5dp"
 					app:icon="@drawable/dismiss"
 					/>
 
 				<Space
-					android:layout_width="0dp"
+					android:layout_width="@dimen/tiny"
 					android:layout_height="0dp"
-					android:layout_weight="1"
 					/>
 
 				<com.google.android.material.button.MaterialButton
 					style="@style/Widget.Button.Icon"
 					android:id="@+id/nac_expand_other"
 					android:contentDescription="@string/cd_expand_alarm"
-					android:layout_width="@dimen/touch"
-					android:layout_height="@dimen/isz_large"
+					android:layout_width="@dimen/card_action"
+					android:layout_height="@dimen/card_action"
+					android:insetTop="@dimen/zero"
+					android:insetBottom="@dimen/zero"
+					app:backgroundTint="@color/gray_light"
+					app:cornerRadius="@dimen/card_action_radius"
+					app:iconSize="@dimen/isz_normal"
 					app:icon="@drawable/expand"
 					/>
 			</LinearLayout> <!-- Extra info -->
@@ -275,7 +315,7 @@
 				<include layout="@layout/nac_day_of_week" />
 			</LinearLayout>
 
-			<!-- Repeat, Vibrate, NFC, Flashlight -->
+			<!-- Repeat, Vibrate, NFC, Flashlight, Dawn -->
 			<LinearLayout
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
@@ -327,7 +367,18 @@
 					android:text="@string/action_alarm_option_flashlight"
 					app:icon="@drawable/flashlight_on_32"
 					/>
-			</LinearLayout> <!-- Repeat, Vibrate, NFC, Flashlight -->
+
+				<!-- Dawn -->
+				<com.google.android.material.button.MaterialButton
+					style="@style/My.Alarm.ToggleButtons"
+					android:id="@+id/nac_dawn"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					android:text="@string/action_alarm_option_dawn"
+					app:icon="@drawable/sun_32"
+					/>
+			</LinearLayout> <!-- Repeat, Vibrate, NFC, Flashlight, Dawn -->
 
 			<!-- Media -->
 			<com.google.android.material.button.MaterialButton
@@ -368,17 +419,54 @@
 					android:progress="75"
 					/>
 
+				<TextView
+					android:id="@+id/nac_volume_value"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:minWidth="48dp"
+					android:gravity="end"
+					android:textSize="14sp"
+					android:text=""
+					/>
+
 			</LinearLayout> <!-- Volume -->
 
-			<!-- Name -->
-			<com.google.android.material.button.MaterialButton
-				style="@style/Widget.Button.Text.Row"
-				android:id="@+id/nac_name"
+			<!-- Name, with a color swatch to sort alarms into categories -->
+			<LinearLayout
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:text=""
-				app:icon="@drawable/label"
-				/>
+				android:gravity="center_vertical"
+				android:orientation="horizontal">
+
+				<!-- Color swatch -->
+				<FrameLayout
+					android:id="@+id/nac_name_color_container"
+					android:layout_width="@dimen/touch"
+					android:layout_height="@dimen/touch"
+					android:clickable="true"
+					android:focusable="true"
+					android:contentDescription="@string/cd_alarm_name_color">
+
+					<View
+						android:id="@+id/nac_name_color"
+						android:layout_width="20dp"
+						android:layout_height="20dp"
+						android:layout_gravity="center"
+						android:background="@drawable/circle_button"
+						/>
+				</FrameLayout>
+
+				<!-- Name -->
+				<com.google.android.material.button.MaterialButton
+					style="@style/Widget.Button.Text.Row"
+					android:id="@+id/nac_name"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					android:text=""
+					app:icon="@drawable/label"
+					/>
+			</LinearLayout>
 
 			<!-- Options divider -->
 			<LinearLayout
@@ -425,39 +513,28 @@
 				android:gravity="center_horizontal"
 				android:orientation="horizontal">
 
-				<!-- Dismiss -->
-				<com.google.android.material.button.MaterialButton
-					style="@style/My.Alarm.OptionButtons"
-					android:id="@+id/nac_dismiss_options"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_weight="1"
-					android:text="@string/action_alarm_dismiss"
-					app:icon="@drawable/dismiss"
-					/>
-
 				<!-- Snooze -->
 				<com.google.android.material.button.MaterialButton
 					style="@style/My.Alarm.OptionButtons"
 					android:id="@+id/nac_snooze_options"
-					android:layout_width="wrap_content"
+					android:layout_width="0dp"
 					android:layout_height="wrap_content"
 					android:layout_weight="1"
 					android:text="@string/action_alarm_snooze"
 					app:icon="@drawable/snooze"
 					/>
 
-				<!-- More -->
+				<!-- Dismiss -->
 				<com.google.android.material.button.MaterialButton
 					style="@style/My.Alarm.OptionButtons"
-					android:contentDescription="@string/cd_alarm_options"
-					android:id="@+id/nac_alarm_options"
-					android:layout_width="wrap_content"
+					android:id="@+id/nac_dismiss_options"
+					android:layout_width="0dp"
 					android:layout_height="wrap_content"
 					android:layout_weight="1"
-					android:text="@string/title_settings"
-					app:icon="@drawable/settings"
+					android:text="@string/action_alarm_dismiss"
+					app:icon="@drawable/dismiss"
 					/>
+
 			</LinearLayout> <!-- Options -->
 		</LinearLayout> <!-- Expanded alarm -->
 

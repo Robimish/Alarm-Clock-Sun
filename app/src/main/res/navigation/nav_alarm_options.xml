@@ -22,6 +22,9 @@
 			android:id="@+id/action_nacAlarmOptionsDialog_to_nacFlashlightOptionsDialog"
 			app:destination="@id/nacFlashlightOptionsDialog" />
 		<action
+			android:id="@+id/action_nacAlarmOptionsDialog_to_nacDawnOptionsDialog"
+			app:destination="@id/nacDawnOptionsDialog" />
+		<action
 			android:id="@+id/action_nacAlarmOptionsDialog_to_nacVibrateOptionsDialog"
 			app:destination="@id/nacVibrateOptionsDialog" />
 		<action
@@ -50,6 +53,10 @@
 		android:id="@+id/nacFlashlightOptionsDialog"
 		android:name="com.nfcalarmclock.alarm.options.flashlight.NacFlashlightOptionsDialog"
 		android:label="NacFlashlightOptionsDialog" />
+	<dialog
+		android:id="@+id/nacDawnOptionsDialog"
+		android:name="com.nfcalarmclock.alarm.options.dawn.NacDawnOptionsDialog"
+		android:label="NacDawnOptionsDialog" />
 	<dialog
 		android:id="@+id/nacVibrateOptionsDialog"
 		android:name="com.nfcalarmclock.alarm.options.vibrate.NacVibrateOptionsDialog"

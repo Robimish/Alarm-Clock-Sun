@@ -1,6 +1,8 @@
 package com.nfcalarmclock.main
 
 import android.annotation.SuppressLint
+import com.nfcalarmclock.timer.active.NacRingingTimerScreen
+import android.view.WindowManager
 import android.app.PendingIntent
 import android.content.ComponentName
 import android.content.Context
@@ -17,6 +19,7 @@ import android.os.IBinder
 import android.provider.AlarmClock
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
@@ -44,7 +47,10 @@ import com.nfcalarmclock.alarm.activealarm.NacActiveAlarmActivity
 import com.nfcalarmclock.alarm.activealarm.NacActiveAlarmService
 import com.nfcalarmclock.alarm.activealarm.NacDismissErroneousActiveAlarmService
 import com.nfcalarmclock.alarm.db.NacAlarm
+import com.nfcalarmclock.alarm.options.tts.NacSayTimeService
 import com.nfcalarmclock.log.NacLog
+import com.nfcalarmclock.alarm.options.dawn.NacDawnImage
+import com.nfcalarmclock.view.quickToast
 import com.nfcalarmclock.nfc.NacNfc
 import com.nfcalarmclock.nfc.NacNfcReaderMode
 import com.nfcalarmclock.nfc.SCANNED_NFC_TAG_ID_BUNDLE_NAME
@@ -72,6 +78,7 @@ import com.nfcalarmclock.system.toBundle
 import com.nfcalarmclock.system.unregisterMyReceiver
 import com.nfcalarmclock.timer.NacShowTimersFragment
 import com.nfcalarmclock.timer.NacTimerViewModel
+import com.nfcalarmclock.timer.db.NacTimer
 import com.nfcalarmclock.timer.active.NacActiveTimerFragment
 import com.nfcalarmclock.timer.active.NacActiveTimerService
 import com.nfcalarmclock.view.setupRippleColor
@@ -88,6 +95,68 @@ import java.io.File
 class NacMainActivity
 	: AppCompatActivity()
 {
+
+	/**
+	 * Id of the alarm the dawn image is being chosen for.
+	 *
+	 * Note: the file picker is opened from here, and not from the options dialog,
+	 * because Android closes that dialog while the picker is in front. The result
+	 * would then be delivered to a dialog that no longer exists, and the choice
+	 * would be lost. This activity is always there to receive it.
+	 */
+	private var dawnImageAlarmId: Long = 0
+
+	/**
+	 * Launcher used to pick the image of the dawn.
+	 */
+	private val dawnImagePickerLauncher = registerForActivityResult(
+		ActivityResultContracts.OpenDocument()) { uri ->
+
+		// No image was chosen
+		if (uri == null)
+		{
+			return@registerForActivityResult
+		}
+
+		// Copy the image into the app
+		val path = NacDawnImage.copyIntoApp(this, uri, dawnImageAlarmId)
+
+		// The image could not be read
+		if (path == null)
+		{
+			quickToast(this, R.string.message_dawn_unable_to_read_image)
+			return@registerForActivityResult
+		}
+
+		// Put the choice aside. The options dialog picks it back up, whether it is
+		// still open or opened again later
+		val shared = NacSharedPreferences(this)
+
+		shared.dawnPendingImagePath = path
+		shared.dawnPendingImageAlarmId = dawnImageAlarmId
+
+		// Ask for the options dialog to be opened again, in case Android closed it
+		// while the picker was in front
+		shared.dawnReopenAlarmId = dawnImageAlarmId
+	}
+
+	/**
+	 * Choose the image that the dawn will show for an alarm.
+	 */
+	fun pickDawnImage(alarmId: Long)
+	{
+		dawnImageAlarmId = alarmId
+
+		try
+		{
+			dawnImagePickerLauncher.launch(arrayOf("image/*"))
+		}
+		catch (e: Exception)
+		{
+			NacLog.e("Unable to open the image picker", throwable = e)
+			quickToast(this, R.string.message_dawn_unable_to_read_image)
+		}
+	}
 
 	/**
 	 * Nav host fragment.
@@ -125,6 +194,15 @@ class NacMainActivity
 	 * Floating action button to add new alarms.
 	 */
 	private lateinit var floatingActionButton: FloatingActionButton
+
+	/**
+	 * The warm halo rising off the bottom bar.
+	 *
+	 * It belongs to the two lists, where there is empty room above the bar for it to
+	 * rise into. Every other screen is text that scrolls, and a wash of color behind
+	 * a paragraph only makes it harder to read.
+	 */
+	private lateinit var bottomHalo: View
 
 	/**
 	 * Bottom navigation.
@@ -555,6 +633,10 @@ class NacMainActivity
 		// Move the shared preference to device protected storage
 		NacSharedPreferences.moveToDeviceProtectedStorage(this)
 
+		// Over the lock screen while a timer rings, and only then
+		updateShowOverLockScreen()
+		NacRingingTimerScreen.onRingingChanged = { updateShowOverLockScreen() }
+
 		// Set the content view
 		setContentView(R.layout.act_main)
 
@@ -564,6 +646,7 @@ class NacMainActivity
 		sharedPreferences = NacSharedPreferences(this)
 		toolbar = findViewById(R.id.tb_top_bar)
 		floatingActionButton = findViewById(R.id.floating_action_button)
+		bottomHalo = findViewById(R.id.bottom_halo)
 		bottomNavigation = findViewById(R.id.bottom_navigation)
 		permissionRequestManager = NacPermissionRequestManager(this)
 		shutdownBroadcastReceiver = NacShutdownBroadcastReceiver()
@@ -611,6 +694,9 @@ class NacMainActivity
 
 		NacLog.i("Destroying main activity")
 
+		// Stop listening for timers that ring
+		NacRingingTimerScreen.onRingingChanged = null
+
 		// Cleanup
 		unregisterMyReceiver(this, shutdownBroadcastReceiver)
 		unregisterMyReceiver(this, airplaneModeReceiver)
@@ -630,6 +716,9 @@ class NacMainActivity
 
 		// Set the intent
 		setIntent(intent)
+
+		// A ringing timer may be what brought this screen up
+		updateShowOverLockScreen()
 	}
 
 	/**
@@ -655,6 +744,13 @@ class NacMainActivity
 		super.onResume()
 
 		NacLog.i("Resuming main activity")
+
+		// Put the shake listener back. The application does this too, when the process
+		// starts, but Android refuses a foreground service started from a process that
+		// woke in the background, and that refusal is silent. Here the app is on screen,
+		// so the start is always allowed: opening the app is enough to put the
+		// notification back where it belongs
+		NacSayTimeService.refresh(this)
 
 		// Check if the main activity should be refreshed
 		if (sharedPreferences.shouldRefreshMainActivity)
@@ -869,6 +965,88 @@ class NacMainActivity
 			doEventUpdateAndBackupMediaInfoInAlarmsDbV31()
 		}
 
+		// Check if the audio source of the alarms still holds the words shown on
+		// screen rather than a name that does not change with the language
+		if (!sharedPreferences.eventAudioSourceToKeys)
+		{
+			sharedPreferences.runEventAudioSourceToKeys(
+				alarmViewModel.getAllAlarms(),
+				onAlarmChanged = { alarm ->
+
+					// Update the database
+					alarmViewModel.update(alarm)
+
+				})
+		}
+
+		// Check if where each alarm sits in the list still has to be written down, so
+		// that a list that is no longer rearranged keeps the order it had
+		if (!sharedPreferences.eventFreezeAlarmOrder)
+		{
+			sharedPreferences.runEventFreezeAlarmOrder(
+				alarmViewModel.getAllAlarms(),
+				onAlarmChanged = { alarm ->
+
+					// Update the database
+					alarmViewModel.update(alarm)
+
+				})
+		}
+
+		// The same for the timers, which the event above left out
+		if (!sharedPreferences.eventTimerAudioSourceToKeys)
+		{
+			sharedPreferences.runEventTimerAudioSourceToKeys(
+				timerViewModel.getAllTimers(),
+				onTimerChanged = { timer ->
+
+					// Update the database
+					timerViewModel.update(timer)
+
+				})
+		}
+
+		// A ready-made "Eggs" timer of 10 minutes in the list, once, as the
+		// first alarm is for the alarms. Not added again if one of 10 minutes is there
+		// already (1.94, 10 minutes and this name since 1.97). The preference key still
+		// says five minutes so that the event does not run a second time
+		if (!sharedPreferences.eventAddFiveMinuteTimer)
+		{
+			val hasTenMinutes = timerViewModel.getAllTimers()
+				.any { it.duration == READY_MADE_TIMER_IN_SEC }
+
+			if (!hasTenMinutes)
+			{
+				NacLog.i("Adding a ready-made Eggs timer")
+
+				val timer = NacTimer.build(sharedPreferences)
+
+				timer.duration = READY_MADE_TIMER_IN_SEC
+				timer.name = getString(R.string.name_ready_made_timer)
+				timerViewModel.insert(timer)
+			}
+
+			sharedPreferences.eventAddFiveMinuteTimer = true
+		}
+
+		// The ready-made timer of 1.94 and 1.95 was of 5 minutes, without a name or
+		// named Timer 5'. It becomes the Eggs timer of 10 minutes, once.
+		// A 5 minute timer given another name by hand is left alone (1.97)
+		if (!sharedPreferences.eventEggTimer)
+		{
+			timerViewModel.getAllTimers()
+				.filter { (it.duration == OLD_READY_MADE_TIMER_IN_SEC)
+					&& (it.name.isEmpty() || (it.name == OLD_READY_MADE_TIMER_NAME)) }
+				.forEach { timer ->
+					NacLog.i("Turning the ready-made timer ${timer.id} into the Eggs timer")
+					timer.duration = READY_MADE_TIMER_IN_SEC
+					timer.name = getString(R.string.name_ready_made_timer)
+					timerViewModel.update(timer)
+				}
+
+			sharedPreferences.eventEggTimer = true
+		}
+
 		// Check if should fix any auto dismiss, auto snooze, or snooze duration values
 		// that are set to 0 in alarms.
 		if (!sharedPreferences.eventFixZeroAutoDismissAndSnooze)
@@ -895,26 +1073,74 @@ class NacMainActivity
 	}
 
 	/**
+	 * Let this screen come up over the lock screen, and turn the screen on, while a
+	 * timer rings. Only then: otherwise the whole app would be open on a locked phone.
+	 */
+	private fun updateShowOverLockScreen()
+	{
+		val isRinging = NacRingingTimerScreen.isAnyRinging
+
+		NacLog.i("Main screen over the lock screen: $isRinging")
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1)
+		{
+			setShowWhenLocked(isRinging)
+			setTurnScreenOn(isRinging)
+		}
+		else
+		{
+			@Suppress("DEPRECATION")
+			val flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+				WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+
+			if (isRinging)
+			{
+				window.addFlags(flags)
+			}
+			else
+			{
+				window.clearFlags(flags)
+			}
+		}
+	}
+
+	/**
+	 * Whether a dialog is on screen already, such as a permission request.
+	 */
+	private fun isDialogShowing(): Boolean
+	{
+		return supportFragmentManager.fragments.any { fragment ->
+			(fragment is androidx.fragment.app.DialogFragment)
+				&& (fragment.dialog?.isShowing == true)
+		}
+	}
+
+	/**
 	 * Setup an initial dialog, if any, that need to be shown.
 	 */
 	@SuppressLint("NotifyDataSetChanged")
 	private fun setupInitialDialogToShow()
 	{
-		// Get the delay counter for showing the what's new dialog
-		val delayCounter = sharedPreferences.delayShowingWhatsNewDialogCounter
+		// The What's New dialog used to wait for a counter to reach 4 once permissions
+		// had been asked for. The counter went up each time this screen came back, and
+		// on this phone a permission is asked for after every update, so the dialog
+		// showed several screens later instead of at launch (28 Sept, 1.91). It now
+		// shows as soon as nothing else is on screen
+		if (sharedPreferences.delayShowingWhatsNewDialogCounter != 0)
+		{
+			sharedPreferences.delayShowingWhatsNewDialogCounter = 0
+		}
+
+		// A permission dialog is already up. It comes first, and this runs again when
+		// the screen comes back
+		if (isDialogShowing())
+		{
+			return
+		}
 
 		// Missing permissions that should be requested
 		if (permissionRequestManager.isMissingPermissions)
 		{
-			// Check if the what's new dialog should be shown
-			if (shouldShowWhatsNewDialog)
-			{
-				// Set the delay counter for showing the what's new dialog.
-				// Do not want to show the what's new dialog immediately after
-				// all the permissions are requested
-				sharedPreferences.delayShowingWhatsNewDialogCounter = 1
-			}
-
 			NacLog.i("Requesting app permissions")
 
 			// Request permissions
@@ -925,10 +1151,14 @@ class NacMainActivity
 				// request manager showing up first
 				navController.navigate(R.id.action_global_nacShowAlarmsFragment)
 
+				// Nothing left to ask, so the news can follow. A moment later, since the
+				// last permission dialog is still closing when this is called
+				window.decorView.postDelayed({ setupInitialDialogToShow() }, 300)
+
 			})
 		}
 		// Attempt to show the What's new dialog
-		else if (shouldShowWhatsNewDialog && delayCounter == 0)
+		else if (shouldShowWhatsNewDialog)
 		{
 			NacLog.i("Showing what's new dialog")
 
@@ -944,22 +1174,6 @@ class NacMainActivity
 					whatsNewDialog = null
 
 				})
-		}
-		// Check if the delay counter has been set
-		else if (delayCounter > 0)
-		{
-			// Check if the delay counter has exceeded the max count
-			if (delayCounter >= 4)
-			{
-				// Reset the delay counter
-				sharedPreferences.delayShowingWhatsNewDialogCounter = 0
-			}
-			// The delay counter has not been exceeded yet
-			else
-			{
-				// Increment the delay counter
-				sharedPreferences.delayShowingWhatsNewDialogCounter = delayCounter + 1
-			}
 		}
 		// Check if should request to show the rate my app flow
 		else if (NacRateMyApp.shouldRequest(sharedPreferences))
@@ -1001,6 +1215,7 @@ class NacMainActivity
 
 			// Toolbar visibility
 			toolbar.visibility = if ((destination.id == R.id.nacGeneralSettingFragment)
+				|| (destination.id == R.id.nacSpeakTimeSettingFragment)
 				|| (destination.id == R.id.nacAppearanceSettingFragment)
 				|| (destination.id == R.id.nacNfcTagSettingFragment)
 				|| (destination.id == R.id.nacStatisticsSettingFragment)
@@ -1034,6 +1249,19 @@ class NacMainActivity
 				else -> floatingActionButton.hide()
 			}
 
+			// The halo follows the same rule as the button above it: the two lists have
+			// room for it, the settings and everything else are text that would have to
+			// be read through it
+			bottomHalo.visibility = if ((destination.id == R.id.nacShowAlarmsFragment)
+				|| (destination.id == R.id.nacShowTimersFragment))
+			{
+				View.VISIBLE
+			}
+			else
+			{
+				View.GONE
+			}
+
 			// Bottom navigation visibility
 			bottomNavigation.visibility = if ((destination.id == R.id.nacOnboardingFragment)
 				|| (destination.id == R.id.nacAlarmMainMediaPickerFragment)
@@ -1064,6 +1292,7 @@ class NacMainActivity
 				// Settings
 				R.id.nacMainSettingFragment           -> R.id.bottom_navigation_settings
 				R.id.nacGeneralSettingFragment        -> R.id.bottom_navigation_settings
+				R.id.nacSpeakTimeSettingFragment      -> R.id.bottom_navigation_settings
 				R.id.nacAppearanceSettingFragment     -> R.id.bottom_navigation_settings
 				R.id.nacNfcTagSettingFragment         -> R.id.bottom_navigation_settings
 				R.id.nacStatisticsSettingFragment     -> R.id.bottom_navigation_settings
@@ -1219,6 +1448,14 @@ class NacMainActivity
 
 	companion object
 	{
+
+		/**
+		 * Duration of the ready-made timer. [Units: sec]
+		 */
+		private const val READY_MADE_TIMER_IN_SEC: Long = 10 * 60
+		private const val OLD_READY_MADE_TIMER_IN_SEC: Long = 5 * 60
+		private const val OLD_READY_MADE_TIMER_NAME = "Timer 5'"
+
 
 		/**
 		 * Create an intent that will be used to start the Main activity.

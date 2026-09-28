@@ -38,6 +38,7 @@
 	<string-array name="start_week_on">
 		<item>Chủ nhật</item>
 		<item>Thứ hai</item>
+		<item>Tự động</item>
 	</string-array>
 
 	<!-- General list of seconds -->

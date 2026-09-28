@@ -6,6 +6,8 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import com.nfcalarmclock.shared.NacSharedPreferences
 import com.nfcalarmclock.system.permission.NacPermissionRequestDialog.OnPermissionRequestListener
+import com.nfcalarmclock.system.permission.fullscreenintent.NacFullScreenIntentPermission
+import com.nfcalarmclock.system.permission.fullscreenintent.NacFullScreenIntentPermissionRequestDialog
 import com.nfcalarmclock.system.permission.postnotifications.NacPostNotificationsPermission
 import com.nfcalarmclock.system.permission.postnotifications.NacPostNotificationsPermissionRequestDialog
 import com.nfcalarmclock.system.permission.systemalertwindow.NacSystemAlertWindowPermission
@@ -25,6 +27,7 @@ class NacPermissionRequestManager(activity: AppCompatActivity)
 	{
 		//IGNORE_BATTERY_OPTIMIZATION,
 		POST_NOTIFICATIONS,
+		FULL_SCREEN_INTENT,
 		SYSTEM_ALERT_WINDOW
 	}
 
@@ -79,10 +82,22 @@ class NacPermissionRequestManager(activity: AppCompatActivity)
 			return
 		}
 
+		// Remember which permissions are in hand before asking what is missing, so
+		// that a permission taken away later is told apart from one never given
+		NacFullScreenIntentPermission.rememberIfGranted(context, shared)
+		NacSystemAlertWindowPermission.rememberIfGranted(context, shared)
+
 		// Post notifications
 		if (NacPostNotificationsPermission.shouldRequestPermission(context, shared))
 		{
 			set.add(Permission.POST_NOTIFICATIONS)
+		}
+
+		// Full screen intent. It comes before the one below because it is the one that
+		// brings the alarm screen up, the other being a safety net
+		if (NacFullScreenIntentPermission.shouldRequestPermission(context, shared))
+		{
+			set.add(Permission.FULL_SCREEN_INTENT)
 		}
 
 		// System alert window
@@ -172,6 +187,11 @@ class NacPermissionRequestManager(activity: AppCompatActivity)
 		{
 			showPostNotificationPermissionDialog(activity, onDone=onDone)
 		}
+		// Full screen intent
+		else if (permissionRequestSet.contains(Permission.FULL_SCREEN_INTENT))
+		{
+			showFullScreenIntentPermissionDialog(activity, onDone=onDone)
+		}
 		// System alert window
 		else if (permissionRequestSet.contains(Permission.SYSTEM_ALERT_WINDOW))
 		{
@@ -228,6 +248,47 @@ class NacPermissionRequestManager(activity: AppCompatActivity)
 	//	dialog.show(activity.supportFragmentManager,
 	//		NacIgnoreBatteryOptimizationPermissionRequestDialog.TAG)
 	//}
+
+	/**
+	 * Show the USE_FULL_SCREEN_INTENT permission dialog.
+	 */
+	private fun showFullScreenIntentPermissionDialog(
+		activity: AppCompatActivity, onDone: () -> Unit = {})
+	{
+		// Create the dialog
+		val dialog = NacFullScreenIntentPermissionRequestDialog()
+
+		// Setup the current position and total number of pages in the dialog
+		setupDialogPageInfo(dialog)
+
+		// Handle the cases where the permission request is accepted/canceled
+		dialog.onPermissionRequestListener = object : OnPermissionRequestListener
+		{
+
+			/**
+			 * Called when the permission request is accepted.
+			 */
+			override fun onPermissionRequestAccepted(permission: String)
+			{
+				permissionRequestSet.remove(Permission.FULL_SCREEN_INTENT)
+				NacFullScreenIntentPermission.requestPermission(activity)
+			}
+
+			/**
+			 * Called when the permission request was canceled.
+			 */
+			override fun onPermissionRequestCanceled(permission: String)
+			{
+				permissionRequestSet.remove(Permission.FULL_SCREEN_INTENT)
+				showNextPermissionRequestDialog(activity, onDone=onDone)
+			}
+
+		}
+
+		// Show the dialog
+		dialog.show(activity.supportFragmentManager,
+			NacFullScreenIntentPermissionRequestDialog.TAG)
+	}
 
 	/**
 	 * Show the POST_NOTIFICATIONS permission dialog.

@@ -372,23 +372,17 @@ class NacOldDatabase(
 	fun read(db: SQLiteDatabase, version: Int): List<NacAlarm?>?
 	{
 		val list: MutableList<NacAlarm?> = ArrayList()
-		val cursor: Cursor?
 
-		// Query the database for the cursor
-		try
+		// Query the database for the cursor. SQLiteDatabase.query() never gives back
+		// null: it throws instead, which is caught here
+		val cursor: Cursor = try
 		{
-			cursor = db.query(alarmTable, null, null, null, null, null, null)
+			db.query(alarmTable, null, null, null, null, null, null)
 		}
 		// Exception occurred. Stop everything
 		catch (_: SQLiteException)
 		{
 			return null
-		}
-
-		// Unable to get cursor, return empty list
-		if (cursor == null)
-		{
-			return list
 		}
 
 		// Iterate over each item in cursor

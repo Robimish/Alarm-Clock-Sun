@@ -34,6 +34,16 @@ class NacTextToSpeech(
 {
 
 	/**
+	 * Language to speak in. Null means the language of the phone.
+	 */
+	var language: Locale? = null
+
+	/**
+	 * Called when the engine has no voice for the language that was asked for.
+	 */
+	var onMissingVoice: (Locale) -> Unit = {}
+
+	/**
 	 * Utterance listener.
 	 */
 	class NacUtteranceListener(
@@ -227,8 +237,19 @@ class NacTextToSpeech(
 				return
 			}
 
-			// Set the language
-			textToSpeech.language = Locale.getDefault()
+			// Set the language. A caller that wants another one sets it here, otherwise
+			// the language of the phone is used
+			val wanted = language ?: Locale.getDefault()
+			val result = textToSpeech.setLanguage(wanted)
+
+			// The engine has no voice for that language. Without saying so, it reads the
+			// text with the voice it does have, which comes out as gibberish
+			if ((result == TextToSpeech.LANG_MISSING_DATA)
+				|| (result == TextToSpeech.LANG_NOT_SUPPORTED))
+			{
+				NacLog.w("No text-to-speech voice for $wanted")
+				onMissingVoice(wanted)
+			}
 
 			// Set the speech rate
 			if (attrs.speechRate != 0f)

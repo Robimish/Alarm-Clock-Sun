@@ -2,7 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
 	<!-- App -->
-	<string name="app_name">Đồng hồ báo thức NFC</string>
+	<string name="app_name">Alarm Clock Sun</string>
 	<string name="app_developer">Gabe Gonzalez</string>
 
 	<!-- Consolidate -->
@@ -611,5 +611,62 @@
 	</plurals>
 
 	<string name="tts_say_time">Thời gian là %1$s:%2$s %3$s.</string>
+	<string name="tts_say_time_one_oclock">Thời gian là %1$s:%2$s %3$s.</string>
 
+	<string name="action_alarm_option_dawn">Bình minh</string>
+	<string name="message_dawn_disabled">Không dùng mô phỏng bình minh</string>
+	<string name="message_dawn_enabled">Dùng mô phỏng bình minh</string>
+	<string name="description_show_hide_dawn_button_true">Hiện nút bình minh khi mở báo thức.</string>
+	<string name="description_show_hide_dawn_button_false">Ẩn nút bình minh khi mở báo thức.</string>
+	<string name="title_dawn_duration">Thời lượng bình minh</string>
+	<string name="description_dawn_duration">Màn hình bắt đầu sáng dần bao lâu trước giờ báo thức.</string>
+	<string name="title_dawn_color">Màu ánh sáng</string>
+	<string name="title_dawn_flashlight">Đèn pin trước báo thức</string>
+	<string name="description_dawn_flashlight">Đèn pin sáng dần trong những phút cuối của bình minh. Đặt bánh xe về 0 để tắt hẳn.</string>
+	<string name="message_dawn_flashlight_off">Tắt</string>
+	<string name="title_dawn_custom_color">Màu tùy chỉnh</string>
+	<string name="title_dawn_use_image">Dùng ảnh</string>
+	<string name="description_dawn_use_image">Hiện dần một ảnh thay vì một màu đơn sắc.</string>
+	<string name="action_dawn_choose_image">Chọn ảnh</string>
+	<string name="message_dawn_preview_over">Chạm để đóng</string>
+	<string name="title_dawn_preview_duration">Thời lượng xem thử</string>
+	<string name="description_dawn_preview_duration">Bản xem thử bình minh chạy %1$d giây, rồi chờ một lần chạm để đóng. Chạm trong lúc chạy sẽ hiện màn hình như bình thường, giống bình minh thật.</string>
+	<string name="title_storage">Bộ nhớ</string>
+	<string name="title_clean_sounds">Giải phóng bản sao âm thanh</string>
+	<string name="description_clean_sounds">Ứng dụng giữ một bản sao của mỗi âm thanh đã chọn, để báo thức vẫn kêu khi tệp gốc bị di chuyển hoặc máy chưa được mở khóa. Thao tác này xóa các bản sao không báo thức nào dùng.</string>
+	<string name="title_clean_images">Giải phóng ảnh bình minh</string>
+	<string name="description_clean_images">Ảnh vẫn nằm trong ứng dụng sau khi bạn quay lại dùng màu, để bật lại mà không phải chọn tệp lần nữa. Thao tác này xóa các ảnh không bình minh nào đang hiện.</string>
+	<string name="title_clean_all">Giải phóng cả hai</string>
+	<string name="description_clean_all">Âm thanh và ảnh cùng lúc.</string>
+	<string name="message_clean_confirm">Chỉ xóa các bản sao không báo thức nào cần. Bản thân các báo thức không bị đụng đến.</string>
+	<string name="message_clean_done">Đã giải phóng %1$s trong %2$d tệp</string>
+	<string name="message_clean_nothing">Không có gì để giải phóng</string>
+	<string name="title_dawn_show_date">Ngày</string>
+	<string name="title_dawn_reveal">Chạm để xem màn hình</string>
+	<string name="description_dawn_reveal">Trong lúc bình minh, một lần chạm sẽ hiện màn hình báo thức như bình thường trong giây lát, để thấy rõ báo thức chưa kêu. Chạm lần nữa để quay lại.</string>
+	<string name="message_dawn_reveal_value">%1$d giây</string>
+	<string name="title_dawn_shown">Hiện trong lúc bình minh</string>
+	<string name="description_dawn_shown">Tắt những gì bạn không muốn thấy trong lúc màn hình sáng dần.</string>
+	<string name="title_dawn_show_phrase">Câu đánh thức</string>
+	<string name="title_dawn_show_name">Tên báo thức</string>
+	<string name="title_dawn_show_clock">Đồng hồ</string>
+	<string name="title_dawn_show_media">Tên bài hát</string>
+	<string name="message_dawn_no_image">Chưa chọn ảnh</string>
+	<string name="message_dawn_unable_to_read_image">Không đọc được ảnh đã chọn</string>
+	<string name="action_dawn_stop">Dừng</string>
+	<string name="message_dawn_snoozed">Đã hoãn báo thức 5 phút</string>
+	<string name="message_dawn_not_ringing_yet">Bình minh đang chạy. Báo thức chưa kêu.</string>
+	<string name="message_dawn_too_close">Báo thức quá gần: lần này không có bình minh. Lần sau sẽ chạy.</string>
+	<string name="message_dawn_no_more_snoozes">Không hoãn được nữa. Nhấn Dừng để tắt báo thức</string>
+	<string name="title_dawn_notification">Bình minh</string>
+	<string name="description_dawn_notification">Hiện trong lúc màn hình sáng dần trước một báo thức.</string>
+	<string name="dawn_color_amber">Ánh nắng</string>
+	<string name="dawn_color_orange">Trắng</string>
+	<string name="dawn_color_red">Hổ phách</string>
+	<string name="dawn_color_white">Xanh lá nhạt</string>
+	<string name="dawn_color_sky">Xanh dương nhạt</string>
+	<string name="dawn_color_lilac">Tím nhạt</string>
+	<string name="action_alarm_dismiss_next">Hủy báo thức kế tiếp</string>
+	<string name="action_alarm_dismiss_snoozed">Tắt báo thức đang hoãn</string>
+	<string name="message_alarm_is_snoozed">Báo thức đang hoãn sẽ kêu sau %1$s</string>
 </resources>

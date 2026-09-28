@@ -18,6 +18,7 @@ import com.nfcalarmclock.BuildConfig
 import com.nfcalarmclock.R
 import com.nfcalarmclock.alarm.NacAlarmRepository
 import com.nfcalarmclock.alarm.db.NacAlarm
+import com.nfcalarmclock.alarm.options.flashlight.NacFlashlight
 import com.nfcalarmclock.alarm.options.dismissoptions.NacDismissEarlyService
 import com.nfcalarmclock.alarm.options.missedalarm.NacMissedAlarmNotification
 import com.nfcalarmclock.alarm.options.upcomingreminder.NacUpcomingReminderService
@@ -27,6 +28,7 @@ import com.nfcalarmclock.nfc.NacDisableNfcJustScannedFlagService
 import com.nfcalarmclock.nfc.toNfcIdList
 import com.nfcalarmclock.shared.NacSharedPreferences
 import com.nfcalarmclock.statistics.NacAlarmStatisticRepository
+import com.nfcalarmclock.system.NacCalendar
 import com.nfcalarmclock.system.NacLifecycleService
 import com.nfcalarmclock.system.addAlarm
 import com.nfcalarmclock.system.disableActivityAlias
@@ -129,10 +131,141 @@ class NacActiveAlarmService
 	private var startTime: Long = 0
 
 	/**
+	 * Whether the dawn is running, which is to say that the alarm screen is shown
+	 * and lighting up, but the alarm itself has not gone off yet.
+	 */
+	var isInDawnPhase: Boolean = false
+		private set
+
+	/**
+	 * Whether the dawn ran for this alarm. The alarm screen is then already shown,
+	 * so its notification stays quiet when the alarm starts ringing: it has nothing
+	 * left to announce.
+	 */
+	private var wasDawnRunning: Boolean = false
+
+	/**
+	 * Whether the notification is currently on the channel that shows a banner.
+	 */
+	private var isAlarmNotificationLoud: Boolean = false
+
+	/**
+	 * Time at which the dawn started. [Units: ms]
+	 */
+	private var dawnStartMillis: Long = 0
+
+	/**
+	 * Time at which the dawn ends, which is when the alarm goes off. [Units: ms]
+	 */
+	private var dawnAlarmAtMillis: Long = 0
+
+	/**
+	 * Ticks during the dawn, to fade the flashlight in.
+	 */
+	private val dawnHandler: Handler by lazy { Handler(mainLooper) }
+
+	/**
+	 * Flashlight, when it should fade in over the last minutes of the dawn.
+	 */
+	private var dawnFlashlight: NacFlashlight? = null
+
+	/**
+	 * How long before the alarm the flashlight starts to fade in. [Units: ms]
+	 */
+	private var dawnFlashlightLeadMillis: Long = 0
+
+	/**
+	 * Flag indicating that the flashlight of the dawn has been turned on.
+	 */
+	private var isDawnFlashlightOn: Boolean = false
+
+	/**
+	 * A volume key was pressed while the alarm rings: dismiss or snooze, as the
+	 * alarm says.
+	 *
+	 * Two ways lead here. The alarm screen catches the key itself when it is on
+	 * display, which works at the loudest and quietest volume and at once. The
+	 * volume manager reads the volume once a second and remains for everything
+	 * else, such as the alarm ringing while another app is on screen.
+	 */
+	private fun handleVolumeKeyPress()
+	{
+		if (alarm == null)
+		{
+			return
+		}
+
+		// Volume dismiss
+		if (alarm!!.shouldVolumeDismiss)
+		{
+			// Unable to dismiss NFC alarm with volume press
+			if (alarm!!.shouldUseNfc)
+			{
+				NacLog.e("Unable to dismiss NFC alarm with a volume press")
+				quickToast(this, R.string.error_message_unable_to_volume_dismiss_nfc_alarm)
+			}
+			// Dismiss regular alarm with volume press
+			else
+			{
+				NacLog.i("Volume press to dismiss the alarm")
+				dismissAlarmService(this, alarm)
+			}
+		}
+		// Volume snooze
+		else
+		{
+			NacLog.i("Volume press to (attempt) snooze the alarm")
+			snoozeAlarmService(this, alarm)
+		}
+	}
+
+	/**
+	 * The alarm screen caught a volume key.
+	 *
+	 * @return True if the key was used, in which case the screen swallows it and
+	 *         the volume does not change. False during the sunrise, or when this
+	 *         alarm does not use the volume keys, and the key does what it always
+	 *         does.
+	 */
+	fun onVolumeKeyFromScreen(): Boolean
+	{
+		val currentAlarm = alarm ?: return false
+
+		// Only once the alarm rings. The sunrise has no wakeup process yet
+		if (wakeupProcess == null)
+		{
+			return false
+		}
+
+		if (!currentAlarm.shouldVolumeDismiss && !currentAlarm.shouldVolumeSnooze)
+		{
+			return false
+		}
+
+		handleVolumeKeyPress()
+
+		return true
+	}
+
+	/**
+	 * Whether this service still holds an alarm. It does not once the alarm is over,
+	 * which a screen that outlived it has to know before asking anything of it.
+	 */
+	val hasAlarm: Boolean
+		get() = (alarm != null)
+
+	/**
 	 * Attempt to snooze.
 	 */
 	fun attemptSnooze()
 	{
+		// Nothing left to snooze
+		if (alarm == null)
+		{
+			NacLog.w("Asked to snooze, but there is no alarm any more")
+			return
+		}
+
 		// Check if can snooze
 		if (alarm!!.canSnooze)
 		{
@@ -168,6 +301,9 @@ class NacActiveAlarmService
 		autoDismissHandler.removeCallbacksAndMessages(null)
 		autoSnoozeHandler.removeCallbacksAndMessages(null)
 
+		// Cleanup the dawn
+		stopDawnPhase()
+
 		// Check if a wake lock is held
 		if (wakeLock?.isHeld == true)
 		{
@@ -188,13 +324,45 @@ class NacActiveAlarmService
 	@UnstableApi
 	fun dismiss(usedNfc: Boolean = false, wasMissed: Boolean = false)
 	{
+		// Nothing left to dismiss. It crashed the app when a screen that outlived
+		// its alarm was swiped (28 Sept, 1.89)
+		if (alarm == null)
+		{
+			NacLog.w("Asked to dismiss, but there is no alarm any more")
+			return
+		}
+
 		// Update the alarm
 		lifecycleScope.launch {
 
 			NacLog.i("Dismissing active alarm service")
 
+			// The alarm has not reached its own time yet. That happens when the dawn of
+			// this very occurrence is what is being called off, or a snooze that was
+			// taken during it: the sunrise starts ahead of the alarm, so the hour it is
+			// set for is still to come.
+			//
+			// Dismissing such an alarm the ordinary way puts it straight back for the
+			// very time it was meant to skip, and it rings minutes later. This is what
+			// dismissing early is for, and it is what is done instead
+			val now = System.currentTimeMillis()
+			val nextCal = NacCalendar.getNextAlarmDay(alarm!!)
+			val dawnLead = alarm!!.dawnDuration * 60 * 1000L
+			val isStillAhead = alarm!!.shouldUseDawn
+				&& (nextCal != null)
+				&& (nextCal.timeInMillis > now)
+				&& ((nextCal.timeInMillis - now) <= dawnLead)
+
 			// Dismiss the alarm
-			alarm!!.dismiss()
+			if (isStillAhead)
+			{
+				NacLog.i("The alarm had not rung yet, dismissing it early instead")
+				alarm!!.dismissEarly()
+			}
+			else
+			{
+				alarm!!.dismiss()
+			}
 
 			// Check if the alarm missed and had to be dismissed via auto
 			// dismiss
@@ -361,6 +529,15 @@ class NacActiveAlarmService
 
 		NacLog.i("Starting the active alarm service")
 
+		// The alarm screen is on display. Only the notification changes, so this is
+		// handled before anything else: the service must not set itself up again, and
+		// above all must not post the notification on the loud channel on the way
+		if (intent?.action == ACTION_ALARM_SCREEN_SHOWN)
+		{
+			quietenActiveAlarmNotification()
+			return START_STICKY
+		}
+
 		// Setup the service
 		setupActiveAlarmService(intent)
 
@@ -368,8 +545,14 @@ class NacActiveAlarmService
 		// when NOT skipping this alarm
 		if (intentAction != ACTION_SKIP_SERVICE)
 		{
-			// Show active alarm notification
-			showActiveAlarmNotification()
+			// Show active alarm notification. Not for the dawn: it posts one of its
+			// own, with a full screen intent, a few lines below. Posting a plain one
+			// first would make that one an update to a notification already on screen,
+			// and a full screen intent that arrives as an update may never fire
+			if (intentAction != ACTION_START_DAWN)
+			{
+				showActiveAlarmNotification()
+			}
 
 			// Clear the upcoming reminder notification
 			NacUpcomingReminderService.stopService(this, alarm)
@@ -416,6 +599,14 @@ class NacActiveAlarmService
 			ACTION_START_SERVICE ->
 			{
 				startActiveAlarmService()
+				return START_STICKY
+			}
+
+			// Start the dawn, which shows the alarm screen ahead of time, in silence,
+			// and lights it up
+			ACTION_START_DAWN ->
+			{
+				startDawnPhase(intent?.getLongExtra(EXTRA_DAWN_ALARM_AT, 0L) ?: 0L)
 				return START_STICKY
 			}
 
@@ -498,6 +689,23 @@ class NacActiveAlarmService
 		// Attempt to get the alarm from the intent
 		val intentAlarm = intent?.getAlarm()
 
+		// The dawn is running and the alarm is now going off. This is not the same
+		// alarm being started twice: the dawn phase simply gives way to the alarm
+		// itself, so let it through instead of treating it as a duplicate
+		if (isInDawnPhase && (intentAction == ACTION_START_SERVICE))
+		{
+			NacLog.i("Dawn is over, the alarm is taking over")
+
+			stopDawnPhase()
+
+			if (intentAlarm != null)
+			{
+				alarm = intentAlarm
+			}
+
+			return
+		}
+
 		// New service was started
 		if (isNewServiceStarted(intentAlarm, intentAction))
 		{
@@ -535,8 +743,14 @@ class NacActiveAlarmService
 	 */
 	private fun showActiveAlarmNotification()
 	{
-		// Create the active alarm notification
-		val notification = NacActiveAlarmNotification(this, alarm)
+		// Create the active alarm notification. During the dawn it is kept quiet, so
+		// that no banner comes across the top of the screen that the dawn is lighting.
+		// The dawn posts one of its own, with a full screen intent, once it knows when
+		// it starts and when it ends
+		val isQuiet = (intentAction == ACTION_START_DAWN) || wasDawnRunning
+		val notification = NacActiveAlarmNotification(this, alarm, isSilenced = isQuiet)
+
+		isAlarmNotificationLoud = !isQuiet
 
 		// Start the service in the foreground
 		showForegroundNotification {
@@ -544,6 +758,55 @@ class NacActiveAlarmService
 		}
 
 		NacLog.i("Showing active alarm notification in active alarm service")
+	}
+
+	/**
+	 * Show the notification of the dawn, which carries the sunrise as a full screen
+	 * intent.
+	 */
+	private fun showDawnNotification()
+	{
+		val notification = NacActiveAlarmNotification(this, alarm, isDawn = true,
+			dawnStartMillis = dawnStartMillis, dawnAlarmAtMillis = dawnAlarmAtMillis)
+
+		isAlarmNotificationLoud = true
+
+		showForegroundNotification {
+			startForeground(notification.id, notification.build())
+		}
+
+		NacLog.i("Showing the dawn notification, with its full screen intent")
+	}
+
+	/**
+	 * Put the notification back on the quiet channel, now that the alarm screen is
+	 * on display.
+	 *
+	 * The notification itself cannot go away: this is a foreground service, and
+	 * Android requires one. It has to be posted on a channel of high importance so
+	 * that Android opens the alarm screen by itself when the phone is locked or
+	 * asleep. When the screen is already on, however, Android shows a banner across
+	 * the top instead of opening anything, right over the alarm screen. Once that
+	 * screen is up there is nothing left for the banner to announce, so the same
+	 * notification is posted again on the quiet channel, which takes it away.
+	 */
+	private fun quietenActiveAlarmNotification()
+	{
+		// There is nothing showing
+		if (!isAlarmNotificationLoud)
+		{
+			return
+		}
+
+		isAlarmNotificationLoud = false
+
+		val notification = NacActiveAlarmNotification(this, alarm, isSilenced = true)
+
+		showForegroundNotification {
+			startForeground(notification.id, notification.build())
+		}
+
+		NacLog.i("Active alarm notification put back on the quiet channel")
 	}
 
 	/**
@@ -613,6 +876,127 @@ class NacActiveAlarmService
 	/**
 	 * Start the service.
 	 */
+	/**
+	 * Start the dawn.
+	 *
+	 * The alarm screen is shown ahead of time and lights up, but nothing is played
+	 * and nothing vibrates. The alarm itself is left alone: it is still scheduled,
+	 * and when it goes off this service is started again with ACTION_START_SERVICE,
+	 * which ends the dawn and rings the alarm on the very same screen.
+	 *
+	 * @param alarmAtMillis Time at which the alarm will go off.
+	 */
+	@UnstableApi
+	private fun startDawnPhase(alarmAtMillis: Long)
+	{
+		val now = System.currentTimeMillis()
+		val duration = alarm!!.dawnDuration*60*1000L
+		val endMillis = if (alarmAtMillis > now) alarmAtMillis else (now + duration)
+
+		NacLog.i("Starting the dawn. It ends in ${(endMillis-now)/1000} sec")
+
+		// Cleanup any resources
+		cleanup()
+
+		isInDawnPhase = true
+		wasDawnRunning = true
+		dawnStartMillis = now
+		dawnAlarmAtMillis = endMillis
+
+		// Keep the processor awake until the alarm has gone off and been dealt with
+		val timeoutSec = ((endMillis-now)/1000L).toInt() + alarm!!.autoDismissTime
+
+		wakeLock = acquireWakeLock(timeoutSec, WAKELOCK_TAG)
+
+		// Post the notification of the dawn before opening anything. It is silent but
+		// of high importance, which lets it carry a full screen intent: that is what
+		// puts the sunrise on a locked screen when starting an activity straight from
+		// here is refused, which is what Android does to an app in the background that
+		// may not draw over other apps
+		showDawnNotification()
+
+		// Show the alarm screen, which knows how to light itself up. When the launch
+		// is refused, the full screen intent above is what opens it instead
+		NacActiveAlarmActivity.startAlarmActivity(this, alarm, dawnStartMillis,
+			dawnAlarmAtMillis)
+
+		// Setup the flashlight, when it should fade in before the alarm. It can never
+		// start before the dawn itself does
+		val lead = alarm!!.dawnFlashlightLead*60*1000L
+
+		if (lead > 0)
+		{
+			dawnFlashlightLeadMillis = lead.coerceAtMost(endMillis - now)
+			dawnFlashlight = NacFlashlight(this)
+
+			dawnHandler.post(dawnFlashlightTick)
+		}
+	}
+
+	/**
+	 * Runnable that fades the flashlight in over the last minutes of the dawn.
+	 */
+	private val dawnFlashlightTick: Runnable = Runnable { updateDawnFlashlight() }
+
+	/**
+	 * Fade the flashlight in over the last minutes of the dawn.
+	 */
+	private fun updateDawnFlashlight()
+	{
+		val torch = dawnFlashlight ?: return
+		val remaining = dawnAlarmAtMillis - System.currentTimeMillis()
+
+		// Only fade in over the last minutes
+		if (remaining <= dawnFlashlightLeadMillis)
+		{
+			val fraction = (1f - remaining/dawnFlashlightLeadMillis.toFloat()).coerceIn(0f, 1f)
+			val level = (fraction*torch.maxLevel).toInt().coerceIn(torch.minLevel, torch.maxLevel)
+
+			// Turn the flashlight on the first time round, then only change its
+			// strength. On a device that cannot vary the strength, this simply turns
+			// it on
+			if (!isDawnFlashlightOn)
+			{
+				torch.strengthLevel = level
+				torch.turnOn()
+
+				isDawnFlashlightOn = true
+			}
+			else
+			{
+				torch.changeStrengthLevel(level)
+			}
+		}
+
+		// Keep going until the alarm goes off
+		if (remaining > 0)
+		{
+			dawnHandler.postDelayed(dawnFlashlightTick, DAWN_TICK_MILLIS)
+		}
+	}
+
+	/**
+	 * Stop the dawn, and turn the flashlight off if it was on.
+	 *
+	 * The flashlight is handed back to the alarm, which has an option of its own for
+	 * it.
+	 */
+	private fun stopDawnPhase()
+	{
+		isInDawnPhase = false
+
+		dawnHandler.removeCallbacksAndMessages(null)
+
+		if (isDawnFlashlightOn)
+		{
+			dawnFlashlight?.cleanup()
+
+			isDawnFlashlightOn = false
+		}
+
+		dawnFlashlight = null
+	}
+
 	@UnstableApi
 	private fun startActiveAlarmService()
 	{
@@ -665,30 +1049,7 @@ class NacActiveAlarmService
 		if (alarm!!.shouldVolumeDismiss || alarm!!.shouldVolumeSnooze)
 		{
 			wakeupProcess!!.volumeManager.onVolumeKeyPressListener = NacVolumeManager.OnVolumeKeyPressListener {
-
-				// Volume dismiss
-				if (alarm!!.shouldVolumeDismiss)
-				{
-					// Unable to dismiss NFC alarm with volume press
-					if (alarm!!.shouldUseNfc)
-					{
-						NacLog.e("Unable to dismiss NFC alarm with a volume press")
-						quickToast(this, R.string.error_message_unable_to_volume_dismiss_nfc_alarm)
-					}
-					// Dismiss regular alarm with volume press
-					else
-					{
-						NacLog.i("Volume press to dismiss the alarm")
-						dismissAlarmService(this, alarm)
-					}
-				}
-				// Volume snooze
-				else
-				{
-					NacLog.i("Volume press to (attempt) snooze the alarm")
-					snoozeAlarmService(this, alarm)
-				}
-
+				handleVolumeKeyPress()
 			}
 		}
 
@@ -812,6 +1173,27 @@ class NacActiveAlarmService
 		const val ACTION_START_SERVICE = "com.nfcalarmclock.ACTION_START_SERVICE"
 
 		/**
+		 * Action telling the service that the alarm screen is on display, so that the
+		 * notification can stop shouting.
+		 */
+		const val ACTION_ALARM_SCREEN_SHOWN = "com.nfcalarmclock.ACTION_ALARM_SCREEN_SHOWN"
+
+		/**
+		 * Action to start the dawn, ahead of the alarm.
+		 */
+		const val ACTION_START_DAWN = "com.nfcalarmclock.ACTION_START_DAWN"
+
+		/**
+		 * Extra holding the time at which the alarm will go off, used by the dawn.
+		 */
+		const val EXTRA_DAWN_ALARM_AT = "com.nfcalarmclock.DAWN_ALARM_AT"
+
+		/**
+		 * How often the dawn ticks, to fade the flashlight in. [Units: ms]
+		 */
+		private const val DAWN_TICK_MILLIS = 2000L
+
+		/**
 		 * Action to stop the service.
 		 */
 		const val ACTION_STOP_SERVICE = "com.nfcalarmclock.ACTION_STOP_SERVICE"
@@ -918,6 +1300,23 @@ class NacActiveAlarmService
 			// Create an intent with the alarm service
 			return Intent(ACTION_START_SERVICE, null, context, NacActiveAlarmService::class.java)
 				.addAlarm(alarm)
+		}
+
+		/**
+		 * Create an intent that will be used to start the dawn, ahead of the alarm.
+		 *
+		 * @param context A context.
+		 * @param alarm An alarm.
+		 * @param alarmAtMillis Time at which the alarm will go off.
+		 *
+		 * @return The foreground service intent.
+		 */
+		fun getDawnIntent(context: Context, alarm: NacAlarm?, alarmAtMillis: Long = 0L): Intent
+		{
+			// Create an intent with the alarm service
+			return Intent(ACTION_START_DAWN, null, context, NacActiveAlarmService::class.java)
+				.addAlarm(alarm)
+				.putExtra(EXTRA_DAWN_ALARM_AT, alarmAtMillis)
 		}
 
 		/**

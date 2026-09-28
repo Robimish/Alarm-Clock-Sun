@@ -1,0 +1,12 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+	<!-- Un fond blanc, et rien d'autre. Le soleil detoure est pose dessus, ce qui fait
+	     ressortir ses jaunes sans dependre de ce qu'un lanceur dessine derriere une
+	     couche de fond transparente, qui avait ete essayee et rendait mal. -->
+	<path android:fillColor="#FFFFFFFF" android:pathData="M0,0h24v24h-24z"/>
+
+</vector>

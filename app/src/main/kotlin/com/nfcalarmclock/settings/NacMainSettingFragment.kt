@@ -87,6 +87,7 @@ class NacMainSettingFragment
 		// Keys for all settings
 		val generalKey = getString(R.string.key_settings_general)
 		val appearanceKey = getString(R.string.key_settings_appearance)
+		val speakTimeKey = getString(R.string.key_settings_speak_time)
 		val statisticsKey = getString(R.string.key_settings_statistics)
 		val manageNfcTagsKey = getString(R.string.key_settings_manage_nfc_tags)
 		val aboutKey = getString(R.string.key_settings_about)
@@ -104,6 +105,9 @@ class NacMainSettingFragment
 
 			// Appearance
 			appearanceKey -> destinationId = R.id.action_nacMainSettingFragment_to_nacAppearanceSettingFragment
+
+			// Speak the time
+			speakTimeKey -> destinationId = R.id.action_nacMainSettingFragment_to_nacSpeakTimeSettingFragment
 
 			// Manage NFC tags
 			manageNfcTagsKey -> destinationId = R.id.action_nacMainSettingFragment_to_nacNfcTagSettingFragment

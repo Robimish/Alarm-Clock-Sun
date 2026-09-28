@@ -33,6 +33,7 @@ open class NacAlarmOptionsDialog
 		return when (id)
 		{
 			R.id.option_flashlight -> R.id.nacFlashlightOptionsDialog
+			R.id.option_dawn -> R.id.nacDawnOptionsDialog
 			R.id.option_nfc -> R.id.nacScanNfcTagDialog
 			R.id.option_repeat -> R.id.nacRepeatOptionsDialog
 			R.id.option_vibrate -> R.id.nacVibrateOptionsDialog
@@ -84,6 +85,15 @@ open class NacAlarmOptionsDialog
 			{
 				// Hide the button
 				if (!sharedPreferences.shouldShowFlashlightButton)
+				{
+					v.visibility = View.GONE
+				}
+			}
+			// Dawn
+			else if (v.id == R.id.option_dawn)
+			{
+				// Hide the button
+				if (!sharedPreferences.shouldShowDawnButton)
 				{
 					v.visibility = View.GONE
 				}

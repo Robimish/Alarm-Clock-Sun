@@ -5,6 +5,7 @@ import android.content.res.TypedArray
 import android.util.AttributeSet
 import androidx.fragment.app.FragmentManager
 import androidx.preference.Preference
+import java.util.Calendar
 import com.nfcalarmclock.R
 import com.nfcalarmclock.shared.NacSharedPreferences
 
@@ -52,18 +53,26 @@ class NacStartWeekOnPreference @JvmOverloads constructor(
 	override fun getSummary(): CharSequence?
 	{
 		val week = context.resources.getStringArray(R.array.days_of_week_full)
-		var index = startWeekOnIndex
+		val options = context.resources.getStringArray(R.array.start_week_on)
 
-		// Get the name of the day by the index
-		return when (index)
+		return when (startWeekOnIndex)
 			{
-				1, 0 -> week[index]
-				2 -> week[6]
-				else ->
+
+				// Sunday or Monday, as chosen
+				0, 1 -> week[startWeekOnIndex]
+
+				// Automatic: also say which day the phone settles on, so that the
+				// summary matches what the week actually shows
+				2 ->
 				{
-					index = 0
-					week[index]
+					val day = Calendar.getInstance().firstDayOfWeek - Calendar.SUNDAY
+
+					"${options[2]} (${week[day.coerceIn(0, 6)]})"
 				}
+
+				// Anything else should not happen
+				else -> week[0]
+
 			}
 	}
 

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
+
+	<!-- Speak the time: shaking the phone. The switch comes first and is written
+		larger, and everything that only works through it is greyed out until it is
+		on -->
+	<com.nfcalarmclock.settings.preference.NacPreferenceCategory
+		android:title="@string/title_shake_to_say_time">
+
+		<com.nfcalarmclock.settings.preference.NacMasterSwitchPreference
+			android:title="@string/title_shake_to_say_time_switch"
+			android:key="@string/key_shake_to_say_time"
+			android:summaryOn="@string/description_shake_to_say_time_true"
+			android:summaryOff="@string/description_shake_to_say_time_false"
+			android:defaultValue="@bool/default_shake_to_say_time"
+			app:allowDividerAbove="false"
+			app:allowDividerBelow="false"
+			/>
+
+		<com.nfcalarmclock.settings.preference.NacPreference
+			android:title="@string/title_shake_sensitivity"
+			android:key="@string/key_shake_sensitivity"
+			android:dependency="@string/key_shake_to_say_time"
+			android:layout="@layout/nac_preference"
+			app:allowDividerAbove="false"
+			app:allowDividerBelow="true"
+			/>
+	</com.nfcalarmclock.settings.preference.NacPreferenceCategory>
+
+	<!-- Speak the time: passing a hand over the phone. The proximity sensor sits at
+		the top of the screen, which is where the hand has to go -->
+	<com.nfcalarmclock.settings.preference.NacPreferenceCategory
+		android:title="@string/title_wave_to_say_time">
+
+		<com.nfcalarmclock.settings.preference.NacMasterSwitchPreference
+			android:title="@string/title_wave_to_say_time_switch"
+			android:key="@string/key_wave_to_say_time"
+			android:summaryOn="@string/description_wave_to_say_time_true"
+			android:summaryOff="@string/description_wave_to_say_time_false"
+			android:defaultValue="@bool/default_wave_to_say_time"
+			app:allowDividerAbove="false"
+			app:allowDividerBelow="false"
+			/>
+
+		<com.nfcalarmclock.settings.preference.NacPreference
+			android:title="@string/title_wave_passes"
+			android:key="@string/key_wave_passes"
+			android:dependency="@string/key_wave_to_say_time"
+			android:layout="@layout/nac_preference"
+			app:allowDividerAbove="false"
+			app:allowDividerBelow="true"
+			/>
+	</com.nfcalarmclock.settings.preference.NacPreferenceCategory>
+
+	<!-- Speak the time: the hours. They hold back both the shake and the hand, so
+		they sit apart from either rather than under one of them -->
+	<com.nfcalarmclock.settings.preference.NacPreferenceCategory
+		android:title="@string/title_say_time_when">
+
+		<com.nfcalarmclock.settings.preference.NacPreference
+			android:title="@string/title_say_time_hours"
+			android:key="@string/key_say_time_from_hour"
+			android:layout="@layout/nac_preference"
+			app:allowDividerAbove="false"
+			app:allowDividerBelow="true"
+			/>
+	</com.nfcalarmclock.settings.preference.NacPreferenceCategory>
+
+	<!-- Speak the time: the voice itself, which is the same whoever asks, the alarms
+		included -->
+	<com.nfcalarmclock.settings.preference.NacPreferenceCategory
+		android:title="@string/title_say_time_voice">
+
+		<Preference
+			android:title="@string/title_say_time_language"
+			android:key="@string/key_say_time_language"
+			android:layout="@layout/nac_preference"
+			app:allowDividerAbove="false"
+			app:allowDividerBelow="false"
+			/>
+
+		<Preference
+			android:title="@string/title_say_time_format"
+			android:key="@string/key_say_time_format"
+			android:layout="@layout/nac_preference"
+			app:allowDividerAbove="false"
+			app:allowDividerBelow="true"
+			/>
+	</com.nfcalarmclock.settings.preference.NacPreferenceCategory>
+
+</PreferenceScreen>

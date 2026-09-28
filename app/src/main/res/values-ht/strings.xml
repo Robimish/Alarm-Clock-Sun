@@ -2,7 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
 	<!-- App -->
-	<string name="app_name">Revèy Alam NFC</string>
+	<string name="app_name">Alarm Clock Sun</string>
 	<string name="app_developer">Gabe Gonzalez</string>
 
 	<!-- Consolidate -->
@@ -632,5 +632,62 @@
 	</plurals>
 
 	<string name="tts_say_time">Lè a se %1$s:%2$s %3$s.</string>
+	<string name="tts_say_time_one_oclock">Lè a se %1$s:%2$s %3$s.</string>
 
+	<string name="action_alarm_option_dawn">Douvanjou</string>
+	<string name="message_dawn_disabled">Pa itilize similasyon douvanjou a</string>
+	<string name="message_dawn_enabled">Itilize similasyon douvanjou a</string>
+	<string name="description_show_hide_dawn_button_true">Montre bouton douvanjou a lè w ouvri yon revèy.</string>
+	<string name="description_show_hide_dawn_button_false">Kache bouton douvanjou a lè w ouvri yon revèy.</string>
+	<string name="title_dawn_duration">Dire douvanjou a</string>
+	<string name="description_dawn_duration">Konbyen tan anvan revèy la ekran an kòmanse limen.</string>
+	<string name="title_dawn_color">Koulè limyè a</string>
+	<string name="title_dawn_flashlight">Flach anvan revèy la</string>
+	<string name="description_dawn_flashlight">Flach la limen tikal nan dènye minit douvanjou a. Mete wou a sou zewo pou kite l etenn.</string>
+	<string name="message_dawn_flashlight_off">Etenn</string>
+	<string name="title_dawn_custom_color">Koulè pa w</string>
+	<string name="title_dawn_use_image">Sèvi ak yon imaj</string>
+	<string name="description_dawn_use_image">Montre yon foto tikal olye yon koulè plat.</string>
+	<string name="action_dawn_choose_image">Chwazi imaj</string>
+	<string name="message_dawn_preview_over">Tape pou fèmen</string>
+	<string name="title_dawn_preview_duration">Dire apèsi a</string>
+	<string name="description_dawn_preview_duration">Apèsi douvanjou a dire %1$d segonn, epi li tann yon tap pou fèmen. Si w tape pandan l ap mache, ekran an parèt jan l ye nòmalman, menm jan ak yon vre douvanjou.</string>
+	<string name="title_storage">Espas depo</string>
+	<string name="title_clean_sounds">Libere kopi son yo</string>
+	<string name="description_clean_sounds">Aplikasyon an kenbe yon kopi chak son ou chwazi, pou revèy la sonnen menm si orijinal la deplase oswa telefòn nan poko debloke. Sa efase kopi okenn revèy pa itilize.</string>
+	<string name="title_clean_images">Libere imaj douvanjou yo</string>
+	<string name="description_clean_images">Yon imaj rete nan aplikasyon an menm apre ou tounen sou yon koulè, konsa ou ka remete l san w pa chwazi fichye a ankò. Sa efase imaj okenn douvanjou pa montre.</string>
+	<string name="title_clean_all">Libere tou de</string>
+	<string name="description_clean_all">Son ak imaj ansanm.</string>
+	<string name="message_clean_confirm">Se sèlman kopi okenn revèy pa bezwen ki efase. Revèy yo menm pa touche.</string>
+	<string name="message_clean_done">Libere %1$s nan %2$d fichye</string>
+	<string name="message_clean_nothing">Pa gen anyen pou libere</string>
+	<string name="title_dawn_show_date">Dat</string>
+	<string name="title_dawn_reveal">Tape pou wè ekran an</string>
+	<string name="description_dawn_reveal">Pandan douvanjou a, yon tap montre ekran revèy la jan l ye nòmalman pou yon ti moman, konsa ou wè klè revèy la poko sonnen. Yon dezyèm tap retounen.</string>
+	<string name="message_dawn_reveal_value">%1$d segonn</string>
+	<string name="title_dawn_shown">Vizib pandan douvanjou a</string>
+	<string name="description_dawn_shown">Etenn sa ou pa vle wè pandan ekran an ap limen.</string>
+	<string name="title_dawn_show_phrase">Fraz pou leve</string>
+	<string name="title_dawn_show_name">Non revèy la</string>
+	<string name="title_dawn_show_clock">Revèy</string>
+	<string name="title_dawn_show_media">Tit mizik la</string>
+	<string name="message_dawn_no_image">Pa gen imaj chwazi</string>
+	<string name="message_dawn_unable_to_read_image">Pa ka li imaj ou chwazi a</string>
+	<string name="action_dawn_stop">Kanpe</string>
+	<string name="message_dawn_snoozed">Revèy la ranvwaye pou 5 minit</string>
+	<string name="message_dawn_not_ringing_yet">Douvanjou ap mache. Revèy la poko sonnen.</string>
+	<string name="message_dawn_too_close">Revèy la twò pre: pa gen douvanjou fwa sa a. L ap mache pou pwochen an.</string>
+	<string name="message_dawn_no_more_snoozes">Pa ka ranvwaye ankò. Peze Kanpe pou etenn revèy la</string>
+	<string name="title_dawn_notification">Douvanjou</string>
+	<string name="description_dawn_notification">Parèt pandan ekran an ap limen tikal anvan yon revèy.</string>
+	<string name="dawn_color_amber">Limyè solèy</string>
+	<string name="dawn_color_orange">Blan</string>
+	<string name="dawn_color_red">Anbre</string>
+	<string name="dawn_color_white">Vèt pal</string>
+	<string name="dawn_color_sky">Ble pal</string>
+	<string name="dawn_color_lilac">Lila</string>
+	<string name="action_alarm_dismiss_next">Anile pwochen revèy la</string>
+	<string name="action_alarm_dismiss_snoozed">Etenn revèy ranvwaye a</string>
+	<string name="message_alarm_is_snoozed">Revèy ranvwaye a ap sonnen nan %1$s</string>
 </resources>

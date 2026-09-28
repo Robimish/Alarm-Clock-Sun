@@ -27,19 +27,13 @@ class NacHelpSettingFragment
 	private lateinit var onSharedPreferenceChangeListener: SharedPreferences.OnSharedPreferenceChangeListener
 
 	/**
-	 * Address.
+	 * Address to send the emails to.
+	 *
+	 * The original app wrote to an address built from the app name, which for this
+	 * fork would be an address nobody owns. Left empty, the email app opens with no
+	 * recipient and the user picks one.
 	 */
-	private val address: String
-		get()
-		{
-			val appName = resources.getString(R.string.app_name)
-			val alphabet = "abcdefghijklmnopqrstuvwxyz"
-			val symbols = "!@#$%^&*()_+<>?,./"
-			val name = "${alphabet[2]}${alphabet[14]}${alphabet[13]}${alphabet[19]}${alphabet[0]}${alphabet[2]}${alphabet[19]}"
-			val ext = "${alphabet[2]}${alphabet[14]}${alphabet[12]}"
-
-			return "$name${symbols[1]}${appName.lowercase().replace(" ", "")}${symbols[16]}$ext"
-		}
+	private val address: String = ""
 
 	/**
 	 * Called when creating the preferences.
@@ -155,7 +149,7 @@ class NacHelpSettingFragment
 			context.sendEmail(
 				Intent.ACTION_SEND,
 				type = "message/rfc822",
-				subject = "NFC Alarm Clock (Email chat)",
+				subject = "Alarm Clock Sun (Email chat)",
 				to = address,
 				onError = {
 					quickToast(context, R.string.error_message_unable_to_email)
@@ -191,7 +185,7 @@ class NacHelpSettingFragment
 			context.sendEmail(
 				Intent.ACTION_SEND_MULTIPLE,
 				type = "message/rfc822",
-				subject = "NFC Alarm Clock (Debug Logs)",
+				subject = "Alarm Clock Sun (Debug Logs)",
 				to = address,
 				attachmentList = logFiles,
 				onError = {

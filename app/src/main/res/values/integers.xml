@@ -17,8 +17,8 @@
 	<integer name="default_delete_alarm_after_dismissed_color">0xffff0000</integer>
 	<integer name="default_skip_next_alarm_color">0xffff0000</integer>
 	<integer name="default_day_button_style">1</integer>
-	<integer name="default_start_week_on_index">0</integer>
-	<integer name="default_next_alarm_format_index">0</integer>
+	<integer name="default_start_week_on_index">2</integer>
+	<integer name="default_next_alarm_format_index">2</integer>
 
 	<integer name="duration_day_button_off">200</integer>
 	<integer name="duration_day_button_alpha_on">280</integer>
@@ -37,5 +37,21 @@
 	<integer name="default_clock_widget_color_am_pm">0xffffffff</integer>
 	<integer name="default_clock_widget_color_alarm_icon">0xffffffff</integer>
 	<integer name="default_clock_widget_color_alarm_time">0xfffb8c00</integer>
+
+	<!-- How long a tap shows the screen as normal during a dawn, in seconds -->
+	<integer name="default_dawn_reveal_duration">10</integer>
+	<!-- How long a dawn preview runs, in seconds -->
+	<integer name="default_dawn_preview_duration">7</integer>
+	<integer name="default_say_time_from_hour">3</integer>
+	<integer name="default_say_time_to_hour">8</integer>
+	<integer name="default_say_time_format">0</integer>
+	<integer name="default_tts_delay">0</integer>
+	<!-- 2 is "A light shake is enough": the whole point is a flick of the wrist in
+		the dark, not a workout. The two entries before it ask for less still -->
+	<integer name="default_shake_sensitivity">2</integer>
+
+	<!-- 1 is "Two passes": one pass alone is easily set off by anything that goes
+		over the phone during the night -->
+	<integer name="default_wave_passes">1</integer>
 
 </resources>

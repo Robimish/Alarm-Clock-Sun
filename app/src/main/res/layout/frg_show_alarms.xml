@@ -6,22 +6,61 @@
 	android:layout_height="match_parent"
 	android:orientation="vertical">
 
-	<!-- Next alarm message -->
-	<com.google.android.material.textview.MaterialTextView
-		android:id="@+id/tv_next_alarm"
+	<!-- Messages at the top of the list -->
+	<LinearLayout
+		android:id="@+id/nac_top_messages"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:background="@color/black"
 		android:gravity="center_horizontal"
-		android:paddingTop="@dimen/small"
-		android:paddingBottom="@dimen/tiny"
-		android:textSize="@dimen/tsz_normal"
-		android:text=""
+		android:orientation="vertical"
 		app:layout_constraintStart_toEndOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
-		app:layout_constraintBottom_toTopOf="@id/rv_alarm_list"
-		/>
+		app:layout_constraintBottom_toTopOf="@id/rv_alarm_list">
+
+		<!-- A snoozed alarm, so that it is plain one is waiting -->
+		<com.google.android.material.textview.MaterialTextView
+			android:id="@+id/tv_snoozed_alarm"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/small"
+			android:background="@drawable/pill_background"
+			android:drawablePadding="@dimen/tiny"
+			android:gravity="center_vertical"
+			android:paddingStart="@dimen/normal"
+			android:paddingEnd="@dimen/normal"
+			android:paddingTop="@dimen/tiny"
+			android:paddingBottom="@dimen/tiny"
+			android:textSize="@dimen/tsz_normal"
+			android:textStyle="bold"
+			android:visibility="gone"
+			app:drawableStartCompat="@drawable/snooze"
+			android:text=""
+			/>
+
+		<!-- Next alarm message -->
+		<com.google.android.material.textview.MaterialTextView
+			android:id="@+id/tv_next_alarm"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center_horizontal"
+			android:paddingTop="@dimen/small"
+			android:paddingBottom="@dimen/tiny"
+			android:textSize="@dimen/tsz_normal"
+			android:text=""
+			/>
+
+		<!-- The sun travels along this as the alarm comes closer. With no alarm it
+			rests at the start, dimmed -->
+		<com.nfcalarmclock.view.NacNextAlarmTrackView
+			android:id="@+id/v_next_alarm_track"
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/next_alarm_track_height"
+			android:paddingStart="@dimen/normal"
+			android:paddingEnd="@dimen/normal"
+			/>
+	</LinearLayout>
 
 	<!-- Alarm list -->
 	<androidx.recyclerview.widget.RecyclerView
@@ -35,7 +74,7 @@
 		android:scrollbars="vertical"
 		app:layout_constraintStart_toEndOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/tv_next_alarm"
+		app:layout_constraintTop_toBottomOf="@id/nac_top_messages"
 		app:layout_constraintBottom_toBottomOf="parent"
 		/>
 

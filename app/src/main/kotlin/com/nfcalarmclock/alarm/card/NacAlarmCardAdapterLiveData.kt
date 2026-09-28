@@ -8,6 +8,31 @@ class NacAlarmCardAdapterLiveData
 {
 
 	/**
+	 * Whether the list is rearranged on its own, which brings whatever rings next to
+	 * the top, or stays as it is.
+	 */
+	var shouldAutoSort: Boolean = false
+
+	/**
+	 * Sort a list of alarms, either the way they are meant to ring or the way they
+	 * were left.
+	 */
+	private fun sortAlarms(alarms: MutableList<NacAlarm>)
+	{
+		// Whatever rings first comes first, and what is turned off goes below
+		if (shouldAutoSort)
+		{
+			alarms.sort()
+		}
+		// The rank each alarm was given, and the order they were created in to settle
+		// a tie
+		else
+		{
+			alarms.sortWith(compareBy({ it.sortOrder }, { it.id }))
+		}
+	}
+
+	/**
 	 * Calculate the merge between two lists of alarms.
 	 *
 	 * @return The merged alarm list.
@@ -147,7 +172,7 @@ class NacAlarmCardAdapterLiveData
 		// Normal sort of the merged alarms. There was no order specified or mismatching sizes of lists
 		if ((order == null) || (order.size != mergedAlarms.size))
 		{
-			mergedAlarms.sort()
+			sortAlarms(mergedAlarms)
 		}
 		// Use the ordered list as the sort order for the alarms
 		else
@@ -172,7 +197,7 @@ class NacAlarmCardAdapterLiveData
 		// Sort the alarms normally
 		if ((order == null) || (order.size != newAlarms.size))
 		{
-			newAlarms.sort()
+			sortAlarms(newAlarms)
 		}
 		// Use the ordered list as the sort order for the alarms
 		else

@@ -1,5 +1,7 @@
 package com.nfcalarmclock.alarm.options.volume
 
+import android.content.Context
+import android.media.AudioManager
 import android.widget.AdapterView
 import android.widget.RelativeLayout
 import androidx.appcompat.widget.SwitchCompat
@@ -13,6 +15,8 @@ import com.nfcalarmclock.alarm.options.NacGenericAlarmOptionsDialog
 import com.nfcalarmclock.system.getAlarm
 import com.nfcalarmclock.system.getDeviceProtectedStorageContext
 import com.nfcalarmclock.system.media.NacAudioAttributes
+import com.nfcalarmclock.system.media.getSafeStreamVolume
+import com.nfcalarmclock.system.media.setStreamVolume
 import com.nfcalarmclock.system.mediaplayer.NacMediaPlayer
 import com.nfcalarmclock.view.calcAlpha
 import com.nfcalarmclock.view.quickToast
@@ -69,6 +73,39 @@ open class NacVolumeOptionsDialog
 	private var mediaPlayer: NacMediaPlayer? = null
 
 	/**
+	 * The phone's own volume from before the preview, to be put back after it. The
+	 * preview sets the phone to the volume of the alarm so that it sounds as it will,
+	 * and until 1.90 it left it there: the phone stayed at that volume for every
+	 * alarm afterwards, those of other apps included. Null when there is nothing to
+	 * put back.
+	 */
+	private var volumeBeforePreview: Int? = null
+
+	/**
+	 * Save the phone's volume before the preview changes it.
+	 */
+	private fun saveVolumeBeforePreview()
+	{
+		val stream = audioAttributes?.stream ?: return
+		val audioManager = requireContext().getSystemService(Context.AUDIO_SERVICE) as AudioManager
+
+		volumeBeforePreview = audioManager.getSafeStreamVolume(stream)
+	}
+
+	/**
+	 * Put the phone's volume back as it was before the preview.
+	 */
+	private fun revertVolumeAfterPreview()
+	{
+		val volume = volumeBeforePreview ?: return
+		val stream = audioAttributes?.stream ?: return
+		val audioManager = context?.getSystemService(Context.AUDIO_SERVICE) as? AudioManager ?: return
+
+		audioManager.setStreamVolume(stream, volume)
+		volumeBeforePreview = null
+	}
+
+	/**
 	 * Selected gradually increase volume wait time.
 	 */
 	private var selectedWaitTime: Int = 0
@@ -78,8 +115,9 @@ open class NacVolumeOptionsDialog
 	 */
 	private fun cleanup()
 	{
-		// Cleanup volume resources
-		volumeManager?.cleanup()
+		// Cleanup volume resources, and give the phone its volume back if a preview
+		// was still playing
+		volumeManager?.cleanup(onRevertVolume = { revertVolumeAfterPreview() })
 
 		// Cleanup the media player
 		mediaPlayer?.release()
@@ -213,7 +251,7 @@ open class NacVolumeOptionsDialog
 			// Stop preview
 			if (isPlaying)
 			{
-				volumeManager!!.cleanup()
+				volumeManager!!.cleanup(onRevertVolume = { revertVolumeAfterPreview() })
 				mediaPlayer!!.stop()
 			}
 			// Start preview
@@ -227,7 +265,7 @@ open class NacVolumeOptionsDialog
 				// Setup volume and media player
 				val context = requireContext()
 
-				volumeManager!!.setup(tmpAlarm)
+				volumeManager!!.setup(tmpAlarm, onSaveVolume = { saveVolumeBeforePreview() })
 				mediaPlayer!!.playAlarm(context, tmpAlarm)
 			}
 

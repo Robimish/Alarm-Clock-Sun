@@ -28,7 +28,8 @@ class NacNextAlarmFormatDialog
 	override val array: Array<String> by lazy {
 		arrayOf(
 			getString(R.string.description_next_alarm_format_time_in),
-			getString(R.string.description_next_alarm_format_time_on)
+			getString(R.string.description_next_alarm_format_time_on),
+			getString(R.string.description_next_alarm_format_both)
 		)
 	}
 

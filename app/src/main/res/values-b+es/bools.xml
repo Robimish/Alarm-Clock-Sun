@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<!-- L'espagnol dit les minutes comme un nombre, "y cinco", et non comme un
+		cadran : le zero de tete ferait dire "cero cinco" -->
+	<bool name="tts_should_pad_minutes">false</bool>
+
+</resources>

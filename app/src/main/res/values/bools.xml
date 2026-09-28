@@ -26,6 +26,25 @@
 	<bool name="default_show_hide_vibrate_button">true</bool>
 	<bool name="default_show_hide_nfc_button">true</bool>
 	<bool name="default_show_hide_flashlight_button">true</bool>
+	<bool name="default_show_hide_dawn_button">true</bool>
 	<bool name="default_style_should_show_card_button_labels">true</bool>
 
+	<bool name="default_analog_clock">false</bool>
+	<bool name="default_shake_to_say_time">false</bool>
+	<bool name="default_wave_to_say_time">false</bool>
+
+	<!-- Whether the alarm list rearranges itself, which brings whatever rings next
+	     to the top -->
+	<bool name="default_auto_sort_alarms">false</bool>
+
+	<!-- Whether the minutes are said as a clock face, where "4:05" needs its leading
+	     zero, or as a plain number, where "05" would be read out as "zero five" -->
+	<!-- Whether the light comes back on its own after a tap during the dawn -->
+	<bool name="default_dawn_reveal_return">true</bool>
+
+	<!-- Whether the screen going off dismisses the alarm while it rings -->
+	<bool name="default_power_dismiss">false</bool>
+	<bool name="default_record_statistics">false</bool>
+
+	<bool name="tts_should_pad_minutes">true</bool>
 </resources>

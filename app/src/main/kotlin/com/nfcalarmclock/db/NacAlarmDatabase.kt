@@ -28,6 +28,7 @@ import com.nfcalarmclock.db.NacAlarmDatabase.FixFlashlightBlinkEmptyStringDurati
 import com.nfcalarmclock.db.NacAlarmDatabase.RemoveSnoozeHourMinuteColumnsAndRenameShouldEasySnoozeColumnMigration
 import com.nfcalarmclock.db.NacAlarmDatabase.RemoveUseTtsColumnMigration
 import com.nfcalarmclock.db.NacAlarmDatabase.RenameShouldDeleteAlarmAfterDismissedColumnMigration
+import com.nfcalarmclock.db.NacAlarmDatabase.UpdateDawnRevealDurationFrom12To10Migration
 import com.nfcalarmclock.db.NacAlarmDatabase.UpdateRepeatFrequencyFrom0To1Migration
 import com.nfcalarmclock.db.NacAlarmDatabase.UpdateRepeatFrequencyUnitFrom0To1Migration
 import com.nfcalarmclock.db.NacOldDatabase.Companion.read
@@ -143,7 +144,7 @@ fun NacAlarm.updateMediaFromDb(
 /**
  * Store alarms in a Room database.
  */
-@Database(version = 49,
+@Database(version = 59,
 	entities = [
 		NacAlarm::class,
 		NacAlarmCreatedStatistic::class,
@@ -202,6 +203,16 @@ fun NacAlarm.updateMediaFromDb(
 		AutoMigration(from = 46, to = 47),
 		AutoMigration(from = 47, to = 48),
 		AutoMigration(from = 48, to = 49),
+		AutoMigration(from = 49, to = 50),
+		AutoMigration(from = 50, to = 51),
+		AutoMigration(from = 51, to = 52),
+		AutoMigration(from = 52, to = 53),
+		AutoMigration(from = 53, to = 54),
+		AutoMigration(from = 54, to = 55),
+		AutoMigration(from = 55, to = 56),
+		AutoMigration(from = 56, to = 57),
+		AutoMigration(from = 57, to = 58, spec = UpdateDawnRevealDurationFrom12To10Migration::class),
+		AutoMigration(from = 58, to = 59),
 	]
 )
 @TypeConverters(NacAlarmTypeConverters::class, NacStatisticTypeConverters::class)
@@ -462,6 +473,25 @@ abstract class NacAlarmDatabase
 	@DeleteColumn(tableName = "alarm", columnName = "snooze_hour")
 	@DeleteColumn(tableName = "alarm", columnName = "snooze_minute")
 	internal class RemoveSnoozeHourMinuteColumnsAndRenameShouldEasySnoozeColumnMigration : AutoMigrationSpec
+
+	/**
+	 * Faire passer de 12 a 10 secondes la duree pendant laquelle un appui montre
+	 * l'ecran, pour les alarmes qui portent encore l'ancienne valeur par defaut.
+	 */
+	internal class UpdateDawnRevealDurationFrom12To10Migration : AutoMigrationSpec
+	{
+		override fun onPostMigrate(db: SupportSQLiteDatabase)
+		{
+			// Update the table
+			db.execSQL("UPDATE alarm SET dawn_reveal_duration=10 WHERE dawn_reveal_duration=12")
+
+			// Update the shared preferences, but only if they still hold the old default
+			if (sharedPreferences?.dawnRevealDuration == 12)
+			{
+				sharedPreferences?.dawnRevealDuration = 10
+			}
+		}
+	}
 
 	/**
 	 * Update all values of the repeat frequency from 0 (the old default value) to 1

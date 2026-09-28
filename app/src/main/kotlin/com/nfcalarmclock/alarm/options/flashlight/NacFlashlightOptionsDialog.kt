@@ -83,6 +83,25 @@ open class NacFlashlightOptionsDialog
 	}
 
 	/**
+	 * Called when the view is destroyed.
+	 *
+	 * The cancel and ok buttons clean up the flashlight themselves, but the dialog can
+	 * also be closed with a back press or by tapping outside of it, which would
+	 * otherwise leave the flashlight on.
+	 */
+	override fun onDestroyView()
+	{
+		// Make sure the flashlight is off
+		if (::flashlight.isInitialized)
+		{
+			flashlight.cleanup()
+		}
+
+		// Super
+		super.onDestroyView()
+	}
+
+	/**
 	 * Update the alarm with selected options.
 	 */
 	override fun onOkClicked(alarm: NacAlarm)
@@ -252,8 +271,9 @@ open class NacFlashlightOptionsDialog
 		// Set the change listener
 		brightnessSlider.addOnChangeListener { _, value, _ ->
 
-			// Change the flashlight strength
-			flashlight.strengthLevel = value.toInt()
+			// Change the flashlight strength, applying it right away when the preview
+			// is running
+			flashlight.changeStrengthLevel(value.toInt())
 
 		}
 
@@ -272,8 +292,11 @@ open class NacFlashlightOptionsDialog
 			 */
 			override fun onStopTrackingTouch(slider: Slider)
 			{
-				// Check if the flashlight is running
-				if (flashlight.isRunning)
+				// Only a blinking flashlight needs to be restarted, so that the blink
+				// cycle picks up the new strength. Restarting a steady flashlight would
+				// turn it off and back on, and some devices come back at full strength
+				// instead of the level that was just chosen
+				if (flashlight.isRunning && blinkSwitch.isChecked)
 				{
 					// Restart the flashlight
 					startFlashlight()

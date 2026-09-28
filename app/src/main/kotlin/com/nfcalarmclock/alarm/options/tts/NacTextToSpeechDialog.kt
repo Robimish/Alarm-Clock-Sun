@@ -71,6 +71,21 @@ open class NacTextToSpeechDialog
 	private lateinit var ttsFreqInputLayout: TextInputLayout
 
 	/**
+	 * Title for how long to wait before speaking.
+	 */
+	private lateinit var ttsDelayTitle: TextView
+
+	/**
+	 * Description for how long to wait before speaking.
+	 */
+	private lateinit var ttsDelayDescription: TextView
+
+	/**
+	 * Input layout to select how long to wait before speaking.
+	 */
+	private lateinit var ttsDelayInputLayout: TextInputLayout
+
+	/**
 	 * Title for the text-to-speech voice.
 	 */
 	private lateinit var ttsVoiceTitle: TextView
@@ -126,6 +141,11 @@ open class NacTextToSpeechDialog
 	private var selectedTtsFreq: Int = 0
 
 	/**
+	 * Index of the chosen delay in DELAY_SECONDS.
+	 */
+	private var selectedTtsDelayIndex: Int = 0
+
+	/**
 	 * Selected text-to-speech voice index.
 	 */
 	private var selectedTtsVoiceIndex: Int = 0
@@ -176,6 +196,7 @@ open class NacTextToSpeechDialog
 		alarm.shouldSayCurrentTime = currentTimeCheckBox.isChecked
 		alarm.shouldSayName = alarmNameCheckBox.isChecked
 		alarm.ttsFrequency = selectedTtsFreq
+		alarm.ttsDelay = DELAY_SECONDS.getOrElse(selectedTtsDelayIndex) { 0 }
 		alarm.ttsSpeechRate = ttsSpeechRateSlider.value
 
 		// Set the voice if TTS is initialized, otherwise the user probably was not able
@@ -227,6 +248,24 @@ open class NacTextToSpeechDialog
 	}
 
 	/**
+	 * Set whether the delay before speaking can be selected or not.
+	 */
+	private fun setTtsDelayUsability()
+	{
+		// Get the state and alpha
+		val state = shouldUseTts
+		val alpha = calcAlpha(state)
+
+		// Set the alpha of the views
+		ttsDelayTitle.alpha = alpha
+		ttsDelayDescription.alpha = alpha
+		ttsDelayInputLayout.alpha = alpha
+
+		// Set whether the delay can be selected or not
+		ttsDelayInputLayout.isEnabled = state
+	}
+
+	/**
 	 * Set whether the text-to-speech speech rate can be selected or not.
 	 */
 	private fun setTtsSpeechRateUsability()
@@ -270,16 +309,40 @@ open class NacTextToSpeechDialog
 	{
 		// Set the default selected values
 		selectedTtsFreq = alarm.ttsFrequency
+		selectedTtsDelayIndex = DELAY_SECONDS.indexOf(alarm.ttsDelay).coerceAtLeast(0)
 
 		// Setup the views
 		setupTtsHelper(alarm.ttsVoice)
 		setupTtsWhatToSay(alarm.shouldSayCurrentTime, alarm.shouldSayName)
 		setupTtsSpeakFrequency(alarm.ttsFrequency)
+		setupTtsDelay()
 		setupTtsVoice()
 		setupTtsSpeechRate(alarm.ttsSpeechRate, alarm.name)
 		setTtsSpeakFrequencyUsability()
+		setTtsDelayUsability()
 		setTtsSpeechRateUsability()
 		setTtsVoiceUsability()
+	}
+
+	/**
+	 * Setup how long to wait before speaking.
+	 */
+	private fun setupTtsDelay()
+	{
+		// Get the views
+		val autoCompleteTextView: MaterialAutoCompleteTextView = dialog!!.findViewById(R.id.tts_delay_dropdown_menu)
+		ttsDelayTitle = dialog!!.findViewById(R.id.tts_delay_title)
+		ttsDelayDescription = dialog!!.findViewById(R.id.tts_delay_description)
+		ttsDelayInputLayout = dialog!!.findViewById(R.id.tts_delay_input_layout)
+
+		// Setup the views
+		ttsDelayInputLayout.setupInputLayoutColor(requireContext(), sharedPreferences)
+		autoCompleteTextView.setTextFromIndex(selectedTtsDelayIndex)
+
+		// Set the textview listener
+		autoCompleteTextView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+			selectedTtsDelayIndex = position
+		}
 	}
 
 	/**
@@ -556,6 +619,7 @@ open class NacTextToSpeechDialog
 		// Set the on click listener for the current time checkbox container
 		currentTimeCheckBox.setOnClickListener {
 			setTtsSpeakFrequencyUsability()
+			setTtsDelayUsability()
 			setTtsSpeechRateUsability()
 			setTtsVoiceUsability()
 		}
@@ -563,6 +627,7 @@ open class NacTextToSpeechDialog
 		// Set the on click listener for the alarm name checkbox container
 		alarmNameCheckBox.setOnClickListener {
 			setTtsSpeakFrequencyUsability()
+			setTtsDelayUsability()
 			setTtsSpeechRateUsability()
 			setTtsVoiceUsability()
 		}
@@ -600,6 +665,17 @@ open class NacTextToSpeechDialog
 
 		// Start the preview
 		ttsHelper.speak(phrase, attrs)
+	}
+
+	companion object
+	{
+
+		/**
+		 * How long to wait before speaking, one entry per line of the tts_delay array.
+		 * [Units: sec]
+		 */
+		val DELAY_SECONDS = intArrayOf(0, 5, 10, 15, 20, 30, 45, 60, 90, 120, 180, 300)
+
 	}
 
 }

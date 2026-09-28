@@ -21,8 +21,12 @@ object NacSystemAlertWindowPermission
 	 */
 	val isCorrectAndroidVersion: Boolean
 		get() {
-			// Permission only required for API level == 35
-			return Build.VERSION.SDK_INT == Build.VERSION_CODES.VANILLA_ICE_CREAM
+			// Note: upstream only asked for this on Android 15. Android has
+			// restricted starting an activity from the background since Android 10,
+			// and the alarm screen, dawn included, is exactly that. Tested on a
+			// phone running Android 16: without this permission the alarm rings but
+			// no screen comes up. So ask for it from Android 10 onwards
+			return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 		}
 
 	/**
@@ -72,6 +76,7 @@ object NacSystemAlertWindowPermission
 	 * @return True if the app should request the SYSTEM_ALERT_WINDOW permission,
 	 *         and False otherwise.
 	 */
+	@Suppress("UNUSED_PARAMETER")
 	fun shouldRequestPermission(
 		context: Context,
 		shared: NacSharedPreferences
@@ -85,9 +90,39 @@ object NacSystemAlertWindowPermission
 		}
 		// The app does not already have the permission.
 		// The permission has not been requested yet.
+		// The full screen notification is missing: that one is what brings the alarm
+		// screen and the sunrise up, and where it is granted this permission has
+		// nothing left to add, so there is no reason to ask for it
+		// Already in hand
+		else if (hasPermission(context))
+		{
+			false
+		}
+		// It was in hand and it is gone, an app update most of the time: it is not
+		// offered again. The full screen notification is what brings the alarm screen,
+		// the sunrise and the ringing timer up, and it is asked for again after every
+		// update on its own. Asking for this one as well sent the user through "Allow
+		// restricted settings" after each update for nothing (1.94)
+		// Never asked for on its own any more, not even on a new install. In 1.94 it was
+		// still offered when it had never been asked for and the full screen
+		// notification was missing, which is the state right after an update, so the
+		// 2/2 page kept coming back. The full screen notification is enough on its own:
+		// the alarm, the sunrise and the timer have all been seen on a locked phone
+		// without this permission (1.48, 1.94). It can still be given from About
 		else
 		{
-			(!hasPermission(context) && !shared.wasSystemAlertWindowPermissionRequested)
+			false
+		}
+	}
+
+	/**
+	 * Remember that the permission is in hand, so that its loss can be noticed later.
+	 */
+	fun rememberIfGranted(context: Context, shared: NacSharedPreferences)
+	{
+		if (isCorrectAndroidVersion && hasPermission(context))
+		{
+			shared.wasSystemAlertWindowPermissionGranted = true
 		}
 	}
 

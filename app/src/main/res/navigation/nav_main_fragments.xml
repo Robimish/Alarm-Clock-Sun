@@ -107,6 +107,9 @@
 			android:id="@+id/action_nacMainSettingFragment_to_nacAppearanceSettingFragment"
 			app:destination="@id/nacAppearanceSettingFragment" />
 		<action
+			android:id="@+id/action_nacMainSettingFragment_to_nacSpeakTimeSettingFragment"
+			app:destination="@id/nacSpeakTimeSettingFragment" />
+		<action
 			android:id="@+id/action_nacMainSettingFragment_to_nacNfcTagSettingFragment"
 			app:destination="@id/nacNfcTagSettingFragment" />
 		<action
@@ -127,6 +130,10 @@
 			android:id="@+id/action_nacGeneralSettingFragment_to_nacAlarmMainMediaPickerFragment2"
 			app:destination="@id/nacAlarmMainMediaPickerFragment2" />
 	</fragment>
+	<fragment
+		android:id="@+id/nacSpeakTimeSettingFragment"
+		android:name="com.nfcalarmclock.settings.NacSpeakTimeSettingFragment"
+		android:label="@string/title_setting_speak_time" />
 	<fragment
 		android:id="@+id/nacAppearanceSettingFragment"
 		android:name="com.nfcalarmclock.settings.NacAppearanceSettingFragment"

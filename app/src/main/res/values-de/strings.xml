@@ -2,7 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
 	<!-- App -->
-	<string name="app_name">NFC-Wecker</string>
+	<string name="app_name">Alarm Clock Sun</string>
 	<string name="app_developer">Gabe Gonzalez</string>
 
 	<!-- Consolidate -->
@@ -632,5 +632,62 @@
 	</plurals>
 
 	<string name="tts_say_time">Es ist %1$s:%2$s %3$s.</string>
+	<string name="tts_say_time_one_oclock">Es ist %1$s:%2$s %3$s.</string>
 
+	<string name="action_alarm_option_dawn">Morgenröte</string>
+	<string name="message_dawn_disabled">Morgenröte-Simulation nicht verwenden</string>
+	<string name="message_dawn_enabled">Morgenröte-Simulation verwenden</string>
+	<string name="description_show_hide_dawn_button_true">Morgenröte-Schaltfläche beim Aufklappen eines Weckers anzeigen.</string>
+	<string name="description_show_hide_dawn_button_false">Morgenröte-Schaltfläche beim Aufklappen eines Weckers ausblenden.</string>
+	<string name="title_dawn_duration">Dauer der Morgenröte</string>
+	<string name="description_dawn_duration">Wie lange vor dem Wecker der Bildschirm heller zu werden beginnt.</string>
+	<string name="title_dawn_color">Lichtfarbe</string>
+	<string name="title_dawn_flashlight">Taschenlampe vor dem Wecker</string>
+	<string name="description_dawn_flashlight">Die Taschenlampe wird in den letzten Minuten der Morgenröte langsam heller. Auf null stellen, um sie ausgeschaltet zu lassen.</string>
+	<string name="message_dawn_flashlight_off">Aus</string>
+	<string name="title_dawn_custom_color">Eigene Farbe</string>
+	<string name="title_dawn_use_image">Bild verwenden</string>
+	<string name="description_dawn_use_image">Ein Foto statt einer einfarbigen Fläche einblenden.</string>
+	<string name="action_dawn_choose_image">Bild auswählen</string>
+	<string name="message_dawn_preview_over">Zum Schließen tippen</string>
+	<string name="title_dawn_preview_duration">Länge der Vorschau</string>
+	<string name="description_dawn_preview_duration">Die Vorschau der Morgenröte läuft %1$d Sekunden und wartet dann auf einen Tipp zum Schließen. Ein Tipp währenddessen zeigt den Bildschirm wie gewohnt, genau wie bei einer echten Morgenröte.</string>
+	<string name="title_storage">Speicher</string>
+	<string name="title_clean_sounds">Tonkopien freigeben</string>
+	<string name="description_clean_sounds">Die App behält eine Kopie jedes gewählten Tons, damit ein Wecker auch klingelt, wenn das Original verschoben wurde oder das Telefon noch nicht entsperrt ist. Hiermit werden die Kopien gelöscht, die kein Wecker abspielt.</string>
+	<string name="title_clean_images">Morgenröte-Bilder freigeben</string>
+	<string name="description_clean_images">Ein Bild bleibt in der App, auch wenn wieder eine Farbe gewählt wird, damit es sich ohne erneute Dateiauswahl zurückholen lässt. Hiermit werden die Bilder gelöscht, die keine Morgenröte zeigt.</string>
+	<string name="title_clean_all">Beides freigeben</string>
+	<string name="description_clean_all">Töne und Bilder in einem Schritt.</string>
+	<string name="message_clean_confirm">Es werden nur Kopien gelöscht, die kein Wecker braucht. Die Wecker selbst bleiben unberührt.</string>
+	<string name="message_clean_done">%1$s in %2$d Datei(en) freigegeben</string>
+	<string name="message_clean_nothing">Nichts freizugeben</string>
+	<string name="title_dawn_show_date">Datum</string>
+	<string name="title_dawn_reveal">Zum Anzeigen tippen</string>
+	<string name="description_dawn_reveal">Während der Morgenröte zeigt ein Tipp den Weckbildschirm kurz wie gewohnt, damit klar ist, dass der Wecker noch nicht losgegangen ist. Ein zweiter Tipp geht zurück.</string>
+	<string name="message_dawn_reveal_value">%1$d Sek.</string>
+	<string name="title_dawn_shown">Während der Morgenröte sichtbar</string>
+	<string name="description_dawn_shown">Schalte aus, was du beim Hellerwerden lieber nicht sehen möchtest.</string>
+	<string name="title_dawn_show_phrase">Aufwachspruch</string>
+	<string name="title_dawn_show_name">Name des Weckers</string>
+	<string name="title_dawn_show_clock">Uhr</string>
+	<string name="title_dawn_show_media">Musiktitel</string>
+	<string name="message_dawn_no_image">Kein Bild ausgewählt</string>
+	<string name="message_dawn_unable_to_read_image">Das ausgewählte Bild kann nicht gelesen werden</string>
+	<string name="action_dawn_stop">Stopp</string>
+	<string name="message_dawn_snoozed">Wecker um 5 Minuten verschoben</string>
+	<string name="message_dawn_not_ringing_yet">Morgenröte läuft. Der Wecker ist noch nicht losgegangen.</string>
+	<string name="message_dawn_too_close">Wecker zu nah: diesmal keine Morgenröte. Beim nächsten Mal läuft sie.</string>
+	<string name="message_dawn_no_more_snoozes">Kein weiteres Verschieben. Zum Ausschalten auf Stopp drücken</string>
+	<string name="title_dawn_notification">Morgenröte</string>
+	<string name="description_dawn_notification">Wird angezeigt, während der Bildschirm vor einem Wecker langsam heller wird.</string>
+	<string name="dawn_color_amber">Sonnenlicht</string>
+	<string name="dawn_color_orange">Weiß</string>
+	<string name="dawn_color_red">Bernstein</string>
+	<string name="dawn_color_white">Blassgrün</string>
+	<string name="dawn_color_sky">Blassblau</string>
+	<string name="dawn_color_lilac">Flieder</string>
+	<string name="action_alarm_dismiss_next">Nächsten Wecker absagen</string>
+	<string name="action_alarm_dismiss_snoozed">Verschobenen Wecker beenden</string>
+	<string name="message_alarm_is_snoozed">Verschobener Wecker klingelt in %1$s</string>
 </resources>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/dawn_root"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@android:color/black"
+	android:keepScreenOn="true">
+
+	<!-- Image shown instead of a solid color -->
+	<ImageView
+		android:id="@+id/dawn_image"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:scaleType="centerCrop"
+		android:visibility="gone"
+		android:contentDescription="@string/title_dawn_use_image"
+		/>
+
+	<!-- Clock, date, name and phrase, in the order the alarm screen puts them in -->
+	<LinearLayout
+		android:id="@+id/dawn_clock_row"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="top|center_horizontal"
+		android:layout_marginTop="64dp"
+		android:orientation="vertical">
+
+		<com.nfcalarmclock.view.NacAnalogClockView
+			android:id="@+id/dawn_analog_clock"
+			android:layout_width="@dimen/analog_clock_size"
+			android:layout_height="@dimen/analog_clock_size"
+			android:layout_marginTop="@dimen/analog_clock_top"
+			android:layout_gravity="center_horizontal"
+			android:visibility="gone"
+			/>
+
+		<TextView
+			android:id="@+id/dawn_clock"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+			android:textSize="72sp"
+			/>
+
+		<!-- The same air the alarm screen puts between the clock and its text -->
+		<Space
+			android:id="@+id/dawn_clock_text_gap"
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/clock_text_gap"
+			/>
+
+		<TextView
+			android:id="@+id/dawn_date"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+			android:textSize="16sp"
+			/>
+
+		<TextView
+			android:id="@+id/dawn_alarm_name"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="12dp"
+			android:gravity="center"
+			android:textSize="20sp"
+			android:visibility="gone"
+			/>
+
+		<TextView
+			android:id="@+id/dawn_hint"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="12dp"
+			android:gravity="center"
+			android:textSize="16sp"
+			android:text="@string/message_dawn_in_progress"
+			/>
+	</LinearLayout>
+
+	<!-- Title of the music. On the alarm screen it sits under the controls, at the
+		very bottom, so it does the same here -->
+	<TextView
+		android:id="@+id/dawn_media_title"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="bottom|center_horizontal"
+		android:layout_marginBottom="@dimen/large"
+		android:gravity="center"
+		android:textSize="16sp"
+		android:singleLine="true"
+		android:ellipsize="middle"
+		android:visibility="gone"
+		/>
+
+	<!-- Snooze/dismiss. Le dessin vit dans nac_alarm_action_row.xml, partage avec
+		l'autre ecran. La largeur et la hauteur doivent etre redites ici, faute de quoi
+		Android ignore les autres attributs de position poses sur un include -->
+	<include
+		layout="@layout/nac_alarm_action_row"
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/action_row_height"
+		android:layout_gravity="bottom"
+		/>
+
+</FrameLayout>

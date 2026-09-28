@@ -29,11 +29,15 @@ android {
 	compileSdk = 36
 
 	defaultConfig {
-		applicationId = "com.nfcalarmclock"
+		applicationId = "com.nfcalarmclock.sun"
 		minSdk = 24
 		targetSdk = 36
-		versionCode = 638
-		versionName = "12.7.2-beta025"
+		// Fork de NFC Alarm Clock 12.7.2-beta025 (versionCode 638). Le code de
+		// version doit rester superieur a 638, sinon Android refuse la mise a jour
+		// par-dessus les builds deja installes. A incrementer a CHAQUE lot de
+		// modifications
+		versionCode = 739
+		versionName = "2.00"
 	}
 
 	// Configuration for signing the app on release builds. The keystore.properties file must exist
@@ -122,7 +126,7 @@ android {
 
 // Set output filename
 base {
-	archivesName = "nfc_alarm_clock_v${android.defaultConfig.versionName}"
+	archivesName = "alarm_clock_sun_v${android.defaultConfig.versionName}"
 }
 
 // Set the same JVM version as the compile options
@@ -188,4 +192,22 @@ dependencies {
 	googleplayImplementation("com.google.android.play:review:2.0.2")
 	googleplayImplementation("com.google.android.play:review-ktx:2.0.2")
 
+}
+
+// Copy each APK that is built into the Build folder next to the project, so that it
+// can be picked up there without going into app/build/outputs:
+// ..\Build, next to the project folder
+val copyApkToBuildFolder = tasks.register<Copy>("copyApkToBuildFolder") {
+	from(layout.buildDirectory.dir("outputs/apk")) {
+		include("**/*.apk")
+		// The test APK is not something to install
+		exclude("**/*androidTest*.apk")
+	}
+	into(rootProject.file("../Build"))
+	eachFile { path = name }
+	includeEmptyDirs = false
+}
+
+tasks.matching { it.name.startsWith("assemble") && (it.name != "assemble") }.configureEach {
+	finalizedBy(copyApkToBuildFolder)
 }

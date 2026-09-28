@@ -1,0 +1,682 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.nfcalarmclock.view.alarmoptionlayout.NacAlarmOptionLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<!-- Duration title -->
+	<TextView
+		style="@style/Widget.AlarmOptionDialog.Title"
+		android:id="@+id/dawn_duration_title"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/title_dawn_duration"
+		/>
+
+	<!-- Duration description -->
+	<TextView
+		style="@style/Widget.AlarmOptionDialog.Description"
+		android:id="@+id/dawn_duration_description"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/description_dawn_duration"
+		/>
+
+	<!-- Duration value -->
+	<TextView
+		style="@style/Widget.TextView.Primary"
+		android:id="@+id/dawn_duration_value"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginHorizontal="@dimen/normal"
+		android:gravity="center"
+		/>
+
+	<!-- Duration wheel -->
+	<com.nfcalarmclock.view.wheel.NacHorizontalWheel
+		android:id="@+id/dawn_duration_wheel"
+		android:layout_width="match_parent"
+		android:layout_height="40dp"
+		/>
+
+	<!-- Separator -->
+	<Space
+		style="@style/Widget.AlarmOptionDialog.Separator"
+		android:id="@+id/dawn_duration_space"
+		/>
+
+	<!-- Color title -->
+	<TextView
+		style="@style/Widget.AlarmOptionDialog.Title"
+		android:id="@+id/dawn_color_title"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/title_dawn_color"
+		/>
+
+	<!-- Color swatches -->
+	<LinearLayout
+		android:id="@+id/dawn_color_row"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginHorizontal="@dimen/tiny"
+		android:layout_marginTop="@dimen/small"
+		android:gravity="center"
+		android:orientation="horizontal">
+
+		<View
+			android:id="@+id/dawn_color_0"
+			android:layout_width="@dimen/dawn_swatch"
+			android:layout_height="@dimen/dawn_swatch"
+			android:layout_margin="@dimen/nudge"
+			android:background="@drawable/circle_button"
+			android:clickable="true"
+			android:focusable="true"
+			android:contentDescription="@string/dawn_color_amber"
+			/>
+
+		<View
+			android:id="@+id/dawn_color_1"
+			android:layout_width="@dimen/dawn_swatch"
+			android:layout_height="@dimen/dawn_swatch"
+			android:layout_margin="@dimen/nudge"
+			android:background="@drawable/circle_button"
+			android:clickable="true"
+			android:focusable="true"
+			android:contentDescription="@string/dawn_color_orange"
+			/>
+
+		<View
+			android:id="@+id/dawn_color_2"
+			android:layout_width="@dimen/dawn_swatch"
+			android:layout_height="@dimen/dawn_swatch"
+			android:layout_margin="@dimen/nudge"
+			android:background="@drawable/circle_button"
+			android:clickable="true"
+			android:focusable="true"
+			android:contentDescription="@string/dawn_color_red"
+			/>
+
+		<View
+			android:id="@+id/dawn_color_3"
+			android:layout_width="@dimen/dawn_swatch"
+			android:layout_height="@dimen/dawn_swatch"
+			android:layout_margin="@dimen/nudge"
+			android:background="@drawable/circle_button"
+			android:clickable="true"
+			android:focusable="true"
+			android:contentDescription="@string/dawn_color_white"
+			/>
+
+		<View
+			android:id="@+id/dawn_color_4"
+			android:layout_width="@dimen/dawn_swatch"
+			android:layout_height="@dimen/dawn_swatch"
+			android:layout_margin="@dimen/nudge"
+			android:background="@drawable/circle_button"
+			android:clickable="true"
+			android:focusable="true"
+			android:contentDescription="@string/dawn_color_sky"
+			/>
+
+		<View
+			android:id="@+id/dawn_color_5"
+			android:layout_width="@dimen/dawn_swatch"
+			android:layout_height="@dimen/dawn_swatch"
+			android:layout_margin="@dimen/nudge"
+			android:background="@drawable/circle_button"
+			android:clickable="true"
+			android:focusable="true"
+			android:contentDescription="@string/dawn_color_lilac"
+			/>
+
+		<!-- The custom color. A plus while none has been chosen, so that it does not
+		     read as "the dawn will be grey" -->
+		<TextView
+			android:id="@+id/dawn_color_custom"
+			android:layout_width="@dimen/dawn_swatch"
+			android:layout_height="@dimen/dawn_swatch"
+			android:layout_margin="@dimen/nudge"
+			android:background="@drawable/circle_button"
+			android:clickable="true"
+			android:focusable="true"
+			android:gravity="center"
+			android:textColor="@color/white"
+			android:textSize="20sp"
+			android:textStyle="bold"
+			android:text="+"
+			android:contentDescription="@string/title_dawn_custom_color"
+			/>
+	</LinearLayout>
+
+	<!-- Dot under the color that is in use -->
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginHorizontal="@dimen/tiny"
+		android:layout_marginTop="-6dp"
+		android:gravity="center"
+		android:orientation="horizontal">
+
+		<TextView
+			android:id="@+id/dawn_color_dot_0"
+			android:layout_width="@dimen/dawn_swatch"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/nudge"
+			android:gravity="center"
+			android:textSize="14sp"
+			android:text="\u25cf"
+			android:visibility="invisible"
+			android:importantForAccessibility="no"
+			/>
+
+		<TextView
+			android:id="@+id/dawn_color_dot_1"
+			android:layout_width="@dimen/dawn_swatch"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/nudge"
+			android:gravity="center"
+			android:textSize="14sp"
+			android:text="\u25cf"
+			android:visibility="invisible"
+			android:importantForAccessibility="no"
+			/>
+
+		<TextView
+			android:id="@+id/dawn_color_dot_2"
+			android:layout_width="@dimen/dawn_swatch"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/nudge"
+			android:gravity="center"
+			android:textSize="14sp"
+			android:text="\u25cf"
+			android:visibility="invisible"
+			android:importantForAccessibility="no"
+			/>
+
+		<TextView
+			android:id="@+id/dawn_color_dot_3"
+			android:layout_width="@dimen/dawn_swatch"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/nudge"
+			android:gravity="center"
+			android:textSize="14sp"
+			android:text="\u25cf"
+			android:visibility="invisible"
+			android:importantForAccessibility="no"
+			/>
+
+		<TextView
+			android:id="@+id/dawn_color_dot_4"
+			android:layout_width="@dimen/dawn_swatch"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/nudge"
+			android:gravity="center"
+			android:textSize="14sp"
+			android:text="\u25cf"
+			android:visibility="invisible"
+			android:importantForAccessibility="no"
+			/>
+
+		<TextView
+			android:id="@+id/dawn_color_dot_5"
+			android:layout_width="@dimen/dawn_swatch"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/nudge"
+			android:gravity="center"
+			android:textSize="14sp"
+			android:text="\u25cf"
+			android:visibility="invisible"
+			android:importantForAccessibility="no"
+			/>
+
+		<TextView
+			android:id="@+id/dawn_color_dot_custom"
+			android:layout_width="@dimen/dawn_swatch"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/nudge"
+			android:gravity="center"
+			android:textSize="14sp"
+			android:text="\u25cf"
+			android:visibility="invisible"
+			android:importantForAccessibility="no"
+			/>
+	</LinearLayout>
+
+	<!-- Custom color button. Wrapped so that NacAlarmOptionLayout leaves it here
+	     instead of moving it down next to the OK and Cancel buttons -->
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/small"
+		android:orientation="vertical">
+
+		<com.google.android.material.button.MaterialButton
+			style="@style/Widget.AlarmOptionDialog.Button"
+			android:id="@+id/dawn_custom_color_button"
+			android:layout_width="match_parent"
+			android:text="@string/title_dawn_custom_color"
+			/>
+	</LinearLayout>
+
+	<!-- Separator -->
+	<Space
+		style="@style/Widget.AlarmOptionDialog.Separator"
+		android:id="@+id/dawn_color_space"
+		/>
+
+	<!-- Use image title, description and switch -->
+	<RelativeLayout
+		android:id="@+id/dawn_use_image_container"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:clickable="true"
+		android:focusable="true">
+
+		<!-- Title -->
+		<TextView
+			style="@style/Widget.AlarmOptionDialog.Title"
+			android:id="@+id/dawn_use_image_title"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_toStartOf="@id/dawn_use_image_switch"
+			android:text="@string/title_dawn_use_image"
+			/>
+
+		<!-- Description -->
+		<TextView
+			style="@style/Widget.AlarmOptionDialog.Description"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/dawn_use_image_title"
+			android:layout_toStartOf="@id/dawn_use_image_switch"
+			android:text="@string/description_dawn_use_image"
+			/>
+
+		<!-- Switch -->
+		<androidx.appcompat.widget.SwitchCompat
+			android:id="@+id/dawn_use_image_switch"
+			android:layout_width="@dimen/touch"
+			android:layout_height="@dimen/touch"
+			android:layout_alignParentEnd="true"
+			android:layout_centerVertical="true"
+			android:clickable="false"
+			/>
+	</RelativeLayout>
+
+	<!-- Selected image name -->
+	<TextView
+		style="@style/Widget.TextView.Secondary"
+		android:id="@+id/dawn_image_name"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginHorizontal="@dimen/normal"
+		android:ellipsize="middle"
+		android:singleLine="true"
+		android:text="@string/message_dawn_no_image"
+		/>
+
+	<!-- Choose image button. Wrapped for the same reason as the custom color one -->
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/small"
+		android:orientation="vertical">
+
+		<com.google.android.material.button.MaterialButton
+			style="@style/Widget.AlarmOptionDialog.Button"
+			android:id="@+id/dawn_choose_image_button"
+			android:layout_width="match_parent"
+			android:text="@string/action_dawn_choose_image"
+			/>
+	</LinearLayout>
+
+	<!-- Separator -->
+	<Space
+		style="@style/Widget.AlarmOptionDialog.Separator"
+		android:id="@+id/dawn_image_space"
+		/>
+
+	<!-- Flashlight lead-in title -->
+	<TextView
+		style="@style/Widget.AlarmOptionDialog.Title"
+		android:id="@+id/dawn_flashlight_title"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/title_dawn_flashlight"
+		/>
+
+	<!-- Flashlight lead-in description -->
+	<TextView
+		style="@style/Widget.AlarmOptionDialog.Description"
+		android:id="@+id/dawn_flashlight_description"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/description_dawn_flashlight"
+		/>
+
+	<!-- Flashlight lead-in value -->
+	<TextView
+		style="@style/Widget.TextView.Primary"
+		android:id="@+id/dawn_flashlight_value"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginHorizontal="@dimen/normal"
+		android:gravity="center"
+		/>
+
+	<!-- Flashlight lead-in wheel -->
+	<com.nfcalarmclock.view.wheel.NacHorizontalWheel
+		android:id="@+id/dawn_flashlight_wheel"
+		android:layout_width="match_parent"
+		android:layout_height="40dp"
+		/>
+
+
+	<!-- Separator -->
+	<Space
+		style="@style/Widget.AlarmOptionDialog.Separator"
+		/>
+
+	<!-- Which clock is shown. This is not one of the show/hide switches below: it
+		does not decide whether the clock is seen, but what it looks like -->
+	<TextView
+		style="@style/Widget.AlarmOptionDialog.Title"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/title_clock_style"
+		/>
+
+	<TextView
+		style="@style/Widget.AlarmOptionDialog.Description"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/description_analog_clock"
+		/>
+
+	<!-- title_analog_clock -->
+	<RelativeLayout
+		android:id="@+id/dawn_analog_clock_container"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:clickable="true"
+		android:focusable="true">
+
+		<TextView
+			style="@style/Widget.AlarmOptionDialog.Title"
+			android:id="@+id/dawn_analog_clock_title"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_toStartOf="@id/dawn_analog_clock_switch"
+			android:text="@string/title_analog_clock"
+			/>
+
+		<androidx.appcompat.widget.SwitchCompat
+			android:id="@+id/dawn_analog_clock_switch"
+			android:layout_width="@dimen/touch"
+			android:layout_height="@dimen/touch"
+			android:layout_alignParentEnd="true"
+			android:layout_centerVertical="true"
+			android:clickable="false"
+			/>
+	</RelativeLayout>
+
+	<!-- Separator -->
+	<Space
+		style="@style/Widget.AlarmOptionDialog.Separator"
+		/>
+
+	<!-- What the dawn shows on screen -->
+	<TextView
+		style="@style/Widget.AlarmOptionDialog.Title"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/title_dawn_shown"
+		/>
+
+	<TextView
+		style="@style/Widget.AlarmOptionDialog.Description"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/description_dawn_shown"
+		/>
+
+	<!-- title_dawn_show_clock -->
+	<RelativeLayout
+		android:id="@+id/dawn_show_clock_container"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:clickable="true"
+		android:focusable="true">
+
+		<TextView
+			style="@style/Widget.AlarmOptionDialog.Title"
+			android:id="@+id/dawn_show_clock_title"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_toStartOf="@id/dawn_show_clock_switch"
+			android:text="@string/title_dawn_show_clock"
+			/>
+
+		<androidx.appcompat.widget.SwitchCompat
+			android:id="@+id/dawn_show_clock_switch"
+			android:layout_width="@dimen/touch"
+			android:layout_height="@dimen/touch"
+			android:layout_alignParentEnd="true"
+			android:layout_centerVertical="true"
+			android:clickable="false"
+			/>
+	</RelativeLayout>
+
+	<!-- title_dawn_show_date -->
+	<RelativeLayout
+		android:id="@+id/dawn_show_date_container"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:clickable="true"
+		android:focusable="true">
+
+		<TextView
+			style="@style/Widget.AlarmOptionDialog.Title"
+			android:id="@+id/dawn_show_date_title"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_toStartOf="@id/dawn_show_date_switch"
+			android:text="@string/title_dawn_show_date"
+			/>
+
+		<androidx.appcompat.widget.SwitchCompat
+			android:id="@+id/dawn_show_date_switch"
+			android:layout_width="@dimen/touch"
+			android:layout_height="@dimen/touch"
+			android:layout_alignParentEnd="true"
+			android:layout_centerVertical="true"
+			android:clickable="false"
+			/>
+	</RelativeLayout>
+
+	<!-- title_dawn_show_name -->
+	<RelativeLayout
+		android:id="@+id/dawn_show_name_container"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:clickable="true"
+		android:focusable="true">
+
+		<TextView
+			style="@style/Widget.AlarmOptionDialog.Title"
+			android:id="@+id/dawn_show_name_title"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_toStartOf="@id/dawn_show_name_switch"
+			android:text="@string/title_dawn_show_name"
+			/>
+
+		<androidx.appcompat.widget.SwitchCompat
+			android:id="@+id/dawn_show_name_switch"
+			android:layout_width="@dimen/touch"
+			android:layout_height="@dimen/touch"
+			android:layout_alignParentEnd="true"
+			android:layout_centerVertical="true"
+			android:clickable="false"
+			/>
+	</RelativeLayout>
+
+	<!-- title_dawn_show_phrase -->
+	<RelativeLayout
+		android:id="@+id/dawn_show_phrase_container"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:clickable="true"
+		android:focusable="true">
+
+		<TextView
+			style="@style/Widget.AlarmOptionDialog.Title"
+			android:id="@+id/dawn_show_phrase_title"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_toStartOf="@id/dawn_show_phrase_switch"
+			android:text="@string/title_dawn_show_phrase"
+			/>
+
+		<androidx.appcompat.widget.SwitchCompat
+			android:id="@+id/dawn_show_phrase_switch"
+			android:layout_width="@dimen/touch"
+			android:layout_height="@dimen/touch"
+			android:layout_alignParentEnd="true"
+			android:layout_centerVertical="true"
+			android:clickable="false"
+			/>
+	</RelativeLayout>
+
+	<!-- title_dawn_show_media -->
+	<RelativeLayout
+		android:id="@+id/dawn_show_media_container"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:clickable="true"
+		android:focusable="true">
+
+		<TextView
+			style="@style/Widget.AlarmOptionDialog.Title"
+			android:id="@+id/dawn_show_media_title"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_toStartOf="@id/dawn_show_media_switch"
+			android:text="@string/title_dawn_show_media"
+			/>
+
+		<androidx.appcompat.widget.SwitchCompat
+			android:id="@+id/dawn_show_media_switch"
+			android:layout_width="@dimen/touch"
+			android:layout_height="@dimen/touch"
+			android:layout_alignParentEnd="true"
+			android:layout_centerVertical="true"
+			android:clickable="false"
+			/>
+	</RelativeLayout>
+
+
+	<!-- Separator -->
+	<Space
+		style="@style/Widget.AlarmOptionDialog.Separator"
+		/>
+
+	<!-- Tap to see the screen -->
+	<RelativeLayout
+		android:id="@+id/dawn_reveal_container"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:clickable="true"
+		android:focusable="true">
+
+		<TextView
+			style="@style/Widget.AlarmOptionDialog.Title"
+			android:id="@+id/dawn_reveal_title"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_toStartOf="@id/dawn_reveal_switch"
+			android:text="@string/title_dawn_reveal"
+			/>
+
+		<TextView
+			style="@style/Widget.AlarmOptionDialog.Description"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/dawn_reveal_title"
+			android:layout_toStartOf="@id/dawn_reveal_switch"
+			android:text="@string/description_dawn_reveal"
+			/>
+
+		<androidx.appcompat.widget.SwitchCompat
+			android:id="@+id/dawn_reveal_switch"
+			android:layout_width="@dimen/touch"
+			android:layout_height="@dimen/touch"
+			android:layout_alignParentEnd="true"
+			android:layout_centerVertical="true"
+			android:clickable="false"
+			/>
+	</RelativeLayout>
+
+	<!-- Whether the light comes back on its own -->
+	<RelativeLayout
+		android:id="@+id/dawn_reveal_return_container"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:clickable="true"
+		android:focusable="true">
+
+		<TextView
+			style="@style/Widget.AlarmOptionDialog.Title"
+			android:id="@+id/dawn_reveal_return_title"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_toStartOf="@id/dawn_reveal_return_switch"
+			android:text="@string/title_dawn_reveal_return"
+			/>
+
+		<TextView
+			style="@style/Widget.AlarmOptionDialog.Description"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/dawn_reveal_return_title"
+			android:layout_toStartOf="@id/dawn_reveal_return_switch"
+			android:text="@string/description_dawn_reveal_return"
+			/>
+
+		<androidx.appcompat.widget.SwitchCompat
+			android:id="@+id/dawn_reveal_return_switch"
+			android:layout_width="@dimen/touch"
+			android:layout_height="@dimen/touch"
+			android:layout_alignParentEnd="true"
+			android:layout_centerVertical="true"
+			android:clickable="false"
+			/>
+	</RelativeLayout>
+
+	<!-- How long a tap shows the screen -->
+	<TextView
+		style="@style/Widget.TextView.Primary"
+		android:id="@+id/dawn_reveal_value"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginHorizontal="@dimen/normal"
+		android:gravity="center"
+		/>
+
+	<com.nfcalarmclock.view.wheel.NacHorizontalWheel
+		android:id="@+id/dawn_reveal_wheel"
+		android:layout_width="match_parent"
+		android:layout_height="40dp"
+		/>
+
+	<!-- Preview button -->
+	<com.google.android.material.button.MaterialButton
+		style="@style/Widget.AlarmOptionDialog.Button"
+		android:id="@+id/preview_button"
+		android:layout_width="match_parent"
+		android:text="@string/action_preview"
+		/>
+
+</com.nfcalarmclock.view.alarmoptionlayout.NacAlarmOptionLayout>

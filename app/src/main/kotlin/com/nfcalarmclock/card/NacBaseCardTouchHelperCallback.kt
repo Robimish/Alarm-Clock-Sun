@@ -63,6 +63,9 @@ open class NacBaseCardTouchHelperCallback<T: NacAlarm>(
 	 *
 	 * @return The card holder.
 	 */
+	// T is erased at run time, so the cast cannot be checked. Every holder that
+	// reaches this callback comes from the adapter of the same T
+	@Suppress("UNCHECKED_CAST")
 	protected fun getCardHolder(vh: RecyclerView.ViewHolder): NacBaseCardHolder<T>
 	{
 		return vh as NacBaseCardHolder<T>
@@ -238,6 +241,10 @@ open class NacBaseCardTouchHelperCallback<T: NacAlarm>(
 		// Get the item that is being swiped
 		val adapter = vh.bindingAdapter as NacBaseCardAdapter<*, *>
 		val index = vh.bindingAdapterPosition
+
+		// T is erased at run time, so the cast cannot be checked. The adapter holds
+		// items of the same T as this callback
+		@Suppress("UNCHECKED_CAST")
 		val item = adapter.getItemAt(index) as T
 
 		// Swiped to the left. Call delete listener

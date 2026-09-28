@@ -26,6 +26,7 @@ import com.nfcalarmclock.system.media.getSafeStreamVolume
 import com.nfcalarmclock.system.media.saveCurrentBluetoothVolume
 import com.nfcalarmclock.system.media.saveCurrentVolume
 import com.nfcalarmclock.system.media.setStreamVolume
+import com.nfcalarmclock.system.media.toPlayerGain
 import com.nfcalarmclock.system.mediaplayer.NacMediaPlayer
 
 /**
@@ -448,6 +449,14 @@ class NacWakeupProcess(
 			val mediaItems = mediaPlayer.playAlarm(context, alarm)
 			bluetoothMediaPlayer?.playMediaItems(context, mediaItems)
 
+			// Turn the player itself down when a very low volume was asked for. The
+			// device only has a handful of volume steps, and its lowest one is still
+			// loud, so this is what makes 1 or 2 % actually quiet
+			val gain = alarm.toPlayerGain(audioManager, audioAttributes.stream)
+
+			mediaPlayer.exoPlayer.volume = gain
+			bluetoothMediaPlayer?.exoPlayer?.volume = gain
+
 			// Selected media for alarm is not available
 			if (mediaItems.isEmpty())
 			{
@@ -493,6 +502,51 @@ class NacWakeupProcess(
 	}
 
 	/**
+	 * Quieten whatever is playing and then speak.
+	 *
+	 * Used both when the voice is held back at the start of the alarm and when it
+	 * comes back at the chosen frequency.
+	 */
+	private fun pauseMediaAndSpeak()
+	{
+		// Set handler running flag (for continue wakeup handler)
+		isHandlerRunning = true
+
+		// Stop any vibration and flashlight when TTS is playing
+		vibrator?.cleanup()
+		flashlight?.cleanup()
+
+		// Pause phone media player until done speaking.
+		//
+		// It is paused as soon as it holds something to play, rather than only while it
+		// is actually playing. playMusic() decides between carrying on and starting the
+		// alarm over from the flag that pause() sets, so a player caught buffering, or
+		// between two tracks, would be taken for one that never started and would play
+		// the alarm again from the beginning
+		if ((mediaPlayer?.isPaused == false) && (mediaPlayer.exoPlayer.mediaItemCount > 0))
+		{
+			NacLog.i("Pausing and abandoning media player focus")
+			mediaPlayer.pause()
+			audioManager.abandonFocus(audioAttributes)
+		}
+
+		// Pause bluetooth media player until done speaking
+		if ((bluetoothMediaPlayer?.isPaused == false)
+			&& (bluetoothMediaPlayer!!.exoPlayer.mediaItemCount > 0))
+		{
+			NacLog.i("Pausing and abandoning bluetooth media player focus")
+			bluetoothMediaPlayer!!.pause()
+			audioManager.abandonFocus(bluetoothAudioAttributes!!)
+		}
+
+		// Speak TTS. Have a delay so that there is no OS level volume ducking
+		continueWakeupHandler.postDelayed({
+			speak()
+			isHandlerRunning = false
+		}, 500)
+	}
+
+	/**
 	 * Speak at the desired frequency.
 	 */
 	private fun speak()
@@ -516,38 +570,8 @@ class NacWakeupProcess(
 		if (alarm.ttsFrequency != 0)
 		{
 			// Wait for some period of time before speaking through TTS again
-			speakHandler.postDelayed({
-
-				// Set handler running flag (for continue wakeup handler)
-				isHandlerRunning = true
-
-				// Stop any vibration and flashlight when TTS is playing
-				vibrator?.cleanup()
-				flashlight?.cleanup()
-
-				// Pause phone media player until done speaking
-				if (mediaPlayer?.exoPlayer?.isPlaying == true)
-				{
-					NacLog.i("Pausing and abandoning media player focus")
-					mediaPlayer.pause()
-					audioManager.abandonFocus(audioAttributes)
-				}
-
-				// Pause bluetooth media player until done speaking
-				if (bluetoothMediaPlayer?.exoPlayer?.isPlaying == true)
-				{
-					NacLog.i("Pausing and abandoning bluetooth media player focus")
-					bluetoothMediaPlayer!!.pause()
-					audioManager.abandonFocus(bluetoothAudioAttributes!!)
-				}
-
-				// Speak TTS. Have a delay so that there is no OS level volume ducking
-				continueWakeupHandler.postDelayed({
-					speak()
-					isHandlerRunning = false
-				}, 500)
-
-			}, alarm.ttsFrequency*60L*1000L)
+			speakHandler.postDelayed({ pauseMediaAndSpeak() },
+				alarm.ttsFrequency*60L*1000L)
 		}
 	}
 
@@ -569,7 +593,19 @@ class NacWakeupProcess(
 		// Start TTS
 		if (alarm.shouldUseTts)
 		{
-			speak()
+			// The voice is held back, so that the music wakes you first and only then
+			// does the voice say the time
+			if (alarm.ttsDelay > 0)
+			{
+				startNoTts()
+
+				speakHandler.postDelayed({ pauseMediaAndSpeak() }, alarm.ttsDelay*1000L)
+			}
+			// The voice comes first, as it always did
+			else
+			{
+				speak()
+			}
 		}
 		// Start everything except TTS
 		else

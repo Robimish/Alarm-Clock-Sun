@@ -10,6 +10,17 @@
 		<item>Ringtone</item>
 	</string-array>
 
+	<!-- What is written down for each of the sources above, in the same order. The
+		words above are shown on screen and change with the language; these do not,
+		and they are what an alarm holds -->
+	<string-array name="audio_source_keys" translatable="false">
+		<item>alarm</item>
+		<item>call</item>
+		<item>media</item>
+		<item>notification</item>
+		<item>ringtone</item>
+	</string-array>
+
 	<!-- NFC tag dismiss orders -->
 	<string-array name="nfc_tag_dismiss_orders">
 		<item>Random</item>
@@ -387,6 +398,21 @@
 		<item>Every 28 min</item>
 		<item>Every 29 min</item>
 		<item>Every 30 min</item>
+	</string-array>
+
+	<string-array name="tts_delay">
+		<item>Speak straight away</item>
+		<item>After 5 seconds</item>
+		<item>After 10 seconds</item>
+		<item>After 15 seconds</item>
+		<item>After 20 seconds</item>
+		<item>After 30 seconds</item>
+		<item>After 45 seconds</item>
+		<item>After 1 minute</item>
+		<item>After 1 min 30 s</item>
+		<item>After 2 minutes</item>
+		<item>After 3 minutes</item>
+		<item>After 5 minutes</item>
 	</string-array>
 
 </resources>

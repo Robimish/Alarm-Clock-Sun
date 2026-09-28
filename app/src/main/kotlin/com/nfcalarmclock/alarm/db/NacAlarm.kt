@@ -28,6 +28,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlin.random.Random
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.Calendar
@@ -268,6 +269,93 @@ open class NacAlarm()
 	var flashlightOffDuration: String = "1.0"
 
 	/**
+	 * Whether the alarm should use the dawn simulation or not. The screen gradually
+	 * lights up before the alarm goes off.
+	 */
+	@ColumnInfo(name = "should_use_dawn", defaultValue = "0")
+	var shouldUseDawn: Boolean = false
+
+	/**
+	 * Duration of the dawn simulation, before the alarm goes off. [Units: min]
+	 */
+	@ColumnInfo(name = "dawn_duration", defaultValue = "20")
+	var dawnDuration: Int = 20
+
+	/**
+	 * Color the screen fades to during the dawn simulation. [Units: ARGB]
+	 */
+	@ColumnInfo(name = "dawn_color", defaultValue = "-13942")
+	var dawnColor: Int = -4963
+
+	/**
+	 * Whether an image should be faded in instead of a solid color.
+	 */
+	@ColumnInfo(name = "should_use_dawn_image", defaultValue = "0")
+	var shouldUseDawnImage: Boolean = false
+
+	/**
+	 * URI of the image that is faded in during the dawn simulation.
+	 */
+	@ColumnInfo(name = "dawn_image_path", defaultValue = "")
+	var dawnImagePath: String = ""
+
+	/**
+	 * How long before the alarm the flashlight starts to fade in, during the dawn.
+	 * Zero means that the flashlight is not used. [Units: min]
+	 */
+	@ColumnInfo(name = "dawn_flashlight_lead", defaultValue = "0")
+	var dawnFlashlightLead: Int = 0
+
+	/**
+	 * Which parts of the alarm screen are hidden during the dawn, as a set of
+	 * flags. Zero means that everything is shown.
+	 *
+	 * @see NacAlarm.DAWN_HIDE_PHRASE
+	 */
+	@ColumnInfo(name = "dawn_hidden_views", defaultValue = "0")
+	var dawnHiddenViews: Int = DEFAULT_DAWN_HIDDEN_VIEWS
+
+	/**
+	 * How long a tap shows the alarm screen as normal during the dawn. Zero means
+	 * that a tap does nothing. [Units: sec]
+	 */
+	@ColumnInfo(name = "dawn_reveal_duration", defaultValue = "10")
+	var dawnRevealDuration: Int = 10
+
+	/**
+	 * Whether the light comes back on its own after a tap, or waits for the next one.
+	 *
+	 * On, the screen shows as normal for the duration above and the sunrise returns
+	 * by itself. Off, each tap turns it over and it stays as it is.
+	 */
+	@ColumnInfo(name = "should_dawn_reveal_return", defaultValue = "1")
+	var shouldDawnRevealReturn: Boolean = true
+
+	/**
+	 * Where this alarm sits in the list when it is not rearranged on its own.
+	 *
+	 * Alarms of the same rank fall back on the order they were created in, which is
+	 * what puts a copy right under the alarm it came from: it is given the same rank
+	 * and has the later id.
+	 */
+	@ColumnInfo(name = "sort_order", defaultValue = "0")
+	var sortOrder: Int = 0
+
+	/**
+	 * Whether the clock shown on the alarm screen is a dial with hands rather than
+	 * the digits.
+	 */
+	@ColumnInfo(name = "should_use_analog_clock", defaultValue = "0")
+	var shouldUseAnalogClock: Boolean = false
+
+	/**
+	 * Color of the name of the alarm, used to sort alarms into categories at a
+	 * glance. Zero means that the color from the settings is used. [Units: ARGB]
+	 */
+	@ColumnInfo(name = "name_color", defaultValue = "0")
+	var nameColor: Int = 0
+
+	/**
 	 * Path to the media that will play when the alarm is run.
 	 */
 	@ColumnInfo(name = "media_path", defaultValue = "")
@@ -368,6 +456,14 @@ open class NacAlarm()
 	var ttsFrequency: Int = 0
 
 	/**
+	 * How long to wait after the alarm starts before speaking, so that the music
+	 * wakes you first and only then does the voice say the time. Zero speaks first,
+	 * as it always did. [Units: sec]
+	 */
+	@ColumnInfo(name = "tts_delay", defaultValue = "0")
+	var ttsDelay: Int = 0
+
+	/**
 	 * Speech rate to use for text-to-speech.
 	 */
 	@ColumnInfo(name = "tts_speech_rate", defaultValue = "0.7")
@@ -426,6 +522,13 @@ open class NacAlarm()
 	 */
 	@ColumnInfo(name = "time_of_dismiss_early_alarm", defaultValue = "0")
 	var timeOfDismissEarlyAlarm: Long = 0
+
+	/**
+	 * Time at which a snoozed alarm will go off again. Zero means that the alarm is
+	 * not snoozed. [Units: ms]
+	 */
+	@ColumnInfo(name = "time_of_snoozed_alarm", defaultValue = "0")
+	var timeOfSnoozedAlarm: Long = 0
 
 	/**
 	 * Whether to show a notification for dismiss early or not.
@@ -608,6 +711,20 @@ open class NacAlarm()
 		flashlightOnDuration = input.readString() ?: "1.0"
 		flashlightOffDuration = input.readString() ?: "1.0"
 
+		// Dawn
+		shouldUseDawn = input.readInt() != 0
+		dawnDuration = input.readInt()
+		dawnColor = input.readInt()
+		shouldUseDawnImage = input.readInt() != 0
+		dawnImagePath = input.readString() ?: ""
+		nameColor = input.readInt()
+		dawnFlashlightLead = input.readInt()
+		dawnHiddenViews = input.readInt()
+		dawnRevealDuration = input.readInt()
+		shouldDawnRevealReturn = input.readInt() != 0
+		sortOrder = input.readInt()
+		shouldUseAnalogClock = input.readInt() != 0
+
 		// Media
 		mediaPath = input.readString() ?: ""
 		mediaArtist = input.readString() ?: ""
@@ -632,6 +749,7 @@ open class NacAlarm()
 		shouldSayCurrentTime = input.readInt() != 0
 		shouldSayName = input.readInt() != 0
 		ttsFrequency = input.readInt()
+		ttsDelay = input.readInt()
 		ttsSpeechRate = input.readFloat()
 		ttsVoice = input.readString() ?: ""
 
@@ -641,6 +759,7 @@ open class NacAlarm()
 		canDismissEarly = input.readInt() != 0
 		dismissEarlyTime = input.readInt()
 		timeOfDismissEarlyAlarm = input.readLong()
+		timeOfSnoozedAlarm = input.readLong()
 		shouldShowDismissEarlyNotification = input.readInt() != 0
 		shouldDeleteAfterDismissed = input.readInt() != 0
 		shouldVolumeDismiss = input.readInt() != 0
@@ -1050,6 +1169,20 @@ open class NacAlarm()
 		alarm.flashlightOnDuration = flashlightOnDuration
 		alarm.flashlightOffDuration = flashlightOffDuration
 
+		// Dawn
+		alarm.shouldUseDawn = shouldUseDawn
+		alarm.dawnDuration = dawnDuration
+		alarm.dawnColor = dawnColor
+		alarm.shouldUseDawnImage = shouldUseDawnImage
+		alarm.dawnImagePath = dawnImagePath
+		alarm.nameColor = nameColor
+		alarm.dawnFlashlightLead = dawnFlashlightLead
+		alarm.dawnHiddenViews = dawnHiddenViews
+		alarm.dawnRevealDuration = dawnRevealDuration
+		alarm.shouldDawnRevealReturn = shouldDawnRevealReturn
+		alarm.sortOrder = sortOrder
+		alarm.shouldUseAnalogClock = shouldUseAnalogClock
+
 		// Media
 		alarm.mediaPath = mediaPath
 		alarm.mediaArtist = mediaArtist
@@ -1074,6 +1207,7 @@ open class NacAlarm()
 		alarm.shouldSayCurrentTime = shouldSayCurrentTime
 		alarm.shouldSayName = shouldSayName
 		alarm.ttsFrequency = ttsFrequency
+		alarm.ttsDelay = ttsDelay
 		alarm.ttsSpeechRate = ttsSpeechRate
 		alarm.ttsVoice = ttsVoice
 
@@ -1083,6 +1217,7 @@ open class NacAlarm()
 		alarm.canDismissEarly = canDismissEarly
 		alarm.dismissEarlyTime = dismissEarlyTime
 		alarm.timeOfDismissEarlyAlarm = timeOfDismissEarlyAlarm
+		alarm.timeOfSnoozedAlarm = timeOfSnoozedAlarm
 		alarm.shouldShowDismissEarlyNotification = shouldShowDismissEarlyNotification
 		alarm.shouldDeleteAfterDismissed = shouldDeleteAfterDismissed
 		alarm.shouldVolumeDismiss = shouldVolumeDismiss
@@ -1128,6 +1263,7 @@ open class NacAlarm()
 		timeActive = 0
 		snoozeCount = 0
 		timeOfDismissEarlyAlarm = 0
+		timeOfSnoozedAlarm = 0
 		currentNfcTagsNeededToDismiss = ""
 
 		// Clear the date
@@ -1205,6 +1341,7 @@ open class NacAlarm()
 			&& (snoozeCount == other.snoozeCount)
 			&& (localMediaPath == other.localMediaPath)
 			&& (timeOfDismissEarlyAlarm == other.timeOfDismissEarlyAlarm)
+			&& (timeOfSnoozedAlarm == other.timeOfSnoozedAlarm)
 			&& fuzzyEquals(other)
 	}
 
@@ -1251,6 +1388,18 @@ open class NacAlarm()
 			&& (shouldBlinkFlashlight == alarm.shouldBlinkFlashlight)
 			&& (flashlightOnDuration == alarm.flashlightOnDuration)
 			&& (flashlightOffDuration == alarm.flashlightOffDuration)
+			&& (shouldUseDawn == alarm.shouldUseDawn)
+			&& (dawnDuration == alarm.dawnDuration)
+			&& (dawnColor == alarm.dawnColor)
+			&& (shouldUseDawnImage == alarm.shouldUseDawnImage)
+			&& (dawnImagePath == alarm.dawnImagePath)
+			&& (nameColor == alarm.nameColor)
+			&& (dawnFlashlightLead == alarm.dawnFlashlightLead)
+			&& (dawnHiddenViews == alarm.dawnHiddenViews)
+			&& (dawnRevealDuration == alarm.dawnRevealDuration)
+			&& (shouldDawnRevealReturn == alarm.shouldDawnRevealReturn)
+			&& (sortOrder == alarm.sortOrder)
+			&& (shouldUseAnalogClock == alarm.shouldUseAnalogClock)
 			&& (mediaPath == alarm.mediaPath)
 			&& (mediaArtist == alarm.mediaArtist)
 			&& (mediaTitle == alarm.mediaTitle)
@@ -1264,6 +1413,7 @@ open class NacAlarm()
 			&& (shouldSayCurrentTime == alarm.shouldSayCurrentTime)
 			&& (shouldSayName == alarm.shouldSayName)
 			&& (ttsFrequency == alarm.ttsFrequency)
+			&& (ttsDelay == alarm.ttsDelay)
 			&& (ttsSpeechRate == alarm.ttsSpeechRate)
 			&& (ttsVoice == alarm.ttsVoice)
 			&& (shouldGraduallyIncreaseVolume == alarm.shouldGraduallyIncreaseVolume)
@@ -1354,6 +1504,17 @@ open class NacAlarm()
 			+ flashlightStrengthLevel
 			+ graduallyIncreaseFlashlightStrengthLevelWaitTime
 			+ shouldBlinkFlashlight.hashCode()
+			+ shouldUseDawn.hashCode()
+			+ dawnDuration
+			+ dawnColor
+			+ shouldUseDawnImage.hashCode()
+			+ nameColor
+			+ dawnFlashlightLead
+			+ dawnHiddenViews
+			+ dawnRevealDuration
+			+ shouldDawnRevealReturn.hashCode()
+			+ sortOrder.hashCode()
+			+ shouldUseAnalogClock.hashCode()
 			+ mediaType
 			+ shouldShuffleMedia.hashCode()
 			+ shouldRecursivelyPlayMedia.hashCode()
@@ -1361,6 +1522,7 @@ open class NacAlarm()
 			+ shouldSayCurrentTime.hashCode()
 			+ shouldSayName.hashCode()
 			+ ttsFrequency
+			+ ttsDelay
 			+ ttsSpeechRate.hashCode()
 			+ shouldGraduallyIncreaseVolume.hashCode()
 			+ graduallyIncreaseVolumeWaitTime
@@ -1370,6 +1532,7 @@ open class NacAlarm()
 			+ canDismissEarly.hashCode()
 			+ dismissEarlyTime
 			+ timeOfDismissEarlyAlarm.hashCode()
+			+ timeOfSnoozedAlarm.hashCode()
 			+ shouldShowDismissEarlyNotification.hashCode()
 			+ shouldDeleteAfterDismissed.hashCode()
 			+ shouldVolumeDismiss.hashCode()
@@ -1390,6 +1553,7 @@ open class NacAlarm()
 			+ nfcTagId.hashCode()
 			+ flashlightOnDuration.hashCode()
 			+ flashlightOffDuration.hashCode()
+			+ dawnImagePath.hashCode()
 			+ mediaPath.hashCode()
 			+ mediaArtist.hashCode()
 			+ mediaTitle.hashCode()
@@ -1443,6 +1607,18 @@ open class NacAlarm()
 		println("Should Blink Flash    : $shouldBlinkFlashlight")
 		println("Flashlight On         : $flashlightOnDuration")
 		println("Flashlight Off        : $flashlightOffDuration")
+		println("Use Dawn              : $shouldUseDawn")
+		println("Dawn Duration         : $dawnDuration")
+		println("Dawn Color            : $dawnColor")
+		println("Dawn Use Image        : $shouldUseDawnImage")
+		println("Dawn Image Path       : $dawnImagePath")
+		println("Name Color            : $nameColor")
+		println("Dawn Flashlight Lead  : $dawnFlashlightLead")
+		println("Dawn Hidden Views     : $dawnHiddenViews")
+		println("Dawn Reveal Duration  : $dawnRevealDuration")
+		println("Dawn Reveal Return    : $shouldDawnRevealReturn")
+		println("Sort Order            : $sortOrder")
+		println("Analog Clock          : $shouldUseAnalogClock")
 		println("Media Path            : $mediaPath")
 		println("Media Artist          : $mediaArtist")
 		println("Media Name            : $mediaTitle")
@@ -1457,6 +1633,7 @@ open class NacAlarm()
 		println("Tts say time          : $shouldSayCurrentTime")
 		println("Tts say name          : $shouldSayName")
 		println("Tts Freq              : $ttsFrequency")
+		println("Tts Delay             : $ttsDelay")
 		println("Tts Speech Rate       : $ttsSpeechRate")
 		println("Tts Voice             : $ttsVoice")
 		println("Grad Inc Vol          : $shouldGraduallyIncreaseVolume")
@@ -1467,6 +1644,7 @@ open class NacAlarm()
 		println("Use Dismiss Early     : $canDismissEarly")
 		println("Dismiss Early         : $dismissEarlyTime")
 		println("Time of Early Alarm   : $timeOfDismissEarlyAlarm")
+		println("Time of Snoozed Alarm : $timeOfSnoozedAlarm")
 		println("Should Dismiss Early N: $shouldShowDismissEarlyNotification")
 		println("Should delete after   : $shouldDeleteAfterDismissed")
 		println("Should Volume Dismiss : $shouldVolumeDismiss")
@@ -1535,6 +1713,9 @@ open class NacAlarm()
 		// Increment the snooze count
 		snoozeCount += 1
 
+		// Remember when it will go off again, so that the alarm list can say so
+		timeOfSnoozedAlarm = cal.timeInMillis
+
 		return cal
 	}
 
@@ -1556,6 +1737,47 @@ open class NacAlarm()
 		// Toast the message
 		quickToast(context, messageId)
 	}
+
+	/**
+	 * Toast the dawn message.
+	 */
+	fun toastDawn(context: Context)
+	{
+		// Determine which message to show
+		val messageId = if (shouldUseDawn)
+		{
+			// The alarm is so close that the dawn would have already started. It is
+			// skipped this once, so say so rather than leave the user wondering
+			if (isAlarmTooCloseForDawn)
+			{
+				R.string.message_dawn_too_close
+			}
+			else
+			{
+				R.string.message_dawn_enabled
+			}
+		}
+		else
+		{
+			R.string.message_dawn_disabled
+		}
+
+		// Toast the message
+		quickToast(context, messageId)
+	}
+
+	/**
+	 * Whether the next time this alarm goes off is closer than the duration of the
+	 * dawn, in which case the dawn cannot run for that occurrence.
+	 */
+	val isAlarmTooCloseForDawn: Boolean
+		get()
+		{
+			// The alarm never goes off
+			val nextCal = NacCalendar.getNextAlarmDay(this) ?: return false
+
+			return (nextCal.timeInMillis - dawnDuration*60*1000L) < System.currentTimeMillis()
+		}
 
 	/**
 	 * Toast the NFC message.
@@ -1741,6 +1963,14 @@ open class NacAlarm()
 	}
 
 	/**
+	 * Toggle use the dawn simulation.
+	 */
+	fun toggleUseDawn()
+	{
+		shouldUseDawn = !shouldUseDawn
+	}
+
+	/**
 	 * Toggle use NFC.
 	 */
 	fun toggleUseNfc()
@@ -1829,6 +2059,20 @@ open class NacAlarm()
 		output.writeString(flashlightOnDuration)
 		output.writeString(flashlightOffDuration)
 
+		// Dawn
+		output.writeInt(if (shouldUseDawn) 1 else 0)
+		output.writeInt(dawnDuration)
+		output.writeInt(dawnColor)
+		output.writeInt(if (shouldUseDawnImage) 1 else 0)
+		output.writeString(dawnImagePath)
+		output.writeInt(nameColor)
+		output.writeInt(dawnFlashlightLead)
+		output.writeInt(dawnHiddenViews)
+		output.writeInt(dawnRevealDuration)
+		output.writeInt(if (shouldDawnRevealReturn) 1 else 0)
+		output.writeInt(sortOrder)
+		output.writeInt(if (shouldUseAnalogClock) 1 else 0)
+
 		// Media
 		output.writeString(mediaPath)
 		output.writeString(mediaArtist)
@@ -1853,6 +2097,7 @@ open class NacAlarm()
 		output.writeInt(if (shouldSayCurrentTime) 1 else 0)
 		output.writeInt(if (shouldSayName) 1 else 0)
 		output.writeInt(ttsFrequency)
+		output.writeInt(ttsDelay)
 		output.writeFloat(ttsSpeechRate)
 		output.writeString(ttsVoice)
 
@@ -1862,6 +2107,7 @@ open class NacAlarm()
 		output.writeInt(if (canDismissEarly) 1 else 0)
 		output.writeInt(dismissEarlyTime)
 		output.writeLong(timeOfDismissEarlyAlarm)
+		output.writeLong(timeOfSnoozedAlarm)
 		output.writeInt(if (shouldShowDismissEarlyNotification) 1 else 0)
 		output.writeInt(if (shouldDeleteAfterDismissed) 1 else 0)
 		output.writeInt(if (shouldVolumeDismiss) 1 else 0)
@@ -1886,6 +2132,92 @@ open class NacAlarm()
 
 	companion object
 	{
+
+		/**
+		 * Hide the phrase shown during the dawn.
+		 */
+		const val DAWN_HIDE_PHRASE: Int = 1
+
+		/**
+		 * Hide the name of the alarm during the dawn.
+		 */
+		const val DAWN_HIDE_NAME: Int = 2
+
+		/**
+		 * Hide the clock during the dawn.
+		 */
+		const val DAWN_HIDE_CLOCK: Int = 4
+
+		/**
+		 * Hide the date during the dawn.
+		 */
+		const val DAWN_HIDE_DATE: Int = 16
+
+		/**
+		 * Hide the name of the media during the dawn.
+		 */
+		const val DAWN_HIDE_MEDIA: Int = 8
+
+		/**
+		 * What a new alarm hides during the dawn: the name of the alarm and the date.
+		 *
+		 * The clock, the wake-up phrase and the title of the music are kept. Half asleep
+		 * the hour is the only thing worth reading; the date and the name of the alarm
+		 * are things you already know.
+		 *
+		 * Note: this is the Kotlin default, which is what a new alarm is built with. The
+		 * defaultValue of the column stays at 0 on purpose, since it only ever applies
+		 * to rows that a migration adds the column to, and changing it would ask for a
+		 * database version of its own for nothing.
+		 */
+		const val DEFAULT_DAWN_HIDDEN_VIEWS: Int = DAWN_HIDE_NAME or DAWN_HIDE_DATE
+
+		/**
+		 * Pick one of the lively colors at random, staying away from the ones already
+		 * on screen.
+		 *
+		 * The draw had no memory, so a new alarm could come out the same color as one
+		 * sitting right above it. For each color in use, the nearest color of the
+		 * palette is set aside: a color already taken rules itself out, and an alarm
+		 * wearing the color of the theme rules out whichever of these is closest to it.
+		 * When everything is taken, the whole palette is open again.
+		 */
+		fun randomNameColor(inUse: Collection<Int> = emptyList()): Int
+		{
+			val taken = inUse.map { color -> NAME_COLORS.minBy { distance(it, color) } }
+			val free = NAME_COLORS.filter { it !in taken }
+			val pool = free.ifEmpty { NAME_COLORS.toList() }
+
+			return pool[Random.nextInt(pool.size)]
+		}
+
+		/**
+		 * How far apart two colors are, squared. Only the order matters here, so the
+		 * square root is not worth taking.
+		 */
+		private fun distance(first: Int, second: Int): Int
+		{
+			val red = ((first shr 16) and 0xFF) - ((second shr 16) and 0xFF)
+			val green = ((first shr 8) and 0xFF) - ((second shr 8) and 0xFF)
+			val blue = (first and 0xFF) - (second and 0xFF)
+
+			return (red * red) + (green * green) + (blue * blue)
+		}
+
+		/**
+		 * Lively colors given at random to the name of a new alarm, so that alarms
+		 * can be told apart at a glance. The teal that sat next to the blue is gone:
+		 * the two could not be told apart on a card, so a new alarm could look like
+		 * the one above it even though the draw had set that color aside.
+		 */
+		private val NAME_COLORS: IntArray = intArrayOf(
+			0xFF29B6F6.toInt(),  // Blue
+			0xFF66BB6A.toInt(),  // Green
+			0xFFFFCA28.toInt(),  // Yellow
+			0xFFFF7043.toInt(),  // Orange
+			0xFFEC407A.toInt(),  // Pink
+			0xFFAB47BC.toInt(),  // Purple
+			0xFF7E57C2.toInt())  // Indigo
 
 		/**
 		 * Generate parcel (required for Parcelable).
@@ -1961,6 +2293,17 @@ open class NacAlarm()
 			alarm.flashlightOnDuration = shared.flashlightOnDuration
 			alarm.flashlightOffDuration = shared.flashlightOffDuration
 
+			// Dawn
+			alarm.shouldUseDawn = shared.shouldUseDawn
+			alarm.dawnDuration = shared.dawnDuration
+			alarm.dawnColor = shared.dawnColor
+			alarm.shouldUseDawnImage = shared.shouldUseDawnImage
+			alarm.dawnImagePath = shared.dawnImagePath
+			alarm.dawnFlashlightLead = shared.dawnFlashlightLead
+			alarm.dawnRevealDuration = shared.dawnRevealDuration
+			alarm.shouldDawnRevealReturn = shared.shouldDawnRevealReturn
+			alarm.shouldUseAnalogClock = shared.shouldUseAnalogClock
+
 			// Media
 			alarm.mediaPath = shared.mediaPath
 			alarm.mediaArtist = shared.mediaArtist
@@ -1985,6 +2328,7 @@ open class NacAlarm()
 			alarm.shouldSayCurrentTime = shared.shouldSayCurrentTime
 			alarm.shouldSayName = shared.shouldSayAlarmName
 			alarm.ttsFrequency = shared.ttsFrequency
+			alarm.ttsDelay = shared.ttsDelay
 			alarm.ttsSpeechRate = shared.ttsSpeechRate
 			alarm.ttsVoice = shared.ttsVoice
 

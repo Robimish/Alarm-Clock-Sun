@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Rounded background for a short message pill. Tinted in code, so that it
+     follows the color of the theme. -->
+<shape
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:shape="rectangle">
+
+	<solid android:color="@android:color/white" />
+	<corners android:radius="@dimen/card_action_radius" />
+
+</shape>

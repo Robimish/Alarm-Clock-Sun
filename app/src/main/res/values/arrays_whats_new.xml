@@ -5,6 +5,272 @@
 	<!-- &lt;/b> -->
 
 	<string-array name="whats_new_items" tools:ignore="InconsistentArrays">
+		<item>2.00</item>
+		<item>First &lt;b>release&lt;/b> build: smaller and faster, signed with its own key. It cannot be installed over the test (debug) builds: export your data (Settings, Import | Export), uninstall, install, then import.</item>
+		<item>1.98</item>
+		<item>The lines written in the Android system log (logcat) when a timer is tapped are removed. They stay in the log file of the app.</item>
+		<item>1.97</item>
+		<item>The ready-made timer is now of &lt;b>10 minutes&lt;/b> and named &lt;b>Eggs&lt;/b>. The one of 5 minutes added by 1.94 is changed, once, unless you gave it a name of your own.</item>
+		<item>1.96</item>
+		<item>Fixed: tapping a &lt;b>stopped timer&lt;/b> could open an empty countdown screen, with only play and the add time buttons, instead of its settings.</item>
+		<item>1.95</item>
+		<item>The page asking to &lt;b>display over other apps&lt;/b> no longer comes up at all, after an update or otherwise. It can still be given from About.</item>
+		<item>The ready-made 5 minute timer is named &lt;b>Timer 5\'&lt;/b>. If it was added without a name in 1.94, it gets that name.</item>
+		<item>1.94</item>
+		<item>After an update, the app no longer asks again for the permission to &lt;b>display over other apps&lt;/b>. Only the full screen notification is asked for: it is the one that brings the alarm, the sunrise and a ringing timer to the screen.</item>
+		<item>A &lt;b>new timer&lt;/b> starts at the same volume as a new alarm, 40 out of 100, instead of 75. Timers already made keep their own volume.</item>
+		<item>A ready-made &lt;b>5 minute timer&lt;/b> is added to the list, once. It is not added if there is one of 5 minutes already.</item>
+		<item>1.93</item>
+		<item>Fixed: a &lt;b>timer that rings&lt;/b> still did not come over the lock screen. Its notification had been made silent in a way that also held back the screen.</item>
+		<item>1.92</item>
+		<item>A &lt;b>timer that rings&lt;/b> now comes to the screen when the phone is locked. It rang, but nothing could be seen. The app can be seen over the lock screen only while a timer rings.</item>
+		<item>&lt;b>Record statistics&lt;/b> is now off to begin with.</item>
+		<item>1.91</item>
+		<item>&lt;b>Record statistics&lt;/b>, a new switch at the top of the statistics page. Turned off, nothing new is counted and the page greys out; what was counted before is kept until it is reset.</item>
+		<item>Fixed: after an update, &lt;b>What\'s New&lt;/b> showed several screens later instead of at launch. It waited for a counter that only went up each time the app came back, and on this phone a permission is asked for again after every update.</item>
+		<item>1.90</item>
+		<item>The &lt;b>clock with hands&lt;/b> now shows in landscape too, instead of the digits.</item>
+		<item>Fixed: with the phone locked, &lt;b>the power button&lt;/b> stopped the alarm but left its screen behind, and swiping on it closed the app. The alarm screen now goes away with the alarm.</item>
+		<item>Fixed: the &lt;b>preview&lt;/b> in the volume options left the phone at the volume of the alarm. The phone\'s own volume is now put back when the preview stops.</item>
+		<item>1.89</item>
+		<item>The &lt;b>volume buttons&lt;/b> now snooze or dismiss the moment they are pressed, even at the loudest or quietest volume, when the alarm screen is on display.</item>
+		<item>The &lt;b>About&lt;/b> page checks the exact alarm permission instead of saying it is there.</item>
+		<item>1.88</item>
+		<item>The switch beside &lt;b>Speak the time&lt;/b> in the settings now turns off the shake and the hand together. It used to turn off the shake alone.</item>
+		<item>A &lt;b>new alarm&lt;/b> no longer draws a teal that could not be told from the blue.</item>
+		<item>1.87</item>
+		<item>The &lt;b>alarm list no longer rearranges itself&lt;/b>. Turning an alarm on sent it to the top, because whatever rings next came first and whatever was off went below. Every alarm now stays where it is: a new one is added at the bottom, and a copy right under the alarm it came from. &lt;b>Rearrange the list on its own&lt;/b>, in Appearance, brings the old behaviour back. The order on screen the day this arrives is the one that is kept, so nothing moves.</item>
+		<item>1.86</item>
+		<item>&lt;b>A hand says the time&lt;/b>, a new switch on the Speak the time page. Passing a hand over the top of the screen says the time out loud: it is the sensor that turns the screen off against your ear that is read, so the hand has to go over the top of the phone. Two passes are asked for to begin with, since one alone is easily set off by anything that goes over the phone during the night; &lt;b>How many passes&lt;/b> right below asks for one instead.</item>
+		<item>The &lt;b>shake&lt;/b> can be asked for far less. Its list read a light shake, a normal one and a firm one; it now reads the slightest movement, a slight movement, a light shake and a normal one. The firmest is gone, and what was chosen is carried over: a light shake stays a light shake.</item>
+		<item>The &lt;b>hours&lt;/b> have left the shake and now sit in a section of their own, because they hold back the hand as well. The notification no longer names the shake in particular.</item>
+		<item>1.85</item>
+		<item>&lt;b>The power button dismisses&lt;/b>, a new switch in the settings, off to begin with. Android never hands that button to an app, so what is read is the screen going out: anything else that turns it off while the alarm rings dismisses it too. It does nothing during a sunrise, only once the alarm has gone off. The volume buttons already had their own switch, in the snooze and dismiss options of each alarm.</item>
+		<item>1.84</item>
+		<item>Fixed: the &lt;b>plus button&lt;/b> could disappear after deleting alarms. It hides when the list is scrolled down and comes back when it is scrolled up; a list that has shrunk can no longer be scrolled up, so nothing brought it back. It now returns as soon as everything fits on screen. The timers had the same fault.</item>
+		<item>&lt;b>Go back on its own&lt;/b>, a new switch in the sunrise options. Turned off, a tap during the sunrise turns the screen over and it stays that way until the next tap, instead of the light coming back by itself.</item>
+		<item>A &lt;b>new alarm&lt;/b> no longer draws the color of one already on screen. The draw had no memory; for each color in use, the nearest color of the palette is now set aside, so an alarm wearing the color of the theme also rules out the one that looks like it.</item>
+		<item>1.83</item>
+		<item>The &lt;b>audio source&lt;/b> of an alarm is written down by a name that does not change with the language. It used to hold the words shown on screen, so changing the language left nothing to match and the sound fell back to the alarm channel, losing a choice of anything else. Alarms already set are converted once, on the next launch.</item>
+		<item>The &lt;b>wake-up phrase&lt;/b> appears in landscape too. That screen never had it.</item>
+		<item>1.82</item>
+		<item>Fixed: letting go of &lt;b>Snooze or Dismiss&lt;/b> halfway sent the button running to the end, as though it were about to fire, before it came back. Any release was thrown like a deliberate flick, because a speed slower than the minimum was raised to that minimum. Now the speed of the finger decides: a flick throws the button, a release puts it straight back. Dragging all the way still works.</item>
+		<item>1.81</item>
+		<item>The &lt;b>quick settings tile&lt;/b> that said the time is gone, along with its section on the Speak the time page. It worked, but it asked you to pull down the panel, find it and aim at it, which is the opposite of what a phone on a bedside table is good for. Shaking still answers.</item>
+		<item>1.80</item>
+		<item>The &lt;b>row of buttons&lt;/b> at the bottom of the alarm screen is drawn in one place instead of two. The alarm screen and the sunrise preview each held their own copy, identical but for the two views that pulse under the buttons, and the two copies were already drifting apart: of the twenty one changes made to those two files, four touched both. Nothing moves on screen; each screen now says only where the row goes.</item>
+		<item>1.79</item>
+		<item>The &lt;b>full screen notification&lt;/b> is asked for again after every update that finds it missing, and the button goes straight to its own settings page. It is this one that an update takes away, and without it the alarm rings behind a notification with no screen. One dialogue per update, no more: answer it and it is quiet until the next one.</item>
+		<item>1.78</item>
+		<item>The numbers under a &lt;b>wheel&lt;/b> ask the system what 12sp is worth rather than multiplying by a screen-wide scale. Android 14 stopped having one: past a certain size the font scale is no longer a simple multiple, so headings do not grow as fast as body text. With the system font pushed to its largest, those numbers were slightly off.</item>
+		<item>1.77</item>
+		<item>An &lt;b>authorisation that was granted and has gone&lt;/b> is now offered again. The app remembers which ones it had; when one disappears, which an app update does, the dialogue comes back with the button that opens the right settings page. It used to ask once and never again, so the only way back was through the About page.</item>
+		<item>The &lt;b>full screen notification&lt;/b> joins the authorisations the app asks for at launch. It is the one that brings the alarm screen and the sunrise up on a locked phone, and only the tutorial and the About page offered it.</item>
+		<item>&lt;b>Spanish&lt;/b> says the time as it is spoken rather than read off a dial: \"Son las cuatro y cinco\" instead of \"La hora es 4:05\". One o\'clock is said apart, \"Es la una\", and French gains the same: \"Il est 1 heure\" and no longer \"heures\".</item>
+		<item>1.76</item>
+		<item>Fixed: turning the &lt;b>shake off from the settings list&lt;/b> changed nothing. The switch saved the setting but never told the service, which went on listening with its notification in place. The page had always told it; the new row did not.</item>
+		<item>1.75</item>
+		<item>The &lt;b>Speak the time&lt;/b> row of the settings now carries a switch of its own, beside a dividing line. Touching the text opens the page as before; touching the switch turns the shake on or off without going in.</item>
+		<item>1.74</item>
+		<item>The yellow circle at the centre of the &lt;b>icon&lt;/b> is a touch smaller than in 1.72: the rays start at radius 6.23 rather than 6.5, three tenths of the way back towards where they stood in 1.64. They keep a little more of their length that way.</item>
+		<item>&lt;b>Spanish&lt;/b> is up to date. The 52 texts of the screens added since the fork were missing: speaking the time, the sunrise options, the full screen permission, the analogue clock and the reset.</item>
+		<item>1.73</item>
+		<item>Removed four &lt;b>unused image files&lt;/b>: the round orange icon of the app this one grew out of. They came with the very first commit, were referenced nowhere, and travelled in every build.</item>
+		<item>1.72</item>
+		<item>The &lt;b>icon&lt;/b> goes back to the one the app was born with: the black alarm clock on the yellow square. The rays began at radius 5.60 while the clock\'s bells reach 5.49, so they all but touched; their inner ends are pulled back to radius 6.5, which clears the yellow circle at the centre.</item>
+		<item>The ten &lt;b>icon files&lt;/b> for Android 7.1 and older still carried the drawing from before the fork. They are redrawn from the same shapes as the icon itself.</item>
+		<item>A &lt;b>tap during the sunrise&lt;/b> now shows the screen for 10 seconds instead of 12, and the alarms that never moved that setting are carried over to 10 as well.</item>
+		<item>1.71</item>
+		<item>The &lt;b>icon&lt;/b> goes back to the sun it had in 1.66. It was made larger twice, chosen on renders, and on a real home screen the first one was the better of the three. The renders were a fair guide for choosing, but the phone had the last word.</item>
+		<item>1.70</item>
+		<item>The &lt;b>sun&lt;/b> of the icon grows once more, rays included. Its tips now reach 7.78 of the 8 a round launcher mask keeps: there is no room left beyond that without cutting them.</item>
+		<item>1.69</item>
+		<item>A &lt;b>tap&lt;/b> while the alarm rings now behaves as it does during the sunrise: the ordinary screen for a few seconds, then the light comes back. It used to put the light away for good.</item>
+		<item>1.68</item>
+		<item>The &lt;b>sun&lt;/b> of the icon is larger and the alarm clock on it with it, so that both read at the size an icon actually is on a home screen. The rays have not moved: their silhouette is what fits inside a launcher mask, and it was not worth risking.</item>
+		<item>1.67</item>
+		<item>Fixed a &lt;b>tap&lt;/b> doing nothing once the alarm rings. It was set up, but the first thing it checked was whether the sunrise was over, and it always was. A tap now puts the sunrise light away for good.</item>
+		<item>&lt;b>Shake the phone&lt;/b> now answers between 3:00 and 8:00 by default, rather than 3:00 and 10:00.</item>
+		<item>&lt;b>Clock that is said&lt;/b> names the clock the phone is set to when it is following the phone, instead of leaving it to be guessed.</item>
+		<item>The settings page of the spoken time has someone speaking beside it rather than a microphone.</item>
+		<item>1.66</item>
+		<item>&lt;b>Speak the time&lt;/b> has a settings page of its own, right after Appearance, with a microphone beside it. It used to sit at the bottom of the general screen, under the language, the storage and the default alarm.</item>
+		<item>The &lt;b>icon&lt;/b> is the cut-out sun again, this time on a white tile rather than a transparent one. Its yellows carry, and nothing is left to whatever a launcher draws behind a transparent layer.</item>
+		<item>1.65</item>
+		<item>The tutorial only offers &lt;b>Display over other apps&lt;/b> while the full screen notification is missing. Grant that one and this page steps aside, since it has nothing left to add. The same goes for the dialog that used to come back later.</item>
+		<item>A &lt;b>tap&lt;/b> works once the alarm rings, not only during the sunrise. The screen keeps the light the sunrise left behind, and a tap is the way back to an ordinary, dark alarm screen.</item>
+		<item>1.64</item>
+		<item>Fixed an alarm dismissed &lt;b>during the sunrise&lt;/b> coming straight back. The sunrise starts ahead of the alarm, so the hour it is set for is still to come: dismissing it the ordinary way put it back for that very time, and it rang minutes later. It now skips that occurrence, the way dismissing early does.</item>
+		<item>1.63</item>
+		<item>The tutorial now asks for the &lt;b>full screen notification&lt;/b>, which is the permission that actually brings the alarm screen and the sunrise up on a locked phone. It was nowhere in the setup, only in the About page.</item>
+		<item>1.62</item>
+		<item>&lt;b>Display over other apps&lt;/b> is no longer needed. The alarm screen and the sunrise now come up through the full screen notification, which is the permission that matters. This one is kept as a safety net, for phones whose maker refuses the first.</item>
+		<item>This list had stopped being written at 1.46. Everything since is below.</item>
+		<item>1.61</item>
+		<item>The sunrise now posts its own notification first, rather than replacing a plain one a moment later. A full screen intent that arrives as an update to a notification already on screen may never fire.</item>
+		<item>1.58</item>
+		<item>The shake notification names both ends of the span, not only where it stops.</item>
+		<item>1.57</item>
+		<item>The shake listener is put back every time the app is opened. Android refuses to start it when the process wakes in the background, and that refusal was silent, so the notification could simply be missing.</item>
+		<item>1.56</item>
+		<item>The sunrise preview holds still for a second before it starts, climbs for seven seconds instead of ten, and stays at full light for four.</item>
+		<item>1.55</item>
+		<item>A light shake is enough, by default.</item>
+		<item>1.54</item>
+		<item>The warm halo is only on the two lists now. Everywhere else is text that scrolls, and a wash of colour behind a paragraph only makes it harder to read.</item>
+		<item>1.53</item>
+		<item>The &lt;b>dial&lt;/b> starts lower, where the digits already did. It was borrowing a margin from the digital clock, which is hidden while the dial is on screen — and a hidden view takes its margin with it.</item>
+		<item>1.52</item>
+		<item>The rail follows a &lt;b>snooze&lt;/b> too. A snooze ending in four minutes is the nearest thing there is, and the sun was sitting at the far left.</item>
+		<item>With nothing coming, the sun is now drawn white and in outline, so that the warm colour means something is on its way.</item>
+		<item>1.51</item>
+		<item>What you choose to show is now one choice for both screens: the sunrise and the ringing that follows it, an alarm without a sunrise included.</item>
+		<item>A tap during the sunrise brings back the light, not the rest. What you turned off stays off.</item>
+		<item>1.50</item>
+		<item>The time remaining rounds instead of cutting. Two days, twenty three hours and forty one minutes used to read &lt;b>2 days 23 hours&lt;/b>, a whole day less than it was.</item>
+		<item>1.49</item>
+		<item>In Settings, the switch that turns the shake on is written larger, and what only works through it is greyed out until it is on. The hours moved under it, where they belong: they hold back the shake alone, and the quick settings tile answers at any hour.</item>
+		<item>1.48</item>
+		<item>The sunrise has a notification of its own: silent, but of high importance, which lets it carry a &lt;b>full screen intent&lt;/b>. That is what puts it on a locked screen without leaning on the permission to draw over other apps.</item>
+		<item>The sun on the rail is no longer clipped, and the rail stays when there is no alarm.</item>
+		<item>The halo passes behind the alarm cards instead of over them.</item>
+		<item>A tap during the sunrise no longer shows what the screen would never have shown: two clocks at once, the meridian on a phone set to 24 hours, an empty music box.</item>
+		<item>1.47</item>
+		<item>The clock sits higher, and there is a fixed breath between it and the text under it.</item>
+		<item>1.46</item>
+		<item>Under the next alarm line, a &lt;b>rail with a sun on it&lt;/b>: it travels from left to right as the alarm comes closer, and what it has covered lights up behind it. The rail spans the last day before the alarm. With no alarm it is not shown at all.</item>
+		<item>1.45</item>
+		<item>A warm halo now rises off the bottom bar and dies out before it reaches the list.</item>
+		<item>1.44</item>
+		<item>The &lt;b>next alarm&lt;/b> line now gives the day and the time, and how long is left under it. That is the new default; the two older formats are still there in Appearance.</item>
+		<item>Taken out because they did not work: saying the time with a &lt;b>volume key&lt;/b>, the choice of which key, and the &lt;b>button on the notification&lt;/b>. Shaking the phone and the quick settings tile remain, and both work.</item>
+		<item>Settings &gt; General is now laid out by how you ask: what every way has in common first (hours, language, clock), then shaking, then the tile.</item>
+		<item>1.43</item>
+		<item>The transparent icon is gone: it does not come out well on every launcher. Back to the sun on its yellow tile.</item>
+		<item>A new alarm now hides the &lt;b>date&lt;/b> and the &lt;b>alarm name&lt;/b> during the sunrise, and keeps the clock, the wake-up phrase and the music title. Half asleep, the hour is the only thing worth reading.</item>
+		<item>1.42</item>
+		<item>The &lt;b>icon&lt;/b> is a sun on its own now: no yellow square behind it, the background is transparent. What a launcher puts in its place is up to the launcher.</item>
+		<item>1.41</item>
+		<item>&lt;b>Full screen intent&lt;/b> in the About page now actually checks. It used to say you already had the permission without looking, which was true until Android 14 and a lie since. If it is missing, tapping it takes you to the screen where it is given — it is the permission that lets the alarm screen come up on its own when the phone is locked.</item>
+		<item>1.40</item>
+		<item>What you turn off in the sunrise options now leaves its place to the rest: the alarm name moves up into the gap instead of the screen keeping a hole.</item>
+		<item>The clock sits a little higher and the date a little further under it.</item>
+		<item>The music title is off the bottom edge.</item>
+		<item>Fixed the first press of the volume key doing nothing when the engine had not been woken. It now speaks straight away.</item>
+		<item>1.39</item>
+		<item>More air between the &lt;b>analogue clock&lt;/b> and the date, which a dial needs and the digits do not.</item>
+		<item>In the sunrise options, the kind of clock now has a heading of its own instead of sitting among the show/hide switches, where two rows both read &lt;b>Clock&lt;/b>.</item>
+		<item>1.38</item>
+		<item>The &lt;b>shake&lt;/b> notification is only there within the hours you chose. Outside them nothing listens, the notification is gone, and no battery is spent. It comes back on its own at the hour.</item>
+		<item>1.37</item>
+		<item>Fixed the &lt;b>next alarm&lt;/b> line flashing back for half a second over a snoozed alarm, every time the list was refreshed.</item>
+		<item>1.36</item>
+		<item>The clock, digits or dial, starts a tenth of the way down the screen instead of almost touching the top edge. A fraction rather than a fixed margin, so it is the same tenth on any phone.</item>
+		<item>1.35</item>
+		<item>New: &lt;b>shake the phone&lt;/b> to hear the time. Only within the hours you chose, so a phone in a pocket stays quiet. Three levels of how hard to shake. Android asks for a permanent notification while this is on, and the movement sensor costs a little battery.</item>
+		<item>1.34</item>
+		<item>This list of updates is now in &lt;b>French&lt;/b> too. The entries of this fork had stayed in English in every language, and French had no list at all.</item>
+		<item>1.33</item>
+		<item>New: a &lt;b>quick settings tile&lt;/b> that says the time. Two swipes from anywhere, lock screen included. Add it once from the pencil at the bottom of the quick settings panel.</item>
+		<item>The sunrise preview puts things in the same order as the alarm screen: clock, date, name, phrase, and the music title under the controls.</item>
+		<item>Back to the settings out of the box has moved next to the storage clean up, where it belongs.</item>
+		<item>1.32</item>
+		<item>New in the sunrise options: a &lt;b>clock with hands&lt;/b> instead of the digits. Drawn from scratch, so its hands go from white to dark as the light comes up, like everything else on the screen. Portrait only for now.</item>
+		<item>The music title switch now says that it only shows once the alarm rings.</item>
+		<item>1.31</item>
+		<item>After the voice has spoken, the music carries on where it was rather than starting over — including when it was caught buffering or between two tracks.</item>
+		<item>1.30</item>
+		<item>The sunrise preview now shows the &lt;b>real controls&lt;/b> of the alarm screen, copied from it, rather than two buttons of its own. A tap on either, or anywhere else, closes it.</item>
+		<item>In the sunrise options, what to show is now listed in the order the alarm screen shows it: clock, date, name, phrase, music.</item>
+		<item>New in the alarm\'s text-to-speech options: &lt;b>wait before speaking&lt;/b>. The music wakes you first, and only then does the voice say the time.</item>
+		<item>New in Settings &gt; General: put every setting &lt;b>back to the way it was out of the box&lt;/b>. Alarms are kept.</item>
+		<item>1.29</item>
+		<item>Fixed the &lt;b>spoken time&lt;/b> on a 24 hour phone: 16:00 was being said as "four". The two clocks were the wrong way round in the code. The clock that is said can now also be set apart from the one the phone shows.</item>
+		<item>The &lt;b>language of the app&lt;/b> can be chosen in Settings &gt; General. It is the same setting Android keeps for each app, reached without leaving here.</item>
+		<item>New: a &lt;b>notification&lt;/b> with a button that says the time out loud, at any hour of the day. A notification cannot listen for the volume keys, so the button is what you press.</item>
+		<item>The key that says the time during a sunrise can be volume up, volume down, or either one.</item>
+		<item>The sunrise preview shows &lt;b>Snooze&lt;/b> and &lt;b>Dismiss&lt;/b> again, so that it is judged with the same things on screen. Either one closes it, as a tap anywhere else does.</item>
+		<item>1.28</item>
+		<item>The sunrise &lt;b>preview&lt;/b> has no buttons any more: a tap anywhere closes it, and it holds at full light for three seconds before closing on its own.</item>
+		<item>Fixed the &lt;b>spoken time&lt;/b> being read with the wrong voice. The engine was putting the language of the phone back on every utterance. It now says so when no voice is installed for the language you chose.</item>
+		<item>No more flicker when a sunrise starts: what you hid was being shown first and taken away a moment later.</item>
+		<item>The alarm settings icon is brighter; it looked disabled.</item>
+		<item>1.27</item>
+		<item>Fixed the build: two apostrophes in this very list were not escaped, which Android refuses.</item>
+		<item>1.26</item>
+		<item>A snoozed alarm no longer counts as the next alarm. The list was announcing a ring at the alarm\'s normal time, which a snooze had already moved.</item>
+		<item>1.25</item>
+		<item>The app speaks &lt;b>French&lt;/b>. Every screen, every message, every option.</item>
+		<item>1.24</item>
+		<item>The banner that appeared across the top of the alarm screen now goes away as soon as that screen is up. Android still opens the screen by itself when the phone is locked or asleep.</item>
+		<item>1.23</item>
+		<item>New in Settings &gt; General: &lt;b>Speak the time&lt;/b>. During a sunrise, turning the volume up says the time out loud, only between the hours you choose, and never once the alarm is ringing. The spoken language can be set apart from the app\'s.</item>
+		<item>1.22</item>
+		<item>Fixed: what you turned off in the sunrise options came back on the alarm screen. The screen was putting the clock, the date, the name and the music back by itself.</item>
+		<item>The first alarm is no longer switched on after an install.</item>
+		<item>Pale blue now comes before lilac, and the custom color shows a &lt;b>+&lt;/b> until you pick one, instead of looking grey.</item>
+		<item>1.21</item>
+		<item>A &lt;b>snoozed alarm&lt;/b> now says so at the top of the list, with how long is left, instead of leaving the next normal time on screen.</item>
+		<item>1.20</item>
+		<item>Fixed the &lt;b>clock&lt;/b> and the &lt;b>date&lt;/b> showing during a sunrise even when they were turned off.</item>
+		<item>1.19</item>
+		<item>&lt;b>Dismiss&lt;/b> is now a full-width button under the alarm summary: outlined for the alarm that is coming, filled for one that is snoozed or ringing. It stays visible when the alarm is open.</item>
+		<item>The expand arrow became a round button beside it.</item>
+		<item>1.18</item>
+		<item>Fixed the build: a tidy-up in 1.17 removed more of the appearance settings than it should have.</item>
+		<item>&lt;b>Dismiss early&lt;/b> moved up next to the alarm time, as a colored chip on a lighter background. It is now in plain sight whether the alarm is open or closed.</item>
+		<item>1.17</item>
+		<item>&lt;b>Tap to see the screen&lt;/b> moved into the sunrise options, where it belongs, and can now be turned off. It is set per alarm.</item>
+		<item>The clock and the date can be shown or hidden separately.</item>
+		<item>The sunrise &lt;b>preview&lt;/b> now shows the alarm name, the date and the music title, and follows the show/hide options.</item>
+		<item>New in Settings &gt; General: &lt;b>Storage&lt;/b>. Frees the copies of sounds and images that no alarm needs, one kind at a time or both.</item>
+		<item>The sunrise menus are translated into every language the app speaks.</item>
+		<item>1.16</item>
+		<item>Each version in this list now has its own heading, so updates no longer run together.</item>
+		<item>The settings of an alarm moved up next to its switch, with its own icon. &lt;b>Snooze&lt;/b> and &lt;b>Dismiss&lt;/b> are centred on the row below.</item>
+		<item>&lt;b>Dismiss early&lt;/b> is outlined, and stays visible when the alarm is open.</item>
+		<item>Only one alarm stays open at a time.</item>
+		<item>The sunrise colors are round instead of stretched.</item>
+		<item>New sunrise options: show or hide the wake-up phrase, the alarm name, the clock and the music title. A tap brings them all back for a moment.</item>
+		<item>Sunrise preview: 10 seconds by default.</item>
+		<item>1.15</item>
+		<item>Holding the &lt;b>volume&lt;/b> slider for a second plays the alarm media, so the level can be judged by ear. Letting go stops it and gives the volume back.</item>
+		<item>The custom color swatch keeps the color that was chosen, instead of going back to grey when a preset color is picked.</item>
+		<item>The sunrise &lt;b>preview&lt;/b> now stays on screen when it is over, and waits for a tap to close. Default length 12 seconds.</item>
+		<item>The first alarm is called Sunrise.</item>
+		<item>1.14</item>
+		<item>The sunrise settings now open again by themselves after an &lt;b>image&lt;/b> is chosen, instead of leaving you on the alarm list.</item>
+		<item>The sunrise &lt;b>preview&lt;/b> now lasts 15 seconds by default, and can be set between 5 and 30.</item>
+		<item>1.13</item>
+		<item>Default alarm &lt;b>volume&lt;/b> is now 40%.</item>
+		<item>The &lt;b>preview&lt;/b> of a sunrise now runs inside the settings, so it comes back to them instead of the alarm list. Its length can be set, and tapping it shows the screen as normal.</item>
+		<item>Shorter wheels in the sunrise settings.</item>
+		<item>1.11</item>
+		<item>Added a setting for how long a tap shows the screen as normal during a sunrise.</item>
+		<item>1.9</item>
+		<item>Color swatches are no longer dimmed, and a dot marks the one in use.</item>
+		<item>Fixed the &lt;b>Snooze&lt;/b> label being unreadable during a sunrise.</item>
+		<item>1.8</item>
+		<item>The sunrise phrase no longer changes between the sunrise and the alarm.</item>
+		<item>The alarm name keeps its own color during a sunrise.</item>
+		<item>&lt;b>Volume&lt;/b>: very low percentages are genuinely quiet, and the exact value can be typed in.</item>
+		<item>1.7</item>
+		<item>New sunrise palette, taken from a low sun.</item>
+		<item>Fixed the chosen &lt;b>image&lt;/b> being lost when the file picker closed the settings.</item>
+		<item>The sunrise is no longer lost after a snooze.</item>
+		<item>Each new alarm gets a lively name color of its own.</item>
+		<item>1.6</item>
+		<item>A phrase under the clock during the sunrise, in three languages.</item>
+		<item>The volume slider can be dragged, and shows a percentage.</item>
+		<item>No notification banner during the sunrise.</item>
+		<item>1.1</item>
+		<item>The &lt;b>sunrise&lt;/b> now happens on the alarm screen itself: it lights up ahead of time, and the light stays when the alarm rings.</item>
+		<item>Tapping the screen during a sunrise shows it as normal, so it is plain the alarm has not gone off yet.</item>
+		<item>1.0</item>
+		<item>Added the &lt;b>sunrise&lt;/b>: the screen lights up gradually before the alarm, in a color or with an image of your own.</item>
+		<item>Added a &lt;b>flashlight&lt;/b> that fades in over the last minutes.</item>
+		<item>Added a color dot next to the alarm name, to sort alarms at a glance.</item>
+		<item>The week can start on Monday, Sunday, or follow the phone.</item>
 		<item>12.7.2</item>
 		<item>Added option to play audio through &lt;b>speakers&lt;/b> and &lt;b>bluetooth&lt;/b> simultaneously.</item>
 		<item>Fixed &lt;b>flashlight&lt;/b> blink issue where on/off durations were not being converted properly due to locale.</item>

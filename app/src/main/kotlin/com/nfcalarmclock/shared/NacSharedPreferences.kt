@@ -7,6 +7,7 @@ import android.view.Gravity
 import androidx.preference.PreferenceManager
 import com.nfcalarmclock.R
 import com.nfcalarmclock.alarm.db.NacAlarm
+import com.nfcalarmclock.timer.db.NacTimer
 import com.nfcalarmclock.system.NacCalendar
 import com.nfcalarmclock.system.getDeviceProtectedStorageContext
 import com.nfcalarmclock.system.media.NacMedia
@@ -16,6 +17,12 @@ import java.io.InputStreamReader
 import java.util.Calendar
 import androidx.core.content.edit
 import com.nfcalarmclock.system.daysToValue
+
+/**
+ * Index of the "Automatic" choice of the start of the week, which follows the
+ * locale of the phone.
+ */
+private const val START_WEEK_ON_AUTOMATIC = 2
 
 /**
  * Container for the values of each preference.
@@ -141,7 +148,7 @@ class NacSharedPreferences(context: Context)
 		get()
 		{
 			val key = resources.getString(R.string.key_default_alarm_audio_source)
-			val audioSources = resources.getStringArray(R.array.audio_sources)
+			val audioSources = resources.getStringArray(R.array.audio_source_keys)
 			val defaultValue = audioSources[0]
 
 			return instance.getString(key, defaultValue) ?: defaultValue
@@ -160,7 +167,7 @@ class NacSharedPreferences(context: Context)
 		get()
 		{
 			val key = resources.getString(R.string.key_default_timer_audio_source)
-			val audioSources = resources.getStringArray(R.array.audio_sources)
+			val audioSources = resources.getStringArray(R.array.audio_source_keys)
 			val defaultValue = audioSources[0]
 
 			return instance.getString(key, defaultValue) ?: defaultValue
@@ -326,6 +333,45 @@ class NacSharedPreferences(context: Context)
 		set(value)
 		{
 			val key = resources.getString(R.string.key_main_card_height_expanded)
+
+			saveInt(key, value)
+		}
+
+	/**
+	 * Alarm card height when it is expanded, with the dismiss row showing.
+	 */
+	var cardHeightExpandedDismiss: Int
+		get()
+		{
+			val key = resources.getString(R.string.key_main_card_height_expanded_dismiss)
+			val defaultValue = 0
+
+			return instance.getInt(key, defaultValue)
+		}
+		set(value)
+		{
+			val key = resources.getString(R.string.key_main_card_height_expanded_dismiss)
+
+			saveInt(key, value)
+		}
+
+	/**
+	 * Which version of the alarm card layout the heights were measured for.
+	 *
+	 * The heights of the card are measured once and kept. When the layout changes,
+	 * the old heights no longer fit, so this says whether they can still be trusted.
+	 */
+	var cardLayoutVersion: Int
+		get()
+		{
+			val key = resources.getString(R.string.key_main_card_layout_version)
+			val defaultValue = 0
+
+			return instance.getInt(key, defaultValue)
+		}
+		set(value)
+		{
+			val key = resources.getString(R.string.key_main_card_layout_version)
 
 			saveInt(key, value)
 		}
@@ -978,6 +1024,113 @@ class NacSharedPreferences(context: Context)
 		}
 
 	/**
+	 * Event to write down the audio source of every alarm by a name that does not
+	 * change with the language.
+	 */
+	var eventAudioSourceToKeys: Boolean
+		get()
+		{
+			val key = resources.getString(R.string.key_event_audio_source_to_keys)
+
+			return instance.getBoolean(key, false)
+		}
+		set(value)
+		{
+			val key = resources.getString(R.string.key_event_audio_source_to_keys)
+
+			saveBoolean(key, value)
+		}
+
+	/**
+	 * Whether the ready-made 5 minute timer of 1.94 and 1.95 has been turned into
+	 * the Eggs timer of 10 minutes (1.97).
+	 */
+	var eventEggTimer: Boolean
+		get()
+		{
+			val key = resources.getString(R.string.key_event_egg_timer)
+
+			return instance.getBoolean(key, false)
+		}
+		set(value)
+		{
+			val key = resources.getString(R.string.key_event_egg_timer)
+
+			saveBoolean(key, value)
+		}
+
+	/**
+	 * Whether the ready-made 5 minute timer has been added.
+	 */
+	var eventAddFiveMinuteTimer: Boolean
+		get()
+		{
+			val key = resources.getString(R.string.key_event_add_five_minute_timer)
+
+			return instance.getBoolean(key, false)
+		}
+		set(value)
+		{
+			val key = resources.getString(R.string.key_event_add_five_minute_timer)
+
+			saveBoolean(key, value)
+		}
+
+	/**
+	 * Whether the audio source of the timers has been written down as a name that
+	 * does not change with the language.
+	 */
+	var eventTimerAudioSourceToKeys: Boolean
+		get()
+		{
+			val key = resources.getString(R.string.key_event_timer_audio_source_to_keys)
+
+			return instance.getBoolean(key, false)
+		}
+		set(value)
+		{
+			val key = resources.getString(R.string.key_event_timer_audio_source_to_keys)
+
+			saveBoolean(key, value)
+		}
+
+	/**
+	 * Event to write down where each alarm sits in the list, so that a list that is
+	 * no longer rearranged keeps the order it had.
+	 */
+	var eventFreezeAlarmOrder: Boolean
+		get()
+		{
+			val key = resources.getString(R.string.key_event_freeze_alarm_order)
+
+			return instance.getBoolean(key, false)
+		}
+		set(value)
+		{
+			val key = resources.getString(R.string.key_event_freeze_alarm_order)
+
+			saveBoolean(key, value)
+		}
+
+	/**
+	 * Event to move the shake sensitivity onto the list that gained two finer
+	 * entries and lost the firmest one.
+	 */
+	var eventShakeSensitivityFiner: Boolean
+		get()
+		{
+			val key = resources.getString(R.string.key_event_shake_sensitivity_finer)
+
+			return instance.getBoolean(key, false)
+		}
+		set(value)
+		{
+			val key = resources.getString(R.string.key_event_shake_sensitivity_finer)
+
+			saveBoolean(key, value)
+		}
+
+	/**
 	 * Event to update and backup media information in alarms, starting at database
 	 * version 31.
 	 */
@@ -1243,7 +1396,8 @@ class NacSharedPreferences(context: Context)
 		get()
 		{
 			val key = resources.getString(R.string.key_default_alarm_snooze_max_snooze)
-			val defaultValue = -1
+			// Three snoozes, then the alarm has to be dismissed. Negative means unlimited
+			val defaultValue = 3
 
 			return instance.getInt(key, defaultValue)
 		}
@@ -2046,6 +2200,361 @@ class NacSharedPreferences(context: Context)
 		}
 
 	/**
+	 * Whether a new alarm shows a clock with hands rather than the digits.
+	 */
+	var shouldUseAnalogClock: Boolean
+		get()
+		{
+			val key = resources.getString(R.string.key_analog_clock)
+			val defaultValue = resources.getBoolean(R.bool.default_analog_clock)
+
+			return instance.getBoolean(key, defaultValue)
+		}
+		set(value)
+		{
+			saveBoolean(resources.getString(R.string.key_analog_clock), value)
+		}
+
+	/**
+	 * Whether the light comes back on its own after a tap during a dawn.
+	 */
+	var shouldDawnRevealReturn: Boolean
+		get()
+		{
+			val key = resources.getString(R.string.key_dawn_reveal_return)
+			val defaultValue = resources.getBoolean(R.bool.default_dawn_reveal_return)
+
+			return instance.getBoolean(key, defaultValue)
+		}
+		set(value)
+		{
+			val key = resources.getString(R.string.key_dawn_reveal_return)
+
+			saveBoolean(key, value)
+		}
+
+	/**
+	 * Whether alarms dismissed, snoozed, missed, created and deleted are written to
+	 * the statistics. Nothing already written is removed when it is turned off.
+	 */
+	var shouldRecordStatistics: Boolean
+		get()
+		{
+			val key = resources.getString(R.string.key_record_statistics)
+			val defaultValue = resources.getBoolean(R.bool.default_record_statistics)
+
+			return instance.getBoolean(key, defaultValue)
+		}
+		set(value)
+		{
+			saveBoolean(resources.getString(R.string.key_record_statistics), value)
+		}
+
+	/**
+	 * Whether the power button, through the screen going out, dismisses the alarm.
+	 */
+	var shouldPowerDismiss: Boolean
+		get()
+		{
+			val key = resources.getString(R.string.key_power_dismiss)
+			val defaultValue = resources.getBoolean(R.bool.default_power_dismiss)
+
+			return instance.getBoolean(key, defaultValue)
+		}
+		set(value)
+		{
+			val key = resources.getString(R.string.key_power_dismiss)
+
+			saveBoolean(key, value)
+		}
+
+	/**
+	 * How long a tap shows the screen as normal during a dawn. [Units: sec]
+	 */
+	var dawnRevealDuration: Int
+		get()
+		{
+			val key = resources.getString(R.string.key_dawn_reveal_duration)
+			val defaultValue = resources.getInteger(R.integer.default_dawn_reveal_duration)
+
+			return instance.getInt(key, defaultValue)
+		}
+		set(value)
+		{
+			val key = resources.getString(R.string.key_dawn_reveal_duration)
+
+			saveInt(key, value)
+		}
+
+	/**
+	 * How long a dawn preview runs. [Units: sec]
+	 */
+	var dawnPreviewDuration: Int
+		get()
+		{
+			val key = resources.getString(R.string.key_dawn_preview_duration)
+			val defaultValue = resources.getInteger(R.integer.default_dawn_preview_duration)
+
+			// The allowed range has shrunk since this setting first shipped, so an
+			// older value is brought back inside it
+			return instance.getInt(key, defaultValue).coerceIn(5, 30)
+		}
+		set(value)
+		{
+			val key = resources.getString(R.string.key_dawn_preview_duration)
+
+			saveInt(key, value)
+		}
+
+	/**
+	 * Image chosen for the dawn but not yet applied to the alarm.
+	 *
+	 * Android can close the options dialog while the file picker is in front, which
+	 * would throw the choice away before OK is ever pressed. Keeping it here means
+	 * the choice survives, and it is picked back up when the dialog is reopened.
+	 */
+	var dawnPendingImagePath: String
+		get() = instance.getString("dawnPendingImagePath", "") ?: ""
+		set(value)
+		{
+			saveString("dawnPendingImagePath", value)
+		}
+
+	/**
+	 * Id of the alarm the pending dawn image belongs to.
+	 */
+	var dawnPendingImageAlarmId: Long
+		get() = instance.getLong("dawnPendingImageAlarmId", 0L)
+		set(value)
+		{
+			instance.edit { putLong("dawnPendingImageAlarmId", value) }
+		}
+
+	/**
+	 * First hour at which the time can be spoken. [Units: h]
+	 */
+	var sayTimeFromHour: Int
+		get()
+		{
+			val key = resources.getString(R.string.key_say_time_from_hour)
+			val defaultValue = resources.getInteger(R.integer.default_say_time_from_hour)
+
+			return instance.getInt(key, defaultValue)
+		}
+		set(value)
+		{
+			saveInt(resources.getString(R.string.key_say_time_from_hour), value)
+		}
+
+	/**
+	 * Hour after which the time is no longer spoken. [Units: h]
+	 */
+	var sayTimeToHour: Int
+		get()
+		{
+			val key = resources.getString(R.string.key_say_time_to_hour)
+			val defaultValue = resources.getInteger(R.integer.default_say_time_to_hour)
+
+			return instance.getInt(key, defaultValue)
+		}
+		set(value)
+		{
+			saveInt(resources.getString(R.string.key_say_time_to_hour), value)
+		}
+
+	/**
+	 * Language the time is spoken in. Empty means the language of the phone.
+	 */
+	var sayTimeLanguage: String
+		get()
+		{
+			val key = resources.getString(R.string.key_say_time_language)
+
+			return instance.getString(key, "") ?: ""
+		}
+		set(value)
+		{
+			saveString(resources.getString(R.string.key_say_time_language), value)
+		}
+
+	/**
+	 * Which clock the spoken time uses. 0 follows the phone, 1 is a 12 hour clock and
+	 * 2 is a 24 hour clock.
+	 */
+	var sayTimeFormat: Int
+		get()
+		{
+			val key = resources.getString(R.string.key_say_time_format)
+			val defaultValue = resources.getInteger(R.integer.default_say_time_format)
+
+			return instance.getInt(key, defaultValue)
+		}
+		set(value)
+		{
+			saveInt(resources.getString(R.string.key_say_time_format), value)
+		}
+
+	/**
+	 * Whether the time is said at all. The switch beside Speak the time in the
+	 * settings list answers for this, and it holds back the shake and the hand
+	 * together without touching either of their own switches.
+	 *
+	 * Before 1.88 that switch wrote the shake itself. When nothing has been saved
+	 * yet, it reads as on whenever one of the two is on, so an update changes
+	 * nothing that was working.
+	 */
+	var shouldSayTime: Boolean
+		get()
+		{
+			val key = resources.getString(R.string.key_say_time_enabled)
+
+			return if (instance.contains(key))
+			{
+				instance.getBoolean(key, true)
+			}
+			else
+			{
+				shouldShakeToSayTime || shouldWaveToSayTime
+			}
+		}
+		set(value)
+		{
+			saveBoolean(resources.getString(R.string.key_say_time_enabled), value)
+		}
+
+	/**
+	 * Whether shaking the phone says the time out loud.
+	 */
+	var shouldShakeToSayTime: Boolean
+		get()
+		{
+			val key = resources.getString(R.string.key_shake_to_say_time)
+			val defaultValue = resources.getBoolean(R.bool.default_shake_to_say_time)
+
+			return instance.getBoolean(key, defaultValue)
+		}
+		set(value)
+		{
+			saveBoolean(resources.getString(R.string.key_shake_to_say_time), value)
+		}
+
+	/**
+	 * Whether the alarm list rearranges itself, which brings whatever rings next to
+	 * the top.
+	 */
+	var shouldAutoSortAlarms: Boolean
+		get()
+		{
+			val key = resources.getString(R.string.key_tweak_auto_sort_alarms)
+			val defaultValue = resources.getBoolean(R.bool.default_auto_sort_alarms)
+
+			return instance.getBoolean(key, defaultValue)
+		}
+		set(value)
+		{
+			saveBoolean(resources.getString(R.string.key_tweak_auto_sort_alarms), value)
+		}
+
+	/**
+	 * Whether passing a hand over the phone says the time out loud.
+	 */
+	var shouldWaveToSayTime: Boolean
+		get()
+		{
+			val key = resources.getString(R.string.key_wave_to_say_time)
+			val defaultValue = resources.getBoolean(R.bool.default_wave_to_say_time)
+
+			return instance.getBoolean(key, defaultValue)
+		}
+		set(value)
+		{
+			saveBoolean(resources.getString(R.string.key_wave_to_say_time), value)
+		}
+
+	/**
+	 * How many hands passing over say the time. 0 is one pass and 1 is two.
+	 */
+	var wavePasses: Int
+		get()
+		{
+			val key = resources.getString(R.string.key_wave_passes)
+			val defaultValue = resources.getInteger(R.integer.default_wave_passes)
+
+			return instance.getInt(key, defaultValue)
+		}
+		set(value)
+		{
+			saveInt(resources.getString(R.string.key_wave_passes), value)
+		}
+
+	/**
+	 * How hard the phone has to be shaken, as a place in the list that is shown. 0
+	 * asks for the least and 3 for the most.
+	 */
+	var shakeSensitivity: Int
+		get()
+		{
+			val key = resources.getString(R.string.key_shake_sensitivity)
+			val defaultValue = resources.getInteger(R.integer.default_shake_sensitivity)
+
+			return instance.getInt(key, defaultValue)
+		}
+		set(value)
+		{
+			saveInt(resources.getString(R.string.key_shake_sensitivity), value)
+		}
+
+	/**
+	 * Whether the clock is inside the hours during which the time can be spoken.
+	 */
+	fun isWithinSayTimeHours(hour: Int): Boolean
+	{
+		val from = sayTimeFromHour
+		val to = sayTimeToHour
+
+		// The whole day
+		if (from == to)
+		{
+			return true
+		}
+
+		// A normal span, such as 3 to 10
+		return if (from < to)
+		{
+			(hour >= from) && (hour < to)
+		}
+		// A span that runs over midnight, such as 22 to 7
+		else
+		{
+			(hour >= from) || (hour < to)
+		}
+	}
+
+	/**
+	 * Last custom color chosen for a dawn, so that the custom swatch keeps showing
+	 * it after a preset color is picked. 0 means that none has been chosen yet.
+	 */
+	var dawnCustomColor: Int
+		get() = instance.getInt("dawnCustomColor", 0)
+		set(value)
+		{
+			instance.edit { putInt("dawnCustomColor", value) }
+		}
+
+	/**
+	 * Id of the alarm whose dawn options dialog should be opened again.
+	 *
+	 * Android closes that dialog while the image picker is in front, so the
+	 * dialog is brought back once the picker is done.
+	 */
+	var dawnReopenAlarmId: Long
+		get() = instance.getLong("dawnReopenAlarmId", 0L)
+		set(value)
+		{
+			instance.edit { putLong("dawnReopenAlarmId", value) }
+		}
+
+	/**
 	 * Whether to save battery when an alarm is active or not.
 	 */
 	var shouldSaveBatteryInAlarmScreen: Boolean
@@ -2382,6 +2891,126 @@ class NacSharedPreferences(context: Context)
 		}
 
 	/**
+	 * Whether the dawn simulation should be used or not for an alarm.
+	 */
+	var shouldUseDawn: Boolean
+		get()
+		{
+			val key = resources.getString(R.string.key_default_alarm_dawn_should_use_dawn)
+			val defaultValue = false
+
+			return instance.getBoolean(key, defaultValue)
+		}
+		set(value)
+		{
+			val key = resources.getString(R.string.key_default_alarm_dawn_should_use_dawn)
+
+			saveBoolean(key, value)
+		}
+
+	/**
+	 * Duration of the dawn simulation for an alarm. [Units: min]
+	 */
+	var dawnDuration: Int
+		get()
+		{
+			val key = resources.getString(R.string.key_default_alarm_dawn_duration)
+			val defaultValue = 10
+
+			return instance.getInt(key, defaultValue)
+		}
+		set(value)
+		{
+			val key = resources.getString(R.string.key_default_alarm_dawn_duration)
+
+			saveInt(key, value)
+		}
+
+	/**
+	 * Color of the dawn simulation for an alarm. [Units: ARGB]
+	 */
+	var dawnColor: Int
+		get()
+		{
+			val key = resources.getString(R.string.key_default_alarm_dawn_color)
+			val defaultValue = -13942
+
+			return instance.getInt(key, defaultValue)
+		}
+		set(value)
+		{
+			val key = resources.getString(R.string.key_default_alarm_dawn_color)
+
+			saveInt(key, value)
+		}
+
+	/**
+	 * Whether an image should be used instead of a color for the dawn simulation.
+	 */
+	var shouldUseDawnImage: Boolean
+		get()
+		{
+			val key = resources.getString(R.string.key_default_alarm_dawn_should_use_image)
+			val defaultValue = false
+
+			return instance.getBoolean(key, defaultValue)
+		}
+		set(value)
+		{
+			val key = resources.getString(R.string.key_default_alarm_dawn_should_use_image)
+
+			saveBoolean(key, value)
+		}
+
+	/**
+	 * URI of the image used for the dawn simulation.
+	 */
+	var dawnImagePath: String
+		get()
+		{
+			val key = resources.getString(R.string.key_default_alarm_dawn_image_path)
+			val defaultValue = ""
+
+			return instance.getString(key, defaultValue) ?: ""
+		}
+		set(value)
+		{
+			val key = resources.getString(R.string.key_default_alarm_dawn_image_path)
+
+			saveString(key, value)
+		}
+
+	/**
+	 * How long before the alarm the flashlight fades in during the dawn. [Units: min]
+	 */
+	var dawnFlashlightLead: Int
+		get()
+		{
+			val key = resources.getString(R.string.key_default_alarm_dawn_flashlight_lead)
+			val defaultValue = 0
+
+			return instance.getInt(key, defaultValue)
+		}
+		set(value)
+		{
+			val key = resources.getString(R.string.key_default_alarm_dawn_flashlight_lead)
+
+			saveInt(key, value)
+		}
+
+	/**
+	 * Whether to show or hide the dawn button.
+	 */
+	val shouldShowDawnButton: Boolean
+		get()
+		{
+			val key = resources.getString(R.string.key_show_hide_dawn_button)
+			val defaultValue = resources.getBoolean(R.bool.default_show_hide_dawn_button)
+
+			return instance.getBoolean(key, defaultValue)
+		}
+
+	/**
 	 * Whether to use the new alarm screen or not.
 	 */
 	var shouldUseNewAlarmScreen: Boolean
@@ -2677,8 +3306,17 @@ class NacSharedPreferences(context: Context)
 		{
 			val key = resources.getString(R.string.key_style_start_week_on)
 			val defaultValue = resources.getInteger(R.integer.default_start_week_on_index)
+			val index = instance.getInt(key, defaultValue)
 
-			return instance.getInt(key, defaultValue)
+			// Automatic. Follow the first day of the week of the locale of the phone
+			return if (index == START_WEEK_ON_AUTOMATIC)
+			{
+				if (Calendar.getInstance().firstDayOfWeek == Calendar.MONDAY) 1 else 0
+			}
+			else
+			{
+				index
+			}
 		}
 
 	/**
@@ -2724,7 +3362,24 @@ class NacSharedPreferences(context: Context)
 		}
 
 	/**
-	 * Text-to-speech frequency at which it will speak for an alarm.
+	 * How long the voice waits after the alarm starts, so that the music wakes you
+	 * first. [Units: sec]
+	 */
+	var ttsDelay: Int
+		get()
+		{
+			val key = resources.getString(R.string.key_tts_delay)
+			val defaultValue = resources.getInteger(R.integer.default_tts_delay)
+
+			return instance.getInt(key, defaultValue)
+		}
+		set(value)
+		{
+			saveInt(resources.getString(R.string.key_tts_delay), value)
+		}
+
+	/**
+	 * How often to speak via text-to-speech. [Units: min]
 	 */
 	var ttsFrequency: Int
 		get()
@@ -2980,7 +3635,7 @@ class NacSharedPreferences(context: Context)
 		get()
 		{
 			val key = resources.getString(R.string.key_default_alarm_volume)
-			val defaultValue = 75
+			val defaultValue = 40
 
 			return instance.getInt(key, defaultValue)
 		}
@@ -2998,7 +3653,10 @@ class NacSharedPreferences(context: Context)
 		get()
 		{
 			val key = resources.getString(R.string.key_default_timer_volume)
-			val defaultValue = 75
+
+			// The same as the alarms. It was 75, loud for a timer, which is most often
+			// started in a quiet room (1.94)
+			val defaultValue = 40
 
 			return instance.getInt(key, defaultValue)
 		}
@@ -3082,6 +3740,82 @@ class NacSharedPreferences(context: Context)
 		}
 
 	/**
+	 * Whether the USE_FULL_SCREEN_INTENT permission was ever in hand.
+	 *
+	 * A permission that was granted and is gone was taken away by something, an
+	 * app update most of the time. That is not the same as one that was never
+	 * given, and it is worth offering again.
+	 */
+	var wasFullScreenIntentPermissionGranted: Boolean
+		get()
+		{
+			val key = resources.getString(R.string.key_permission_full_screen_intent_granted)
+
+			return instance.getBoolean(key, false)
+		}
+		set(value)
+		{
+			val key = resources.getString(R.string.key_permission_full_screen_intent_granted)
+
+			saveBoolean(key, value)
+		}
+
+	/**
+	 * The app version at which the USE_FULL_SCREEN_INTENT permission was last asked
+	 * for.
+	 *
+	 * An app update is what takes this one away, so a version that has not yet asked
+	 * should ask, however many times it was asked for before.
+	 */
+	var fullScreenIntentPermissionAskedAtVersion: String
+		get()
+		{
+			val key = resources.getString(R.string.key_permission_full_screen_intent_asked_at_version)
+
+			return instance.getString(key, "") ?: ""
+		}
+		set(value)
+		{
+			val key = resources.getString(R.string.key_permission_full_screen_intent_asked_at_version)
+
+			saveString(key, value)
+		}
+
+	/**
+	 * Whether the SYSTEM_ALERT_WINDOW permission was ever in hand. See above.
+	 */
+	var wasSystemAlertWindowPermissionGranted: Boolean
+		get()
+		{
+			val key = resources.getString(R.string.key_permission_system_alert_window_granted)
+
+			return instance.getBoolean(key, false)
+		}
+		set(value)
+		{
+			val key = resources.getString(R.string.key_permission_system_alert_window_granted)
+
+			saveBoolean(key, value)
+		}
+
+	/**
+	 * Whether the USE_FULL_SCREEN_INTENT permission was requested.
+	 */
+	var wasFullScreenIntentPermissionRequested: Boolean
+		get()
+		{
+			val key = resources.getString(R.string.key_permission_full_screen_intent_requested)
+
+			return instance.getBoolean(key, false)
+		}
+		set(value)
+		{
+			val key = resources.getString(R.string.key_permission_full_screen_intent_requested)
+
+			saveBoolean(key, value)
+		}
+
+	/**
 	 * Whether the SYSTEM_ALERT_WINDOW permission was requested.
 	 */
 	var wasSystemAlertWindowPermissionRequested: Boolean
@@ -3138,6 +3872,41 @@ class NacSharedPreferences(context: Context)
 						else      -> continue
 					}
 
+				}
+
+			}
+
+		}
+	}
+
+	/**
+	 * Put every setting back to what it was out of the box.
+	 *
+	 * Alarms are not touched: they live in the database, not here. Neither are the
+	 * keys the app keeps for itself — first run, the measured card heights, the
+	 * version it last saw — otherwise the app would behave as if it had just been
+	 * installed and would build a new alarm.
+	 */
+	fun resetToDefaults()
+	{
+		val keysToKeep = getCsvKeysToIgnore()
+		val kept = instance.all.filterKeys { keysToKeep.contains(it) }
+
+		instance.edit {
+
+			clear()
+
+			// Put the housekeeping back
+			kept.forEach { (key, value) ->
+
+				when (value)
+				{
+					is Boolean -> putBoolean(key, value)
+					is Float   -> putFloat(key, value)
+					is Int     -> putInt(key, value)
+					is Long    -> putLong(key, value)
+					is String  -> putString(key, value)
+					else       -> {}
 				}
 
 			}
@@ -3237,6 +4006,158 @@ class NacSharedPreferences(context: Context)
 
 		// Mark the event as completed
 		eventFixZeroAutoDismissAndSnooze = true
+	}
+
+	/**
+	 * Write down the audio source of every alarm by a name that does not change with
+	 * the language.
+	 *
+	 * Until 1.83 an alarm held the words shown on screen. Change the language and
+	 * those words matched nothing, so the sound fell back to the alarm channel and a
+	 * choice of anything else was lost. What is read here is taken to be written in
+	 * the language in use, which is true of anyone who has not changed it since
+	 * choosing; anything unknown falls to the first source, as it already did.
+	 */
+	suspend fun runEventAudioSourceToKeys(
+		allAlarms: List<NacAlarm>,
+		onAlarmChanged: suspend (NacAlarm) -> Unit = {})
+	{
+		val keys = resources.getStringArray(R.array.audio_source_keys)
+
+		fun toKey(value: String): String = audioSourceToKey(value)
+
+		// The default that new alarms and timers are built from
+		audioSource = toKey(audioSource)
+		audioSourceTimer = toKey(audioSourceTimer)
+
+		// Every alarm that still holds words
+		allAlarms
+			.filter { it.audioSource.isNotEmpty() && !keys.contains(it.audioSource) }
+			.forEach { alarm ->
+
+				alarm.audioSource = toKey(alarm.audioSource)
+
+				// Call the listener when the alarm is changed
+				onAlarmChanged(alarm)
+
+			}
+
+		// Mark the event as completed
+		eventAudioSourceToKeys = true
+	}
+
+	/**
+	 * The name that does not change with the language, for an audio source that may
+	 * still be held as the words shown on screen.
+	 *
+	 * The words are looked up in the language in use. Words of another language, or
+	 * nothing at all, fall back on the first source, which is the alarm one.
+	 */
+	private fun audioSourceToKey(value: String): String
+	{
+		val keys = resources.getStringArray(R.array.audio_source_keys)
+		val words = resources.getStringArray(R.array.audio_sources)
+
+		// Already written down
+		if (keys.contains(value))
+		{
+			return value
+		}
+
+		// The words of the language in use
+		val index = words.indexOf(value)
+
+		return if (index >= 0) keys[index] else keys[0]
+	}
+
+	/**
+	 * Write down the audio source of every timer as a name that does not change with
+	 * the language, as 1.83 did for the alarms.
+	 */
+	suspend fun runEventTimerAudioSourceToKeys(
+		allTimers: List<NacTimer>,
+		onTimerChanged: suspend (NacTimer) -> Unit = {})
+	{
+		val keys = resources.getStringArray(R.array.audio_source_keys)
+
+		// The default that new timers are built from. The event of the alarms already
+		// did it, but it costs nothing to be sure
+		audioSourceTimer = audioSourceToKey(audioSourceTimer)
+
+		// Every timer that still holds words
+		allTimers
+			.filter { it.audioSource.isNotEmpty() && !keys.contains(it.audioSource) }
+			.forEach { timer ->
+
+				timer.audioSource = audioSourceToKey(timer.audioSource)
+
+				// Call the listener when the timer is changed
+				onTimerChanged(timer)
+
+			}
+
+		// Mark the event as completed
+		eventTimerAudioSourceToKeys = true
+	}
+
+	/**
+	 * Write down where each alarm sits in the list.
+	 *
+	 * Until 1.87 the list was always rearranged, so nothing had to be remembered. It
+	 * can now be left alone, and an order that is left alone has to start somewhere:
+	 * the one on screen. Every alarm is therefore given the rank it holds under the
+	 * old sort, and nothing moves on the day the setting appears.
+	 */
+	suspend fun runEventFreezeAlarmOrder(
+		allAlarms: List<NacAlarm>,
+		onAlarmChanged: suspend (NacAlarm) -> Unit = {})
+	{
+		allAlarms.sorted()
+			.forEachIndexed { index, alarm ->
+
+				// Already where it should be
+				if (alarm.sortOrder == index)
+				{
+					return@forEachIndexed
+				}
+
+				alarm.sortOrder = index
+
+				// Call the listener when the alarm is changed
+				onAlarmChanged(alarm)
+
+			}
+
+		// Mark the event as completed
+		eventFreezeAlarmOrder = true
+	}
+
+	/**
+	 * Move the shake sensitivity onto the list that gained two finer entries and lost
+	 * the firmest one.
+	 *
+	 * Until 1.85 the list read soft, normal, firm. It now reads slightest, slight,
+	 * light, normal, so what was chosen has to be carried over or a setting would
+	 * quietly come to mean something else. The firmest is gone, so whoever had it
+	 * lands on the firmest that is left.
+	 */
+	fun runEventShakeSensitivityFiner()
+	{
+		val key = resources.getString(R.string.key_shake_sensitivity)
+
+		// Nothing was ever chosen, so the new default already says what it should
+		if (instance.contains(key))
+		{
+			// 0 soft -> 2 light, 1 normal -> 3 normal, 2 firm -> 3 normal
+			shakeSensitivity = when (instance.getInt(key, 0))
+			{
+				0 -> 2
+				else -> 3
+			}
+		}
+
+		// Mark the event as completed
+		eventShakeSensitivityFiner = true
 	}
 
 	/**

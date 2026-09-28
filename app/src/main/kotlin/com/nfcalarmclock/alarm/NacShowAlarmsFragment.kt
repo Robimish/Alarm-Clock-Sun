@@ -3,6 +3,8 @@ package com.nfcalarmclock.alarm
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.provider.AlarmClock
@@ -44,11 +46,14 @@ import com.nfcalarmclock.alarm.card.NacAlarmCardHolder.OnCardDismissOptionsClick
 import com.nfcalarmclock.alarm.card.NacAlarmCardHolder.OnCardExpandedListener
 import com.nfcalarmclock.alarm.card.NacAlarmCardHolder.OnCardMediaClickedListener
 import com.nfcalarmclock.alarm.card.NacAlarmCardHolder.OnCardNameClickedListener
+import com.nfcalarmclock.alarm.card.NacAlarmCardHolder.OnCardNameColorClickedListener
+import com.nfcalarmclock.settings.colorpicker.NacColorPickerDialog
 import com.nfcalarmclock.alarm.card.NacAlarmCardHolder.OnCardSnoozeOptionsClickedListener
 import com.nfcalarmclock.alarm.card.NacAlarmCardHolder.OnCardSwitchChangedListener
 import com.nfcalarmclock.alarm.card.NacAlarmCardHolder.OnCardTimeClickedListener
 import com.nfcalarmclock.alarm.card.NacAlarmCardHolder.OnCardUpdatedListener
 import com.nfcalarmclock.alarm.card.NacAlarmCardHolder.OnCardUseFlashlightChangedListener
+import com.nfcalarmclock.alarm.card.NacAlarmCardHolder.OnCardUseDawnChangedListener
 import com.nfcalarmclock.alarm.card.NacAlarmCardHolder.OnCardUseNfcChangedListener
 import com.nfcalarmclock.alarm.card.NacAlarmCardHolder.OnCardUseRepeatChangedListener
 import com.nfcalarmclock.alarm.card.NacAlarmCardHolder.OnCardUseVibrateChangedListener
@@ -56,6 +61,7 @@ import com.nfcalarmclock.alarm.card.NacAlarmCardHolder.OnCardVolumeChangedListen
 import com.nfcalarmclock.alarm.card.NacAlarmCardTouchHelper
 import com.nfcalarmclock.alarm.db.NacAlarm
 import com.nfcalarmclock.alarm.db.NacNextAlarm
+import com.nfcalarmclock.alarm.card.NacVolumePreview
 import com.nfcalarmclock.alarm.options.NacAlarmOptionsDialog
 import com.nfcalarmclock.alarm.options.dateandtime.NacDateAndTimePickerDialog
 import com.nfcalarmclock.alarm.options.dismissoptions.NacDismissEarlyService
@@ -79,6 +85,7 @@ import com.nfcalarmclock.system.registerMyReceiver
 import com.nfcalarmclock.system.scheduler.NacScheduler
 import com.nfcalarmclock.system.toBundle
 import com.nfcalarmclock.system.unregisterMyReceiver
+import com.nfcalarmclock.view.NacNextAlarmTrackView
 import com.nfcalarmclock.view.performHapticFeedback
 import com.nfcalarmclock.view.quickToast
 import com.nfcalarmclock.view.showSnackbar
@@ -109,6 +116,11 @@ class NacShowAlarmsFragment
 	private val alarmViewModel: NacAlarmViewModel by viewModels()
 
 	/**
+	 * Plays the media of an alarm while its volume slider is being held.
+	 */
+	private val volumePreview by lazy { NacVolumePreview(requireContext()) }
+
+	/**
 	 * Statistic view model.
 	 */
 	private val statisticViewModel: NacAlarmStatisticViewModel by viewModels()
@@ -137,6 +149,16 @@ class NacShowAlarmsFragment
 	 * Next alarm text view.
 	 */
 	private lateinit var nextAlarmTextView: MaterialTextView
+
+	/**
+	 * The rail the sun travels along as the next alarm comes closer.
+	 */
+	private lateinit var nextAlarmTrackView: NacNextAlarmTrackView
+
+	/**
+	 * Message shown while an alarm is snoozed.
+	 */
+	private lateinit var snoozedAlarmTextView: MaterialTextView
 
 	/**
 	 * Recycler view containing the alarm cards.
@@ -298,7 +320,11 @@ class NacShowAlarmsFragment
 		alarm.id = 0
 		alarm.hour = 8
 		alarm.minute = 0
-		alarm.name = getString(R.string.example_name)
+		alarm.name = getString(R.string.first_alarm_name)
+
+		// Left off. It is an example, not something the person asked for, and an alarm
+		// going off on its own the morning after an install is a nasty surprise
+		alarm.isEnabled = false
 
 		// Add the alarm
 		addAlarm(alarm)
@@ -408,6 +434,94 @@ class NacShowAlarmsFragment
 	}
 
 	/**
+	 * Show, or hide, the message saying that an alarm is snoozed.
+	 *
+	 * A snoozed alarm is easy to miss: the alarm list goes on showing the next
+	 * normal time, which is hours away, so nothing says that one is waiting a few
+	 * minutes from now.
+	 */
+	private fun setSnoozedAlarmMessage()
+	{
+		val now = System.currentTimeMillis()
+
+		// The snoozed alarm that will go off first, of those still waiting
+		val snoozed = alarmCardAdapter.currentList
+			.filter { (it.snoozeCount > 0) && (it.timeOfSnoozedAlarm > now) }
+			.minByOrNull { it.timeOfSnoozedAlarm }
+
+		// Nothing is snoozed
+		if (snoozed == null)
+		{
+			snoozedAlarmTextView.visibility = View.GONE
+			return
+		}
+
+		// Say how long is left
+		val cal = Calendar.getInstance()
+
+		cal.timeInMillis = snoozed.timeOfSnoozedAlarm
+
+		val timeRemaining = NacCalendar.Message.getTimeRemaining(resources, cal)
+
+		snoozedAlarmTextView.text = getString(R.string.message_alarm_is_snoozed, timeRemaining)
+		snoozedAlarmTextView.visibility = View.VISIBLE
+	}
+
+	/**
+	 * Mix a color with black.
+	 */
+	private fun blendWithBlack(color: Int, fraction: Float): Int
+	{
+		val f = fraction.coerceIn(0f, 1f)
+
+		return Color.argb(255, (Color.red(color)*f).toInt(), (Color.green(color)*f).toInt(),
+			(Color.blue(color)*f).toInt())
+	}
+
+	/**
+	 * Mix a color with white.
+	 */
+	private fun blendWithWhite(color: Int, fraction: Float): Int
+	{
+		val f = fraction.coerceIn(0f, 1f)
+		val r = Color.red(color) + ((255 - Color.red(color)) * f).toInt()
+		val g = Color.green(color) + ((255 - Color.green(color)) * f).toInt()
+		val b = Color.blue(color) + ((255 - Color.blue(color)) * f).toInt()
+
+		return Color.argb(255, r, g, b)
+	}
+
+	/**
+	 * Close every alarm card except the one that was just opened, so that only one
+	 * alarm is open at a time.
+	 */
+	private fun collapseOtherAlarmCards(keepId: Long)
+	{
+		// Nothing else is open
+		val others = alarmViewModel.expandedAlarmIds.filter { it != keepId }
+
+		if (others.isEmpty())
+		{
+			return
+		}
+
+		// Forget them, whether their card is on screen or not
+		alarmViewModel.expandedAlarmIds.removeAll(others)
+
+		// Close the ones that are on screen
+		for (i in 0 until alarmCardAdapter.itemCount)
+		{
+			val other = getAlarmCardAt(i) ?: continue
+			val otherAlarm = other.alarm ?: continue
+
+			if ((otherAlarm.id != keepId) && other.isExpanded)
+			{
+				other.doCollapseWithColor()
+			}
+		}
+	}
+
+	/**
 	 * Measure a card.
 	 */
 	private fun measureCard(card: NacAlarmCardHolder)
@@ -415,7 +529,7 @@ class NacShowAlarmsFragment
 		NacLog.i("Measuring alarm card")
 
 		// Array that will store the heights
-		val heights = IntArray(3)
+		val heights = IntArray(4)
 
 		// Measure the card
 		card.measureCard(heights)
@@ -424,7 +538,9 @@ class NacShowAlarmsFragment
 		sharedPreferences.cardHeightCollapsed = heights[0]
 		sharedPreferences.cardHeightCollapsedDismiss = heights[1]
 		sharedPreferences.cardHeightExpanded = heights[2]
+		sharedPreferences.cardHeightExpandedDismiss = heights[3]
 		sharedPreferences.cardIsMeasured = true
+		sharedPreferences.cardLayoutVersion = CARD_LAYOUT_VERSION
 	}
 
 	/**
@@ -449,6 +565,9 @@ class NacShowAlarmsFragment
 		super.onPause()
 
 		NacLog.i("Pausing show alarms fragment")
+
+		// Never leave the media playing, or the stream volume changed
+		volumePreview.stop()
 
 		// Save scroll position of recyclerview and sort order of alarms
 		alarmViewModel.recyclerViewState = recyclerView.layoutManager?.onSaveInstanceState()
@@ -497,6 +616,17 @@ class NacShowAlarmsFragment
 		// Clear the action from the back stack entry
 		arguments?.remove(BUNDLE_INTENT_ACTION)
 
+		// The setting may have been turned over on the appearance screen while this
+		// page was away, so the list is put in whichever order it now asks for. Not
+		// before it holds anything: an empty list would go on screen ahead of the
+		// alarms, which arrive from the database a moment later
+		alarmCardAdapterLiveData.shouldAutoSort = sharedPreferences.shouldAutoSortAlarms
+
+		if (alarmCardAdapterLiveData.value != null)
+		{
+			alarmCardAdapterLiveData.sort()
+		}
+
 		// Restore the recyclerview state
 		restoreRecyclerViewState()
 
@@ -505,6 +635,53 @@ class NacShowAlarmsFragment
 
 		// Register the time tick receiver
 		registerMyReceiver(requireContext(), timeTickReceiver, IntentFilter(Intent.ACTION_TIME_TICK))
+
+		// Open the dawn options dialog again after an image was picked
+		reopenDawnOptionsIfNeeded()
+	}
+
+	/**
+	 * Open the dawn options dialog again after the image picker closed it.
+	 *
+	 * Android destroys that dialog while the system picker is in front, so the
+	 * main activity leaves the id of the alarm behind and the dialog is brought
+	 * back here, with the image that was just chosen already in it.
+	 */
+	private fun reopenDawnOptionsIfNeeded()
+	{
+		val shared = NacSharedPreferences(requireContext())
+		val alarmId = shared.dawnReopenAlarmId
+
+		// Nothing to reopen
+		if (alarmId == 0L)
+		{
+			return
+		}
+
+		// Consume the request, so that it only happens once
+		shared.dawnReopenAlarmId = 0L
+
+		// The dialog is still there, so there is nothing to do
+		val current = navController.currentDestination?.id
+
+		if ((current == R.id.nacDawnOptionsDialog)
+			|| (current == R.id.nacDawnOptionsDialog2))
+		{
+			return
+		}
+
+		// Find the alarm and show its dawn options again
+		lifecycleScope.launch {
+
+			val alarm = alarmViewModel.findAlarm(alarmId) ?: return@launch
+
+			NacAlarmOptionsDialog.quickNavigate(navController,
+				R.id.nacDawnOptionsDialog2, alarm)
+				?.observe(viewLifecycleOwner) { a ->
+					updateAlarm(a)
+				}
+
+		}
 	}
 
 	/**
@@ -541,11 +718,23 @@ class NacShowAlarmsFragment
 		val context = requireContext()
 		sharedPreferences = NacSharedPreferences(context)
 		nextAlarmTextView = view.findViewById(R.id.tv_next_alarm)
+		nextAlarmTrackView = view.findViewById(R.id.v_next_alarm_track)
+		snoozedAlarmTextView = view.findViewById(R.id.tv_snoozed_alarm)
+
+		// The pill follows the color of the theme
+		val theme = sharedPreferences.themeColor
+
+		snoozedAlarmTextView.backgroundTintList = ColorStateList.valueOf(
+			blendWithBlack(theme, 0.22f))
+		snoozedAlarmTextView.setTextColor(blendWithWhite(theme, 0.35f))
+		snoozedAlarmTextView.compoundDrawableTintList = ColorStateList.valueOf(
+			blendWithWhite(theme, 0.35f))
 		floatingActionButton = requireActivity().findViewById(R.id.floating_action_button)
 		bottomNavigation = requireActivity().findViewById(R.id.bottom_navigation)
 		recyclerView = view.findViewById(R.id.rv_alarm_list)
 		alarmCardAdapter = NacAlarmCardAdapter()
 		alarmCardAdapterLiveData = NacAlarmCardAdapterLiveData()
+		alarmCardAdapterLiveData.shouldAutoSort = sharedPreferences.shouldAutoSortAlarms
 		nextAlarmMessageHandler = Handler(context.mainLooper)
 		alarmCardTouchHelper = NacAlarmCardTouchHelper(object: NacBaseCardTouchHelperCallback.OnCardSwipedListener<NacAlarm> {
 
@@ -671,20 +860,66 @@ class NacShowAlarmsFragment
 		// Cancel any post delayed runnables
 		nextAlarmMessageHandler.removeCallbacksAndMessages(null)
 
-		// Get the next alarm. Use the parameter when it is supplied, otherwise use the
-		// alarm card adapter list
-		val nextAlarm = nextAlarm
-			?: NacCalendar.getNextAlarm(alarmCardAdapter.currentList)
+		// A snoozed alarm will not ring at its normal time. It rings at the end of the
+		// snooze, which the message above already gives. Counting it here would
+		// announce a ring that is not going to happen
+		val now = System.currentTimeMillis()
+		val isSnoozed = { a: NacAlarm -> (a.snoozeCount > 0) && (a.timeOfSnoozedAlarm > now) }
+		val anySnoozed = alarmCardAdapter.currentList.any(isSnoozed)
 
-		// Get the next alarm message
-		val message = NacCalendar.Message.getNext(requireContext(),
-			nextAlarm?.calendar, sharedPreferences.nextAlarmFormat)
+		// Get the next alarm. A next alarm that was handed over is only kept when it is
+		// not the one that is snoozed: the guard has to hold whoever calls, otherwise
+		// the line flashes back for as long as it takes the one second refresh to take
+		// it away again
+		val nextAlarm = nextAlarm?.takeUnless { isSnoozed(it.alarm) }
+			?: NacCalendar.getNextAlarm(alarmCardAdapter.currentList.filterNot(isSnoozed))
 
-		// Set the message in the text view
-		nextAlarmTextView.text = message
+		// Nothing is coming apart from the alarm that is snoozed, so there is nothing
+		// left for this line to say
+		if ((nextAlarm == null) && anySnoozed)
+		{
+			nextAlarmTextView.visibility = View.GONE
+		}
+		else
+		{
+			nextAlarmTextView.visibility = View.VISIBLE
+			nextAlarmTextView.text = NacCalendar.Message.getNext(requireContext(),
+				nextAlarm?.calendar, sharedPreferences.nextAlarmFormat)
+		}
 
+		// The rail follows whatever rings first, the snooze included. The line above
+		// leaves a snooze out on purpose, because the pill says it in words, but the
+		// rail is about what is nearest: a snooze ending in four minutes is the
+		// nearest thing there is. With nothing at all the sun rests at the start
+		val soonestSnooze = alarmCardAdapter.currentList
+			.filter(isSnoozed)
+			.minOfOrNull { it.timeOfSnoozedAlarm }
+
+		val trackMillis = listOfNotNull(nextAlarm?.calendar?.timeInMillis, soonestSnooze)
+			.minOrNull()
+
+		nextAlarmTrackView.hasAlarm = (trackMillis != null)
+		nextAlarmTrackView.progress = if (trackMillis != null)
+		{
+			NacNextAlarmTrackView.progressFor(trackMillis)
+		}
+		else
+		{
+			0f
+		}
+
+		// Say whether an alarm is snoozed
+		setSnoozedAlarmMessage()
+
+		// Keep counting while an alarm is snoozed, so that its countdown runs and the
+		// normal message comes back by itself once the snooze is over
+		if (anySnoozed)
+		{
+			nextAlarmMessageHandler.postDelayed({ setNextAlarmMessage() },
+				REFRESH_NEXT_ALARM_MESSAGE_PERIOD)
+		}
 		// Check if the next alarm message should be refreshed
-		if (shouldRefreshNextAlarmMessage(nextAlarm))
+		else if (shouldRefreshNextAlarmMessage(nextAlarm))
 		{
 			// Set the message for when the next alarm will be run
 			nextAlarmMessageHandler.postDelayed({
@@ -708,8 +943,11 @@ class NacShowAlarmsFragment
 			// Get the alarm
 			val alarm = alarmCardAdapter.getItemAt(index)
 
-			// Measure the card
-			if (!sharedPreferences.cardIsMeasured)
+			// Measure the card. An install whose heights were measured for an older
+			// layout is measured again, otherwise the card would be cut off or leave
+			// an empty gap
+			if (!sharedPreferences.cardIsMeasured
+				|| (sharedPreferences.cardLayoutVersion != CARD_LAYOUT_VERSION))
 			{
 				measureCard(card)
 			}
@@ -788,7 +1026,12 @@ class NacShowAlarmsFragment
 
 			// Expanded listener. Add the ID to the expanded list
 			card.onCardExpandedListener = OnCardExpandedListener { _, alarm ->
+
 				alarmViewModel.expandedAlarmIds.add(alarm.id)
+
+				// Only one alarm stays open at a time
+				collapseOtherAlarmCards(alarm.id)
+
 			}
 
 			// Updated listener
@@ -874,6 +1117,13 @@ class NacShowAlarmsFragment
 				alarm.toastFlashlight(context)
 			}
 
+			// Dawn
+			card.onCardUseDawnChangedListener = OnCardUseDawnChangedListener { _, alarm ->
+				NacLog.i("Saving shouldUseDawn=${alarm.shouldUseDawn}")
+				updateAlarm(alarm)
+				alarm.toastDawn(context)
+			}
+
 			// Media
 			card.onCardMediaClickedListener = OnCardMediaClickedListener { _, alarm ->
 
@@ -907,6 +1157,18 @@ class NacShowAlarmsFragment
 				updateAlarm(alarm)
 			}
 
+			// Hear the media of the alarm while the volume slider is held
+			card.onCardVolumePreviewListener = NacAlarmCardHolder.OnCardVolumePreviewListener { _, alarm, state ->
+
+				when (state)
+				{
+					NacAlarmCardHolder.VolumePreviewState.START -> volumePreview.start(alarm)
+					NacAlarmCardHolder.VolumePreviewState.CHANGE -> volumePreview.setVolume(alarm)
+					NacAlarmCardHolder.VolumePreviewState.STOP -> volumePreview.stop()
+				}
+
+			}
+
 			// Name
 			card.onCardNameClickedListener = OnCardNameClickedListener { _, alarm ->
 
@@ -931,6 +1193,52 @@ class NacShowAlarmsFragment
 
 					})
 					.show(parentFragmentManager, NacNameDialog.TAG)
+
+			}
+
+			// Color of the name, used to sort alarms into categories
+			card.onCardNameColorClickedListener = OnCardNameColorClickedListener { _, alarm ->
+
+				NacLog.i("Showing name color picker")
+
+				// Create the dialog
+				val colorPicker = NacColorPickerDialog()
+
+				// Show the color that is currently in use
+				colorPicker.initialColor = if (alarm.nameColor == 0)
+				{
+					sharedPreferences.nameColor
+				}
+				else
+				{
+					alarm.nameColor
+				}
+
+				// A color was picked
+				colorPicker.onColorSelectedListener = NacColorPickerDialog.OnColorSelectedListener { color ->
+
+					NacLog.i("Saving alarm name color")
+
+					alarm.nameColor = color
+
+					// Refresh the views and update the alarm
+					card.refreshNameViews()
+					updateAlarm(alarm)
+
+				}
+
+				// The default color was picked, so go back to the one from the settings
+				colorPicker.onDefaultColorSelectedListener = NacColorPickerDialog.OnDefaultColorSelectedListener {
+
+					alarm.nameColor = 0
+
+					card.refreshNameViews()
+					updateAlarm(alarm)
+
+				}
+
+				// Show the dialog
+				colorPicker.show(parentFragmentManager, NacColorPickerDialog.TAG)
 
 			}
 
@@ -1148,8 +1456,20 @@ class NacShowAlarmsFragment
 				return@setOnClickListener
 			}
 
-			// Create the alarm
+			// Create the alarm, with a lively name color of its own so that alarms
+			// are easy to tell apart at a glance
 			val alarm = NacAlarm.build(sharedPreferences)
+
+			// An alarm with no color of its own wears the one of the theme
+			val colorsInUse = alarmCardAdapter.currentList.map {
+				if (it.nameColor == 0) sharedPreferences.nameColor else it.nameColor
+			}
+
+			alarm.nameColor = NacAlarm.randomNameColor(colorsInUse)
+
+			// A new alarm goes at the bottom of a list that is left alone. It makes no
+			// difference to a list that rearranges itself
+			alarm.sortOrder = (alarmCardAdapter.currentList.maxOfOrNull { it.sortOrder } ?: -1) + 1
 
 			NacLog.i("Adding alarm")
 
@@ -1218,8 +1538,11 @@ class NacShowAlarmsFragment
 			// position
 			alarmViewModel.recyclerViewState = recyclerView.layoutManager?.onSaveInstanceState()
 
-			// Restore the saved sorted order of alarms
-			if (alarmViewModel.sortOrderedAlarmIds.size == alarms.size)
+			// Restore the saved sorted order of alarms. Only for a list that rearranges
+			// itself: one that is left alone is already in the order it was left in, and
+			// the order saved here could be one from before the setting was turned over
+			if (sharedPreferences.shouldAutoSortAlarms
+				&& (alarmViewModel.sortOrderedAlarmIds.size == alarms.size))
 			{
 				alarmCardAdapterLiveData.mergeSort(alarms, order = alarmViewModel.sortOrderedAlarmIds)
 				alarmViewModel.sortOrderedAlarmIds = emptyList()
@@ -1259,9 +1582,16 @@ class NacShowAlarmsFragment
 				// Refresh the next alarm message after the alarm list is submitted. If
 				// too many changes are made at once before the list is submitted, this
 				// does not get called over and over. Instead it will just be called the
-				// last time
-				val nextAlarm = NacCalendar.getNextAlarm(alarms)
-				setNextAlarmMessage(nextAlarm)
+				// last time.
+				//
+				// Nothing is handed over here on purpose. This used to pass
+				// NacCalendar.getNextAlarm(alarms), worked out over every alarm, snoozed
+				// ones included, and a next alarm that is handed over is taken as it is.
+				// So every list update flashed "next alarm in 23 hours" for the alarm
+				// that is snoozed, until the one second refresh took it away again.
+				// Called with nothing, the message works the list out itself and leaves
+				// the snoozed alarms out
+				setNextAlarmMessage()
 
 			}
 
@@ -1318,6 +1648,23 @@ class NacShowAlarmsFragment
 		recyclerView.adapter = alarmCardAdapter
 		recyclerView.layoutManager = NacCardLayoutManager(context)
 		recyclerView.setHasFixedSize(true)
+
+		// A list that has shrunk, after a delete, may no longer scroll at all. The
+		// button hides on the way down and nothing brings it back, because there is no
+		// way up left to scroll. Whenever everything fits on screen there is nothing to
+		// get out of the way of, so the button belongs on screen
+		recyclerView.addOnLayoutChangeListener { view, _, _, _, _, _, _, _, _ ->
+
+			val list = view as RecyclerView
+			val everythingFits = !list.canScrollVertically(-1)
+				&& !list.canScrollVertically(1)
+
+			if (everythingFits && !floatingActionButton.isShown)
+			{
+				floatingActionButton.show()
+			}
+
+		}
 
 		// Show/hide the FAB on scroll
 		recyclerView.addOnScrollListener(object : OnScrollListener()
@@ -1635,6 +1982,13 @@ class NacShowAlarmsFragment
 
 	companion object
 	{
+
+		/**
+		 * Version of the alarm card layout. Bumped whenever the layout changes in a
+		 * way that changes the height of the card, so that the heights kept from an
+		 * older version are measured again.
+		 */
+		private const val CARD_LAYOUT_VERSION = 3
 
 		/**
 		 * Rate at which the next alarm message is refreshed.

@@ -11,6 +11,7 @@ import androidx.media3.common.util.UnstableApi
 import com.nfcalarmclock.alarm.activealarm.NacActiveAlarmBroadcastReceiver
 import com.nfcalarmclock.alarm.activealarm.NacActiveAlarmService
 import com.nfcalarmclock.alarm.db.NacAlarm
+import com.nfcalarmclock.log.NacLog
 import com.nfcalarmclock.alarm.options.dismissoptions.NacDismissEarlyService
 import com.nfcalarmclock.alarm.options.upcomingreminder.NacUpcomingReminderService
 import com.nfcalarmclock.main.NacMainActivity
@@ -57,6 +58,76 @@ object NacScheduler
 		{
 			addDismissEarly(context, alarm)
 		}
+
+		// Check if the dawn simulation should be scheduled
+		if (alarm.shouldUseDawn && !alarm.shouldSkipNextAlarm)
+		{
+			addDawn(context, alarm, nextAlarmCal)
+		}
+	}
+
+	/**
+	 * Add the dawn simulation to the scheduler.
+	 *
+	 * The dawn starts the given number of minutes before the alarm goes off.
+	 */
+	fun addDawn(context: Context, alarm: NacAlarm, atCal: Calendar? = null)
+	{
+		// Get the calendar for when the next alarm will run. It is given when the
+		// alarm has been snoozed, since the snooze time is not the usual next time
+		val nextCal = atCal ?: NacCalendar.getNextAlarmDay(alarm) ?: return
+		val now = Calendar.getInstance()
+
+		// Get the time at which the dawn should start
+		val nextMillis = nextCal.timeInMillis
+		val dawnMillis = nextMillis - alarm.dawnDuration*60*1000L
+
+		// The dawn would have started in the past
+		var startMillis = dawnMillis
+
+		if (dawnMillis < now.timeInMillis)
+		{
+			// The alarm has been snoozed. Light the screen back up over whatever time
+			// is left, so that the dawn is not lost for the rest of the morning
+			if (alarm.snoozeCount > 0)
+			{
+				// Nothing left to light up
+				if ((nextMillis - now.timeInMillis) < 30000)
+				{
+					return
+				}
+
+				NacLog.i("Alarm was snoozed, running a shortened dawn")
+				startMillis = now.timeInMillis
+			}
+			// The alarm was just set or changed. Do not light the screen up out of
+			// the blue: the next occurrence gets its full dawn
+			else
+			{
+				NacLog.i("The alarm is too close, skipping the dawn for this occurrence")
+				return
+			}
+		}
+
+		// Create the intent. The dawn is the alarm service itself, started ahead of
+		// time: it shows the alarm screen, in silence, and lets it light up. When the
+		// alarm goes off, the very same service is started again, this time to ring,
+		// and the screen does not move
+		val intent = NacActiveAlarmService.getDawnIntent(context, alarm, nextMillis)
+
+		// Build the pending intent
+		val pendingIntent = buildServicePendingIntent(context, alarm, intent, PendingIntent.FLAG_CANCEL_CURRENT)!!
+
+		// Schedule the dawn as an alarm clock, like the alarm itself. This matters:
+		// an alarm clock grants the app a temporary exemption when it fires, which is
+		// what allows the dawn service to start in the foreground and the dawn screen
+		// to come up. A plain exact alarm does not, and the dawn would silently fail
+		// to appear
+		val showPendingIntent = buildMainActivityPendingIntent(context)
+		val clockInfo = AlarmClockInfo(startMillis, showPendingIntent)
+		val manager = getAlarmManager(context)
+
+		manager.setAlarmClock(clockInfo, pendingIntent)
 	}
 
 	/**
@@ -311,6 +382,32 @@ object NacScheduler
 
 		// Cancel the dismiss early
 		cancelDismissEarly(context, alarm)
+
+		// Cancel the dawn simulation
+		cancelDawn(context, alarm)
+	}
+
+	/**
+	 * Cancel the dawn simulation.
+	 */
+	fun cancelDawn(context: Context, alarm: NacAlarm)
+	{
+		// Create the intent
+		val intent = NacActiveAlarmService.getDawnIntent(context, null)
+
+		// Build the pending intent
+		val pendingIntent = buildServicePendingIntent(context, alarm, intent, PendingIntent.FLAG_NO_CREATE)
+
+		// Check if the pending intent for the dawn is not null
+		if (pendingIntent != null)
+		{
+			// Cancel the dawn
+			getAlarmManager(context).cancel(pendingIntent)
+		}
+
+		// Note: the service is deliberately left alone. The dawn is a phase of the
+		// alarm service, so stopping it here would also stop an alarm that is
+		// currently ringing, and this is called every time an alarm is rescheduled
 	}
 
 	/**
@@ -480,6 +577,14 @@ object NacScheduler
 
 		// Add the alarm. This will not add the reminder, but that is OK
 		addAlarm(context, alarm, cal)
+
+		// Schedule the dawn for this time as well. Without this, snoozing loses the
+		// dawn: the alarm comes back on the plain screen, as if it had never been
+		// asked for
+		if (alarm.shouldUseDawn && !alarm.shouldSkipNextAlarm)
+		{
+			addDawn(context, alarm, cal)
+		}
 	}
 
 	/**

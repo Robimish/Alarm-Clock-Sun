@@ -38,6 +38,7 @@
 	<string-array name="start_week_on">
 		<item>Sonntag</item>
 		<item>Montag</item>
+		<item>Automatisch</item>
 	</string-array>
 
 	<!-- General list of seconds -->

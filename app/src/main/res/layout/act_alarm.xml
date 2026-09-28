@@ -25,6 +25,17 @@
 			android:text="@string/title_alarm_activity"
 			/>
 
+		<TextView
+			android:id="@+id/dawn_phrase"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="@dimen/large"
+			android:gravity="center"
+			android:textSize="16sp"
+			android:text=""
+			android:visibility="gone"
+			/>
+
 		<ImageView
 			android:id="@+id/icon"
 			android:layout_width="@dimen/isz_attention"

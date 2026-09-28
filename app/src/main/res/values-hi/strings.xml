@@ -2,7 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
 	<!-- App -->
-	<string name="app_name">एनएफसी अलार्म घड़ी</string>
+	<string name="app_name">Alarm Clock Sun</string>
 	<string name="app_developer">गेबे गोंजालेज</string>
 
 	<!-- Consolidate -->
@@ -631,5 +631,62 @@
 	</plurals>
 
 	<string name="tts_say_time">समय %1$s:%2$s %3$s है.</string>
+	<string name="tts_say_time_one_oclock">समय %1$s:%2$s %3$s है.</string>
 
+	<string name="action_alarm_option_dawn">भोर</string>
+	<string name="message_dawn_disabled">भोर सिमुलेशन का उपयोग न करें</string>
+	<string name="message_dawn_enabled">भोर सिमुलेशन का उपयोग करें</string>
+	<string name="description_show_hide_dawn_button_true">अलार्म खोलने पर भोर बटन दिखाएँ.</string>
+	<string name="description_show_hide_dawn_button_false">अलार्म खोलने पर भोर बटन छिपाएँ.</string>
+	<string name="title_dawn_duration">भोर की अवधि</string>
+	<string name="description_dawn_duration">अलार्म से कितनी देर पहले स्क्रीन रोशन होने लगती है.</string>
+	<string name="title_dawn_color">रोशनी का रंग</string>
+	<string name="title_dawn_flashlight">अलार्म से पहले टॉर्च</string>
+	<string name="description_dawn_flashlight">भोर के आख़िरी मिनटों में टॉर्च धीरे-धीरे तेज़ होती है. बंद रखने के लिए पहिया शून्य पर रखें.</string>
+	<string name="message_dawn_flashlight_off">बंद</string>
+	<string name="title_dawn_custom_color">अपना रंग</string>
+	<string name="title_dawn_use_image">छवि का उपयोग करें</string>
+	<string name="description_dawn_use_image">सादे रंग के बजाय एक तस्वीर दिखाएँ.</string>
+	<string name="action_dawn_choose_image">छवि चुनें</string>
+	<string name="message_dawn_preview_over">बंद करने के लिए टैप करें</string>
+	<string name="title_dawn_preview_duration">पूर्वावलोकन की अवधि</string>
+	<string name="description_dawn_preview_duration">भोर का पूर्वावलोकन %1$d सेकंड चलता है, फिर बंद करने के लिए टैप का इंतज़ार करता है. चलते समय टैप करने पर स्क्रीन सामान्य दिखती है, जैसे असली भोर में.</string>
+	<string name="title_storage">संग्रहण</string>
+	<string name="title_clean_sounds">ध्वनि की प्रतियाँ हटाएँ</string>
+	<string name="description_clean_sounds">ऐप हर चुनी हुई ध्वनि की एक प्रति रखता है, ताकि मूल फ़ाइल हट जाने पर या फ़ोन अनलॉक न होने पर भी अलार्म बजे. इससे वे प्रतियाँ हटती हैं जिन्हें कोई अलार्म नहीं बजाता.</string>
+	<string name="title_clean_images">भोर की छवियाँ हटाएँ</string>
+	<string name="description_clean_images">रंग पर लौटने के बाद भी छवि ऐप में रहती है, ताकि फ़ाइल दोबारा चुने बिना उसे वापस लगाया जा सके. इससे वे छवियाँ हटती हैं जो किसी भोर में नहीं दिखतीं.</string>
+	<string name="title_clean_all">दोनों हटाएँ</string>
+	<string name="description_clean_all">ध्वनियाँ और छवियाँ एक साथ.</string>
+	<string name="message_clean_confirm">केवल वे प्रतियाँ हटती हैं जिनकी किसी अलार्म को ज़रूरत नहीं. अलार्म स्वयं अछूते रहते हैं.</string>
+	<string name="message_clean_done">%2$d फ़ाइल में %1$s खाली हुआ</string>
+	<string name="message_clean_nothing">हटाने के लिए कुछ नहीं</string>
+	<string name="title_dawn_show_date">तारीख़</string>
+	<string name="title_dawn_reveal">स्क्रीन देखने के लिए टैप करें</string>
+	<string name="description_dawn_reveal">भोर के दौरान टैप करने पर अलार्म स्क्रीन कुछ पल के लिए सामान्य दिखती है, ताकि साफ़ हो कि अलार्म अभी बजा नहीं है. दूसरी बार टैप करने पर वापस लौट आती है.</string>
+	<string name="message_dawn_reveal_value">%1$d सेकंड</string>
+	<string name="title_dawn_shown">भोर के दौरान दिखाई देने वाला</string>
+	<string name="description_dawn_shown">स्क्रीन रोशन होते समय जो नहीं देखना चाहते उसे बंद कर दें.</string>
+	<string name="title_dawn_show_phrase">जगाने वाला वाक्य</string>
+	<string name="title_dawn_show_name">अलार्म का नाम</string>
+	<string name="title_dawn_show_clock">घड़ी</string>
+	<string name="title_dawn_show_media">संगीत का शीर्षक</string>
+	<string name="message_dawn_no_image">कोई छवि नहीं चुनी गई</string>
+	<string name="message_dawn_unable_to_read_image">चुनी गई छवि पढ़ी नहीं जा सकी</string>
+	<string name="action_dawn_stop">रोकें</string>
+	<string name="message_dawn_snoozed">अलार्म 5 मिनट के लिए टाला गया</string>
+	<string name="message_dawn_not_ringing_yet">भोर चल रही है. अलार्म अभी बजा नहीं है.</string>
+	<string name="message_dawn_too_close">अलार्म बहुत नज़दीक है: इस बार भोर नहीं. अगली बार चलेगी.</string>
+	<string name="message_dawn_no_more_snoozes">अब और नहीं टाल सकते. अलार्म बंद करने के लिए रोकें दबाएँ</string>
+	<string name="title_dawn_notification">भोर</string>
+	<string name="description_dawn_notification">अलार्म से पहले स्क्रीन धीरे-धीरे रोशन होते समय दिखाया जाता है.</string>
+	<string name="dawn_color_amber">सूर्य प्रकाश</string>
+	<string name="dawn_color_orange">सफ़ेद</string>
+	<string name="dawn_color_red">अंबर</string>
+	<string name="dawn_color_white">हल्का हरा</string>
+	<string name="dawn_color_sky">हल्का नीला</string>
+	<string name="dawn_color_lilac">बैंगनी</string>
+	<string name="action_alarm_dismiss_next">अगला अलार्म रद्द करें</string>
+	<string name="action_alarm_dismiss_snoozed">टाला हुआ अलार्म बंद करें</string>
+	<string name="message_alarm_is_snoozed">टाला हुआ अलार्म %1$s में बजेगा</string>
 </resources>

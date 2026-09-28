@@ -2,7 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
 	<!-- App -->
-	<string name="app_name">এনএফসি অ্যালার্ম ঘড়ি</string>
+	<string name="app_name">Alarm Clock Sun</string>
 	<string name="app_developer">গাবে গঞ্জালেজ</string>
 
 	<!-- Consolidate -->
@@ -632,5 +632,62 @@
 	</plurals>
 
 	<string name="tts_say_time">সময় হল %1$s:%2$s %3$s।</string>
+	<string name="tts_say_time_one_oclock">সময় হল %1$s:%2$s %3$s।</string>
 
+	<string name="action_alarm_option_dawn">ভোর</string>
+	<string name="message_dawn_disabled">ভোরের অনুকরণ ব্যবহার করবেন না</string>
+	<string name="message_dawn_enabled">ভোরের অনুকরণ ব্যবহার করুন</string>
+	<string name="description_show_hide_dawn_button_true">অ্যালার্ম খুললে ভোরের বোতাম দেখান।</string>
+	<string name="description_show_hide_dawn_button_false">অ্যালার্ম খুললে ভোরের বোতাম লুকান।</string>
+	<string name="title_dawn_duration">ভোরের স্থিতিকাল</string>
+	<string name="description_dawn_duration">অ্যালার্মের কত আগে পর্দা আলোকিত হতে শুরু করে।</string>
+	<string name="title_dawn_color">আলোর রং</string>
+	<string name="title_dawn_flashlight">অ্যালার্মের আগে টর্চ</string>
+	<string name="description_dawn_flashlight">ভোরের শেষ মিনিটগুলোতে টর্চ ধীরে ধীরে উজ্জ্বল হয়। নিভিয়ে রাখতে চাকাটি শূন্যে রাখুন।</string>
+	<string name="message_dawn_flashlight_off">বন্ধ</string>
+	<string name="title_dawn_custom_color">নিজের রং</string>
+	<string name="title_dawn_use_image">ছবি ব্যবহার করুন</string>
+	<string name="description_dawn_use_image">একরঙা পটভূমির বদলে একটি ছবি ফুটিয়ে তুলুন।</string>
+	<string name="action_dawn_choose_image">ছবি বাছুন</string>
+	<string name="message_dawn_preview_over">বন্ধ করতে চাপুন</string>
+	<string name="title_dawn_preview_duration">পূর্বরূপের দৈর্ঘ্য</string>
+	<string name="description_dawn_preview_duration">ভোরের পূর্বরূপ %1$d সেকেন্ড চলে, তারপর বন্ধ করার জন্য চাপের অপেক্ষা করে। চলাকালীন চাপলে পর্দা স্বাভাবিকভাবে দেখায়, ঠিক সত্যিকারের ভোরের মতো।</string>
+	<string name="title_storage">সঞ্চয়স্থান</string>
+	<string name="title_clean_sounds">শব্দের অনুলিপি মুছুন</string>
+	<string name="description_clean_sounds">অ্যাপ প্রতিটি বেছে নেওয়া শব্দের একটি অনুলিপি রাখে, যাতে মূল ফাইল সরে গেলে বা ফোন আনলক না থাকলেও অ্যালার্ম বাজে। এটি সেই অনুলিপিগুলো মোছে যা কোনো অ্যালার্ম বাজায় না।</string>
+	<string name="title_clean_images">ভোরের ছবি মুছুন</string>
+	<string name="description_clean_images">রঙে ফিরে গেলেও ছবিটি অ্যাপে থেকে যায়, যাতে ফাইল আবার না বেছে সেটি ফিরিয়ে আনা যায়। এটি সেই ছবিগুলো মোছে যা কোনো ভোর দেখায় না।</string>
+	<string name="title_clean_all">দুটোই মুছুন</string>
+	<string name="description_clean_all">শব্দ ও ছবি একসঙ্গে।</string>
+	<string name="message_clean_confirm">শুধু সেই অনুলিপিগুলো মোছা হয় যা কোনো অ্যালার্মের দরকার নেই। অ্যালার্মগুলো নিজে অক্ষত থাকে।</string>
+	<string name="message_clean_done">%2$d টি ফাইলে %1$s খালি হয়েছে</string>
+	<string name="message_clean_nothing">মোছার কিছু নেই</string>
+	<string name="title_dawn_show_date">তারিখ</string>
+	<string name="title_dawn_reveal">পর্দা দেখতে চাপুন</string>
+	<string name="description_dawn_reveal">ভোরের সময় একবার চাপলে অ্যালার্মের পর্দা কিছুক্ষণের জন্য স্বাভাবিক দেখায়, যাতে বোঝা যায় অ্যালার্ম এখনো বাজেনি। দ্বিতীয়বার চাপলে ফিরে যায়।</string>
+	<string name="message_dawn_reveal_value">%1$d সেকেন্ড</string>
+	<string name="title_dawn_shown">ভোরের সময় দৃশ্যমান</string>
+	<string name="description_dawn_shown">পর্দা আলোকিত হওয়ার সময় যা দেখতে চান না তা বন্ধ করুন।</string>
+	<string name="title_dawn_show_phrase">জাগানোর বাক্য</string>
+	<string name="title_dawn_show_name">অ্যালার্মের নাম</string>
+	<string name="title_dawn_show_clock">ঘড়ি</string>
+	<string name="title_dawn_show_media">গানের শিরোনাম</string>
+	<string name="message_dawn_no_image">কোনো ছবি বাছা হয়নি</string>
+	<string name="message_dawn_unable_to_read_image">বাছাই করা ছবিটি পড়া যায়নি</string>
+	<string name="action_dawn_stop">থামান</string>
+	<string name="message_dawn_snoozed">অ্যালার্ম ৫ মিনিট পিছিয়ে দেওয়া হয়েছে</string>
+	<string name="message_dawn_not_ringing_yet">ভোর চলছে। অ্যালার্ম এখনো বাজেনি।</string>
+	<string name="message_dawn_too_close">অ্যালার্ম খুব কাছে: এবার ভোর হবে না। পরেরবার চলবে।</string>
+	<string name="message_dawn_no_more_snoozes">আর পেছানো যাবে না। অ্যালার্ম বন্ধ করতে থামান চাপুন</string>
+	<string name="title_dawn_notification">ভোর</string>
+	<string name="description_dawn_notification">অ্যালার্মের আগে পর্দা ধীরে ধীরে আলোকিত হওয়ার সময় দেখানো হয়।</string>
+	<string name="dawn_color_amber">সূর্যালোক</string>
+	<string name="dawn_color_orange">সাদা</string>
+	<string name="dawn_color_red">অ্যাম্বার</string>
+	<string name="dawn_color_white">হালকা সবুজ</string>
+	<string name="dawn_color_sky">হালকা নীল</string>
+	<string name="dawn_color_lilac">লাইলাক</string>
+	<string name="action_alarm_dismiss_next">পরের অ্যালার্ম বাতিল করুন</string>
+	<string name="action_alarm_dismiss_snoozed">পেছানো অ্যালার্ম বন্ধ করুন</string>
+	<string name="message_alarm_is_snoozed">পেছানো অ্যালার্ম %1$s পরে বাজবে</string>
 </resources>

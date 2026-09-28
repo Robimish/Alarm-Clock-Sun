@@ -20,7 +20,46 @@ import com.nfcalarmclock.shared.NacSharedPreferences
 fun NacAlarm.toStreamVolume(audioManager: AudioManager, stream: Int): Int
 {
 	val maxVolume = audioManager.getSafeMaxStreamVolume(stream)
-	return (maxVolume * this.volume / 100.0f).toInt()
+	val exact = maxVolume * this.volume / 100.0f
+
+	// Silence was asked for
+	if (this.volume <= 0)
+	{
+		return 0
+	}
+
+	// Never round down to silence. A device only has a handful of volume steps, so
+	// anything under one step used to come out mute. The step is used instead, and
+	// the player is turned down to make up the difference
+	return exact.toInt().coerceAtLeast(1)
+}
+
+/**
+ * How much the player itself should be turned down, on top of the volume step.
+ *
+ * A device has about fifteen volume steps, so the lowest step is still loud. This
+ * gives back the fine control that the steps cannot: at 1 %, the player plays at a
+ * fraction of the lowest step.
+ *
+ * @return A gain between 0 and 1.
+ */
+fun NacAlarm.toPlayerGain(audioManager: AudioManager, stream: Int): Float
+{
+	// Silence
+	if (this.volume <= 0)
+	{
+		return 0f
+	}
+
+	val maxVolume = audioManager.getSafeMaxStreamVolume(stream)
+	val exact = maxVolume * this.volume / 100.0f
+	val step = exact.toInt().coerceAtLeast(1)
+
+	// Squared, so that the very low percentages are a good deal quieter than a
+	// straight ratio would give
+	val ratio = (exact / step).coerceIn(0f, 1f)
+
+	return (ratio * ratio).coerceAtLeast(0.01f)
 }
 /**
  * Abandon audio focus.
@@ -233,17 +272,27 @@ object NacAudioManager
 			return AudioAttributes.USAGE_UNKNOWN
 		}
 
-		// Get all the audio sources
-		val audioSources = context.resources.getStringArray(R.array.audio_sources)
+		// An alarm holds the name that does not change with the language
+		var index = context.resources.getStringArray(R.array.audio_source_keys)
+			.indexOf(source)
 
-		return when(source)
+		// Until 1.83 it held the words shown on screen instead, which left nothing to
+		// match once the language changed. They are still read, in the language they
+		// were written in, until the one time conversion catches them
+		if (index < 0)
 		{
-			audioSources[0] -> AudioAttributes.USAGE_ALARM
-			audioSources[1] -> AudioAttributes.USAGE_VOICE_COMMUNICATION
-			audioSources[2] -> AudioAttributes.USAGE_MEDIA
-			audioSources[3] -> AudioAttributes.USAGE_NOTIFICATION
-			audioSources[4] -> AudioAttributes.USAGE_NOTIFICATION_RINGTONE
-			else            -> AudioAttributes.USAGE_ALARM
+			index = context.resources.getStringArray(R.array.audio_sources)
+				.indexOf(source)
+		}
+
+		return when (index)
+		{
+			0    -> AudioAttributes.USAGE_ALARM
+			1    -> AudioAttributes.USAGE_VOICE_COMMUNICATION
+			2    -> AudioAttributes.USAGE_MEDIA
+			3    -> AudioAttributes.USAGE_NOTIFICATION
+			4    -> AudioAttributes.USAGE_NOTIFICATION_RINGTONE
+			else -> AudioAttributes.USAGE_ALARM
 		}
 	}
 

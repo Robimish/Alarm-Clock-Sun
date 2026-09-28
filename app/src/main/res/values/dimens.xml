@@ -51,6 +51,9 @@
 
 	<!-- Sizing -->
 	<dimen name="touch">48dp</dimen>
+	<dimen name="dawn_swatch">34dp</dimen>
+	<dimen name="card_action">52dp</dimen>
+	<dimen name="card_action_radius">26dp</dimen>
 	<dimen name="radius">6dp</dimen>
 	<dimen name="radius_day_filled">16dp</dimen>
 	<dimen name="radius_day_outlined">16dp</dimen>
@@ -59,5 +62,28 @@
 	<dimen name="bottom_nav_height">64dp</dimen>
 	<dimen name="action_row_height">92dp</dimen>
 	<dimen name="action_row_landscape_width">420dp</dimen>
+
+	<!-- Clock with hands, on the alarm screen -->
+	<dimen name="analog_clock_size">200dp</dimen>
+	<!-- The dial in landscape, where the screen is short: about the height the
+		digits take there, so that nothing under it has to move -->
+	<dimen name="analog_clock_size_land">100dp</dimen>
+	<dimen name="analog_clock_top_land">8dp</dimen>
+	<!-- Air between the date and the dial beside it, in landscape -->
+	<dimen name="analog_clock_date_side_gap">16dp</dimen>
+	<!-- About two centimetres: 160dp is an inch, so 2cm is a shade under 126dp -->
+	<dimen name="bottom_halo_height">126dp</dimen>
+	<!-- The rail the sun travels along, under the next alarm line -->
+	<dimen name="next_alarm_track_height">36dp</dimen>
+	<!-- Space under the dial, which unlike the digits has no descender to breathe with -->
+	<dimen name="analog_clock_date_gap">32dp</dimen>
+
+	<!-- How far under the guideline the dial starts. The digits get this from
+		their own margin, which a dial cannot borrow: the view the dial hangs from
+		is GONE while the dial is on screen, and a gone view drops its margin -->
+	<dimen name="analog_clock_top">40dp</dimen>
+
+	<!-- Air between the clock and the date, the name and the phrase under it -->
+	<dimen name="clock_text_gap">20dp</dimen>
 
 </resources>

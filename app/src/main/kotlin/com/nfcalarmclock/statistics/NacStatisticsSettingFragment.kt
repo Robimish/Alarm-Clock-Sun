@@ -7,6 +7,7 @@ import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -21,6 +22,7 @@ import com.nfcalarmclock.system.NacCalendar
 import com.nfcalarmclock.system.sendEmail
 import com.nfcalarmclock.view.quickToast
 import com.nfcalarmclock.view.calcContrastColor
+import com.nfcalarmclock.view.setupSwitchColor
 import com.nfcalarmclock.view.setupThemeColor
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -148,6 +150,57 @@ class NacStatisticsSettingFragment
 
 		// Setup all the views that need to use the theme color
 		setupViewsWithThemeColor(root)
+
+		// Setup the switch at the top, last so that it greys out the rest once it is
+		// all in place
+		setupRecordStatisticsSwitch(root)
+	}
+
+	/**
+	 * Setup the switch that turns the recording of statistics on and off.
+	 */
+	private fun setupRecordStatisticsSwitch(root: View)
+	{
+		val sharedPreferences = NacSharedPreferences(requireContext())
+		val row = root.findViewById<View>(R.id.record_statistics_row)
+		val switch = root.findViewById<SwitchCompat>(R.id.record_statistics_switch)
+
+		switch.setupSwitchColor(sharedPreferences)
+		switch.isChecked = sharedPreferences.shouldRecordStatistics
+		setRecordStatisticsState(root, switch.isChecked)
+
+		// The whole row takes the touch, the switch only shows the state
+		row.setOnClickListener {
+
+			val state = !switch.isChecked
+
+			switch.isChecked = state
+			sharedPreferences.shouldRecordStatistics = state
+			setRecordStatisticsState(root, state)
+
+			NacLog.i("Record statistics: $state")
+		}
+	}
+
+	/**
+	 * Grey out the statistics and their buttons when nothing is recorded, and say so.
+	 */
+	private fun setRecordStatisticsState(root: View, isOn: Boolean)
+	{
+		val summary = root.findViewById<TextView>(R.id.record_statistics_summary)
+		val content = root.findViewById<View>(R.id.statistics_content)
+		val emailButton = root.findViewById<MaterialButton>(R.id.email_button)
+		val resetButton = root.findViewById<MaterialButton>(R.id.reset_button)
+		val alpha = if (isOn) 1f else DISABLED_ALPHA
+
+		summary.setText(if (isOn) R.string.description_record_statistics_true
+			else R.string.description_record_statistics_false)
+
+		content.alpha = alpha
+		emailButton.alpha = alpha
+		resetButton.alpha = alpha
+		emailButton.isEnabled = isOn
+		resetButton.isEnabled = isOn
 	}
 
 	/**
@@ -494,6 +547,16 @@ class NacStatisticsSettingFragment
 
 		// Path to the zip file
 		return "${directory}/${zipFileName}"
+	}
+
+	companion object
+	{
+
+		/**
+		 * How faded the statistics are when they are not recorded.
+		 */
+		private const val DISABLED_ALPHA = 0.4f
+
 	}
 
 }

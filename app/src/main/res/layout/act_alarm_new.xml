@@ -9,14 +9,26 @@
 	android:layout_height="match_parent"
 	tools:ignore="Overdraw,UseCompoundDrawables">
 
+	<!-- The clock starts a tenth of the way down the screen rather than right under
+		the top edge. A guideline rather than a margin, so it is the same tenth on a
+		small phone and on a tall one -->
+	<androidx.constraintlayout.widget.Guideline
+		android:id="@+id/clock_top_guideline"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		app:layout_constraintGuide_percent="0.045"
+		/>
+
 	<!-- Time -->
 	<TextView
 		style="@style/My.Alarm.Active.Time"
 		android:id="@+id/current_time"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/xlarge"
 		android:text=""
-		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintTop_toTopOf="@id/clock_top_guideline"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintEnd_toStartOf="@id/current_meridian"
 		app:layout_constraintHorizontal_chainStyle="packed"
@@ -33,6 +45,40 @@
 		app:layout_constraintEnd_toEndOf="parent"
 		/>
 
+	<!-- Clock with hands, shown instead of the digits when the alarm asks for it -->
+	<com.nfcalarmclock.view.NacAnalogClockView
+		android:id="@+id/current_analog_clock"
+		android:layout_width="@dimen/analog_clock_size"
+		android:layout_height="@dimen/analog_clock_size"
+		android:layout_marginTop="@dimen/analog_clock_top"
+		android:visibility="gone"
+		app:layout_constraintTop_toTopOf="@id/current_time"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		/>
+
+	<!-- Whichever clock is shown, the date sits under it. Gone views are left out,
+		so the barrier follows the one that is there -->
+	<androidx.constraintlayout.widget.Barrier
+		android:id="@+id/clock_barrier"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		app:barrierDirection="bottom"
+		app:barrierAllowsGoneWidgets="false"
+		app:constraint_referenced_ids="current_meridian,current_analog_clock"
+		/>
+
+	<!-- The air between the clock and the text under it. A Space of its own rather
+		than a margin on the date, because the date is often hidden and a gone view
+		takes its own margin with it. Its height is set in code, since a dial needs
+		more of it than the digits do -->
+	<Space
+		android:id="@+id/clock_text_gap"
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/clock_text_gap"
+		app:layout_constraintTop_toBottomOf="@id/clock_barrier"
+		/>
+
 	<!-- Date -->
 	<TextView
 		style="@style/My.Alarm.Active.Date"
@@ -41,7 +87,7 @@
 		android:layout_height="wrap_content"
 		android:gravity="center_horizontal"
 		android:text=""
-		app:layout_constraintTop_toBottomOf="@id/current_meridian"
+		app:layout_constraintTop_toBottomOf="@id/clock_text_gap"
 		/>
 
 	<!-- Alarm name -->
@@ -53,6 +99,23 @@
 		android:gravity="center_horizontal"
 		android:text=""
 		app:layout_constraintTop_toBottomOf="@id/current_date"
+		/>
+
+	<!-- Dawn phrase, shown only while the sunrise is running -->
+	<TextView
+		android:id="@+id/dawn_phrase"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/normal"
+		android:paddingStart="@dimen/large"
+		android:paddingEnd="@dimen/large"
+		android:gravity="center_horizontal"
+		android:textSize="16sp"
+		android:text=""
+		android:visibility="gone"
+		app:layout_constraintTop_toBottomOf="@id/alarm_name"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
 		/>
 
 	<!-- Scan NFC -->
@@ -107,131 +170,17 @@
 		app:layout_constraintBottom_toTopOf="@id/alarm_action_row"
 		/>
 
-	<!-- Snooze/dismiss -->
-	<RelativeLayout
-		style="@style/My.Alarm.Active.SnoozeDismissRow"
-		android:id="@+id/alarm_action_row"
+	<!-- Snooze/dismiss. Le dessin vit dans nac_alarm_action_row.xml, partage avec
+		l'autre ecran. La largeur et la hauteur doivent etre redites ici, faute de quoi
+		Android ignore les autres attributs de position poses sur un include -->
+	<include
+		layout="@layout/nac_alarm_action_row"
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/action_row_height"
 		app:layout_constraintBottom_toTopOf="@id/music_and_warning_container"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintEnd_toEndOf="parent">
-
-		<!-- Slider -->
-		<RelativeLayout
-			android:id="@+id/alarm_action_slider_path"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:background="@drawable/slider_path"
-			android:visibility="invisible">
-
-			<ImageView
-				style="@style/My.Alarm.Active.SliderArrow"
-				android:id="@+id/slider_center_arrow"
-				android:layout_centerVertical="true"
-				android:layout_centerHorizontal="true"
-				android:contentDescription="@string/cd_alarm_slider_arrow"
-				/>
-
-			<ImageView
-				style="@style/My.Alarm.Active.SliderArrow.Left"
-				android:id="@+id/slider_left_arrow"
-				android:layout_centerVertical="true"
-				android:layout_toStartOf="@id/slider_center_arrow"
-				android:contentDescription="@string/cd_alarm_slider_arrow"
-				/>
-
-			<ImageView
-				style="@style/My.Alarm.Active.SliderArrow.Right"
-				android:id="@+id/slider_right_arrow"
-				android:layout_centerVertical="true"
-				android:layout_toEndOf="@id/slider_center_arrow"
-				android:contentDescription="@string/cd_alarm_slider_arrow"
-				/>
-		</RelativeLayout>
-
-		<!-- Snooze animation -->
-		<RelativeLayout
-			style="@style/My.Alarm.Active.SnoozeDismissButton"
-			android:id="@+id/snooze_attention_view"
-			android:layout_alignTop="@id/snooze_view"
-			android:layout_alignStart="@id/snooze_view"
-			android:alpha="0.3"
-			android:backgroundTint="@color/white"
-			/>
-
-		<!-- Dismiss animation -->
-		<RelativeLayout
-			style="@style/My.Alarm.Active.SnoozeDismissButton"
-			android:id="@+id/dismiss_attention_view"
-			android:layout_alignTop="@id/dismiss_view"
-			android:layout_alignStart="@id/dismiss_view"
-			android:alpha="0.3"
-			android:backgroundTint="@color/white"
-			/>
-
-		<!-- Snooze -->
-		<RelativeLayout
-			style="@style/My.Alarm.Active.SnoozeDismissButton"
-			android:id="@+id/snooze_view"
-			android:layout_alignParentStart="true"
-			android:layout_centerVertical="true"
-			android:layout_marginStart="@dimen/tiny"
-			android:backgroundTint="@color/gray_light"
-			android:gravity="center_vertical">
-
-			<ImageView
-				android:id="@+id/snooze_icon"
-				android:layout_width="@dimen/isz_large"
-				android:layout_height="@dimen/isz_large"
-				android:layout_centerHorizontal="true"
-				android:src="@drawable/snooze"
-				android:contentDescription="@string/cd_snooze_alarm"
-				/>
-
-			<TextView
-				android:id="@+id/snooze_text"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_below="@id/snooze_icon"
-				android:layout_centerHorizontal="true"
-				android:textColor="@color/white"
-				android:textSize="@dimen/tsz_tiny"
-				android:textStyle="bold"
-				android:text="@string/action_alarm_snooze"
-				/>
-		</RelativeLayout>
-
-		<!-- Dismiss -->
-		<RelativeLayout
-			style="@style/My.Alarm.Active.SnoozeDismissButton"
-			android:id="@+id/dismiss_view"
-			android:layout_alignParentEnd="true"
-			android:layout_centerVertical="true"
-			android:layout_marginEnd="@dimen/tiny"
-			android:backgroundTint="@color/orange"
-			android:gravity="center_vertical">
-
-			<ImageView
-				android:id="@+id/dismiss_icon"
-				android:layout_width="@dimen/isz_dismiss_large"
-				android:layout_height="@dimen/isz_dismiss_large"
-				android:layout_centerHorizontal="true"
-				android:src="@drawable/dismiss"
-				android:contentDescription="@string/cd_dismiss_alarm"
-				/>
-
-			<TextView
-				android:id="@+id/dismiss_text"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_below="@id/dismiss_icon"
-				android:layout_centerHorizontal="true"
-				android:textColor="@color/white"
-				android:textSize="@dimen/tsz_tiny"
-				android:textStyle="bold"
-				android:text="@string/action_alarm_dismiss"
-				/>
-		</RelativeLayout>
-	</RelativeLayout>
+		app:layout_constraintEnd_toEndOf="parent"
+		/>
 
 	<!-- Music and warning -->
 	<RelativeLayout
@@ -239,6 +188,7 @@
 		android:id="@+id/music_and_warning_container"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:layout_marginBottom="@dimen/large"
 		android:animateLayoutChanges="true"
 		app:layout_constraintBottom_toBottomOf="parent">
 

@@ -38,6 +38,7 @@
 	<string-array name="start_week_on">
 		<item>Domingo</item>
 		<item>Lunes</item>
+		<item>Automático</item>
 	</string-array>
 
 	<!-- General list of seconds -->
@@ -103,6 +104,18 @@
 		<item>58 segundos</item>
 		<item>59 segundos</item>
 		<item>60 segundos</item>
+	</string-array>
+
+	<string-array name="shake_sensitivity_entries">
+		<item>El menor movimiento</item>
+		<item>Un movimiento leve</item>
+		<item>Una sacudida ligera</item>
+		<item>Una sacudida normal</item>
+	</string-array>
+
+	<string-array name="wave_passes_entries">
+		<item>Una pasada</item>
+		<item>Dos pasadas</item>
 	</string-array>
 
 </resources>

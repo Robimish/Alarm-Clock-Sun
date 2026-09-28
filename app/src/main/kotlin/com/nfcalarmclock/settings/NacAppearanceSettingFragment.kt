@@ -1,11 +1,14 @@
 package com.nfcalarmclock.settings
 
+import android.app.AlertDialog
 import android.os.Bundle
+import android.widget.NumberPicker
 import androidx.preference.Preference
 import androidx.preference.PreferenceManager
 import com.nfcalarmclock.R
 import com.nfcalarmclock.alarm.options.nextalarmformat.NacNextAlarmFormatPreference
 import com.nfcalarmclock.log.NacLog
+import com.nfcalarmclock.shared.NacSharedPreferences
 import com.nfcalarmclock.settings.startweekon.NacStartWeekOnPreference
 import com.nfcalarmclock.system.getDeviceProtectedStorageContext
 import com.nfcalarmclock.settings.colorpicker.NacColorPickerPreference
@@ -42,6 +45,71 @@ class NacAppearanceSettingFragment
 		setupColorPickerOnClickListeners()
 		setupStartWeekOnClickListener()
 		setupNexAlarmFormatOnClickListener()
+		setupDawnPreviewDurationClickListener()
+	}
+
+	/**
+	 * Setup the preference that says how long a dawn preview runs.
+	 */
+	private fun setupDawnPreviewDurationClickListener()
+	{
+		// Get the preference
+		val key = getString(R.string.key_dawn_preview_duration)
+		val pref = findPreference<Preference>(key) ?: return
+		val shared = NacSharedPreferences(requireContext())
+
+		// The allowed range has shrunk since this setting first shipped, so bring
+		// any older value back inside it
+		val previewDuration = shared.dawnPreviewDuration
+			.coerceIn(MIN_DAWN_PREVIEW_DURATION, MAX_DAWN_PREVIEW_DURATION)
+
+		if (previewDuration != shared.dawnPreviewDuration)
+		{
+			shared.dawnPreviewDuration = previewDuration
+		}
+
+		// Show the current value
+		pref.summary = getString(R.string.description_dawn_preview_duration,
+			previewDuration)
+
+		// Set the on click listener
+		pref.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+
+			// Build the picker. The wheel counts down, so that the big numbers are
+			// at the top
+			val picker = NumberPicker(requireContext())
+			val span = MAX_DAWN_PREVIEW_DURATION - MIN_DAWN_PREVIEW_DURATION
+
+			picker.minValue = 0
+			picker.maxValue = span
+			picker.displayedValues = Array(span + 1) {
+				(MAX_DAWN_PREVIEW_DURATION - it).toString()
+			}
+			picker.value = MAX_DAWN_PREVIEW_DURATION - shared.dawnPreviewDuration
+				.coerceIn(MIN_DAWN_PREVIEW_DURATION, MAX_DAWN_PREVIEW_DURATION)
+			picker.wrapSelectorWheel = false
+
+			// Show it
+			AlertDialog.Builder(requireContext())
+				.setTitle(R.string.title_dawn_preview_duration)
+				.setView(picker)
+				.setPositiveButton(R.string.action_ok) { _, _ ->
+
+					picker.clearFocus()
+
+					val seconds = MAX_DAWN_PREVIEW_DURATION - picker.value
+
+					shared.dawnPreviewDuration = seconds
+					pref.summary = getString(R.string.description_dawn_preview_duration,
+						seconds)
+
+				}
+				.setNegativeButton(R.string.action_cancel, null)
+				.show()
+
+			// Return
+			true
+		}
 	}
 
 	/**
@@ -316,6 +384,22 @@ class NacAppearanceSettingFragment
 			// Return
 			true
 		}
+	}
+
+	companion object
+	{
+
+		/**
+		 * Shortest and longest time that a tap can show the screen as normal during
+		 * a dawn. [Units: sec]
+		 */
+
+		/**
+		 * Shortest and longest a dawn preview can run. [Units: sec]
+		 */
+		private const val MIN_DAWN_PREVIEW_DURATION = 5
+		private const val MAX_DAWN_PREVIEW_DURATION = 30
+
 	}
 
 }

@@ -14,9 +14,33 @@
 			/>
 	</com.nfcalarmclock.settings.preference.NacPreferenceCategory>
 
+	<!-- While the alarm rings -->
+	<com.nfcalarmclock.settings.preference.NacPreferenceCategory
+		android:title="@string/title_while_ringing">
+
+		<com.nfcalarmclock.settings.preference.NacSwitchPreference
+			android:title="@string/title_power_dismiss"
+			android:key="@string/key_power_dismiss"
+			android:summaryOn="@string/description_power_dismiss_true"
+			android:summaryOff="@string/description_power_dismiss_false"
+			android:defaultValue="@bool/default_power_dismiss"
+			app:allowDividerAbove="false"
+			app:allowDividerBelow="true"
+			/>
+
+	</com.nfcalarmclock.settings.preference.NacPreferenceCategory>
+
 	<!-- Miscellaneous -->
 	<com.nfcalarmclock.settings.preference.NacPreferenceCategory
 		android:title="@string/title_misc">
+
+		<Preference
+			android:title="@string/title_app_language"
+			android:key="@string/key_app_language"
+			android:layout="@layout/nac_preference"
+			app:allowDividerAbove="false"
+			app:allowDividerBelow="false"
+			/>
 
 		<com.nfcalarmclock.settings.preference.NacSwitchPreference
 			android:title="@string/title_toggle_alarms_with_airplane_mode"
@@ -24,6 +48,48 @@
 			android:summaryOn="@string/description_toggle_alarms_with_airplane_mode_true"
 			android:summaryOff="@string/description_toggle_alarms_with_airplane_mode_false"
 			android:defaultValue="@bool/default_misc_should_toggle_alarms_with_airplane_mode"
+			app:allowDividerAbove="false"
+			app:allowDividerBelow="true"
+			/>
+
+	</com.nfcalarmclock.settings.preference.NacPreferenceCategory>
+
+	<!-- Storage -->
+	<com.nfcalarmclock.settings.preference.NacPreferenceCategory
+		android:title="@string/title_storage">
+
+		<Preference
+			android:title="@string/title_clean_sounds"
+			android:summary="@string/description_clean_sounds"
+			android:key="@string/key_clean_sounds"
+			android:layout="@layout/nac_preference"
+			app:allowDividerAbove="false"
+			app:allowDividerBelow="false"
+			/>
+
+		<Preference
+			android:title="@string/title_clean_images"
+			android:summary="@string/description_clean_images"
+			android:key="@string/key_clean_images"
+			android:layout="@layout/nac_preference"
+			app:allowDividerAbove="false"
+			app:allowDividerBelow="false"
+			/>
+
+		<Preference
+			android:title="@string/title_clean_all"
+			android:summary="@string/description_clean_all"
+			android:key="@string/key_clean_all"
+			android:layout="@layout/nac_preference"
+			app:allowDividerAbove="false"
+			app:allowDividerBelow="false"
+			/>
+
+		<Preference
+			android:title="@string/title_reset_settings"
+			android:summary="@string/description_reset_settings"
+			android:key="@string/key_reset_settings"
+			android:layout="@layout/nac_preference"
 			app:allowDividerAbove="false"
 			app:allowDividerBelow="true"
 			/>

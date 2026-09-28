@@ -9,6 +9,7 @@ import android.content.SharedPreferences
 import android.content.res.ColorStateList
 import android.text.format.DateFormat
 import android.view.MotionEvent
+import android.view.ViewGroup
 import android.view.VelocityTracker
 import android.view.View
 import android.view.ViewPropertyAnimator
@@ -34,6 +35,7 @@ import com.nfcalarmclock.system.media.getMediaTitle
 import com.nfcalarmclock.system.media.isLocalMediaPath
 import com.nfcalarmclock.system.registerMyReceiver
 import com.nfcalarmclock.system.unregisterMyReceiver
+import com.nfcalarmclock.view.NacAnalogClockView
 import com.nfcalarmclock.view.calcContrastColor
 import com.nfcalarmclock.view.setupBackgroundColor
 import java.lang.Float.max
@@ -85,6 +87,21 @@ class NacSwipeLayoutHandler(
 	 * Current meridian.
 	 */
 	private val currentMeridianView: TextView = activity.findViewById(R.id.current_meridian)
+
+	/**
+	 * Clock with hands, shown instead of the digits when the alarm asks for it.
+	 *
+	 * Null in landscape, where the date sits beside the clock rather than under it and
+	 * a dial has nowhere to go.
+	 */
+	private val analogClockView: NacAnalogClockView? = activity.findViewById(R.id.current_analog_clock)
+
+	/**
+	 * The air between the clock and the text under it.
+	 *
+	 * Null in the layouts that do not have it, which fall back to a margin on the date.
+	 */
+	private val clockTextGapView: View? = activity.findViewById(R.id.clock_text_gap)
 
 	/**
 	 * Scan NFC container.
@@ -199,6 +216,15 @@ class NacSwipeLayoutHandler(
 	private var velocityTracker: VelocityTracker? = null
 
 	/**
+	 * Speed of the finger at the moment it left the screen, before the floor below is
+	 * applied.
+	 *
+	 * This is what tells a deliberate throw from a simple release, and the floor hides
+	 * the difference.
+	 */
+	private var releaseVelocity: Float = 0f
+
+	/**
 	 * Receiver for the time tick intent. This is called when the time increments
 	 * every minute.
 	 */
@@ -305,6 +331,9 @@ class NacSwipeLayoutHandler(
 		var finalVelocity: Float = velocityTracker?.getXVelocity(pointerId)?.times(
 			FLING_SCALE_FACTOR)
 			?: return 0f
+
+		// Keep it before the floor below raises it
+		releaseVelocity = finalVelocity
 
 		// Calibrate the final velocity based on its current calculated value
 		if (finalVelocity.absoluteValue < FLING_DEFAULT_VELOCITY)
@@ -675,12 +704,40 @@ class NacSwipeLayoutHandler(
 	}
 
 	/**
+	 * Whether the dawn of this alarm hides a part of the screen.
+	 *
+	 * This handler owns the clock, the date, the name and the music, and puts them
+	 * on screen when it starts and at every clock refresh. Without this, anything the
+	 * dawn options hide is shown here first and taken away a moment later, which
+	 * flickers.
+	 */
+	private fun isHiddenByDawn(flag: Int): Boolean
+	{
+		val a = alarm ?: return false
+
+		return a.shouldUseDawn && ((a.dawnHiddenViews and flag) != 0)
+	}
+
+	/**
 	 * Setup the alarm name.
 	 */
 	private fun setupAlarmName()
 	{
-		// Get the user preference on whether the alarm name should be shown
-		val visibility = if (sharedPreferences.shouldShowAlarmName) View.VISIBLE else View.INVISIBLE
+		// Get the user preference on whether the alarm name should be shown. What the
+		// dawn hides is GONE rather than INVISIBLE, so that whatever is left moves up
+		// into the empty place instead of leaving a hole
+		val visibility = if (isHiddenByDawn(NacAlarm.DAWN_HIDE_NAME))
+		{
+			View.GONE
+		}
+		else if (sharedPreferences.shouldShowAlarmName)
+		{
+			View.VISIBLE
+		}
+		else
+		{
+			View.INVISIBLE
+		}
 
 		// Set the visibility
 		alarmNameTextView.visibility = visibility
@@ -703,10 +760,71 @@ class NacSwipeLayoutHandler(
 		// be shown
 		val visibility = if (sharedPreferences.shouldShowCurrentDateAndTime) View.VISIBLE else View.INVISIBLE
 
-		// Set the visibility
-		currentDateTextView.visibility = visibility
-		currentTimeTextView.visibility = visibility
-		currentMeridianView.visibility = visibility
+		// Set the visibility, minus whatever the dawn of this alarm hides. The clock
+		// and the date are two separate options
+		val clockVisibility = if (isHiddenByDawn(NacAlarm.DAWN_HIDE_CLOCK)) View.GONE else visibility
+		val dateVisibility = if (isHiddenByDawn(NacAlarm.DAWN_HIDE_DATE)) View.GONE else visibility
+
+		// A dial rather than the digits, when this alarm asks for it and there is one
+		// in this layout
+		val useAnalog = (analogClockView != null) && (alarm?.shouldUseAnalogClock == true)
+
+		currentDateTextView.visibility = dateVisibility
+
+		// The air between the clock and the text under it. A dial has no descender to
+		// breathe with, so it is given more of it
+		val clockGap = context.resources.getDimensionPixelSize(
+			if (useAnalog) R.dimen.analog_clock_date_gap else R.dimen.clock_text_gap)
+
+		if (clockTextGapView != null)
+		{
+			val gapParams = clockTextGapView.layoutParams
+
+			if (gapParams.height != clockGap)
+			{
+				gapParams.height = clockGap
+				clockTextGapView.layoutParams = gapParams
+			}
+		}
+		else
+		{
+			// The layouts without that Space keep the older margin on the date. In
+			// landscape the date sits beside the clock rather than under it, and a dial
+			// needs a little air on its side that the digits do not
+			val dateParams = currentDateTextView.layoutParams as? ViewGroup.MarginLayoutParams
+			val dateGap = if (useAnalog) clockGap else 0
+			val dateSideGap = if (useAnalog)
+			{
+				context.resources.getDimensionPixelSize(R.dimen.analog_clock_date_side_gap)
+			}
+			else
+			{
+				0
+			}
+
+			if ((dateParams != null)
+				&& ((dateParams.topMargin != dateGap) || (dateParams.marginEnd != dateSideGap)))
+			{
+				dateParams.topMargin = dateGap
+				dateParams.marginEnd = dateSideGap
+				currentDateTextView.layoutParams = dateParams
+			}
+		}
+
+		// The two clocks take turns. The one that is not used is GONE rather than
+		// INVISIBLE, so that the barrier the date hangs from follows the other one
+		if (useAnalog)
+		{
+			currentTimeTextView.visibility = View.GONE
+			currentMeridianView.visibility = View.GONE
+			analogClockView!!.visibility = clockVisibility
+		}
+		else
+		{
+			currentTimeTextView.visibility = clockVisibility
+			currentMeridianView.visibility = clockVisibility
+			analogClockView?.visibility = View.GONE
+		}
 
 		// Get info for calculating current date and time
 		val cal = Calendar.getInstance()
@@ -724,6 +842,7 @@ class NacSwipeLayoutHandler(
 		currentDateTextView.text = date
 		currentTimeTextView.text = time
 		currentMeridianView.text = if (DateFormat.is24HourFormat(context)) "" else meridian
+		analogClockView?.setTime(hour, minute)
 	}
 
 	/**
@@ -782,7 +901,8 @@ class NacSwipeLayoutHandler(
 		}
 
 		// Check if music information does not need to be shown
-		if (!sharedPreferences.shouldShowMusicInfo || mediaPath.isEmpty())
+		if (!sharedPreferences.shouldShowMusicInfo || mediaPath.isEmpty()
+			|| isHiddenByDawn(NacAlarm.DAWN_HIDE_MEDIA))
 		{
 			// Do nothing else
 			return
@@ -990,7 +1110,13 @@ class NacSwipeLayoutHandler(
 	 */
 	private fun shouldFlingView(velocity: Float): Boolean
 	{
+		// The velocity handed over here never says no: calculateFinalVelocity raises
+		// anything slower than FLING_DEFAULT_VELOCITY up to it, so a finger simply
+		// lifted off was thrown like a deliberate one. The button then ran to the end,
+		// looked about to fire, stopped a hair short of the exact position the trigger
+		// asks for, and came back. The real speed of the finger is what decides
 		return (velocity != 0f)
+			&& (releaseVelocity.absoluteValue >= FLING_MIN_RELEASE_VELOCITY)
 	}
 
 	/**
@@ -1100,6 +1226,16 @@ class NacSwipeLayoutHandler(
 		 * Default velocity for a fling if the calculated velocity is too small.
 		 */
 		const val FLING_DEFAULT_VELOCITY = 750f
+
+		/**
+		 * How fast the finger has to be leaving the screen for the button to be thrown
+		 * rather than simply put back.
+		 *
+		 * Same units as the values above, so a scaled speed. Raise it and only a firm
+		 * flick throws the button; lower it and a gentle one does too. This is the one
+		 * number to turn.
+		 */
+		const val FLING_MIN_RELEASE_VELOCITY = 1500f
 
 		/**
 		 * Friction coefficient to slow down fling speed.

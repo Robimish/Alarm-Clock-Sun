@@ -218,6 +218,40 @@ class NacFlashlight(private val context: Context)
 	}
 
 	/**
+	 * Change the strength level of the flashlight.
+	 *
+	 * When the flashlight is already on, the new level is applied right away instead
+	 * of only being picked up the next time it is turned on.
+	 */
+	fun changeStrengthLevel(level: Int)
+	{
+		// Save the level
+		strengthLevel = level
+
+		// Nothing more to do if the flashlight is off, or if the device cannot change
+		// the strength of its flashlight
+		if (!isRunning || cameraId.isEmpty()
+			|| (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) || (maxLevel <= 1))
+		{
+			return
+		}
+
+		try
+		{
+			// Apply the new strength right away
+			cameraManager.turnOnTorchWithStrengthLevel(cameraId, strengthLevel)
+		}
+		catch (e: CameraAccessException)
+		{
+			toastReasonForCameraAccessFailure(context, e)
+		}
+		catch (_: IllegalArgumentException)
+		{
+			toast(context, R.string.error_message_unable_to_turn_on_flashlight)
+		}
+	}
+
+	/**
 	 * Cleanup.
 	 */
 	fun cleanup()

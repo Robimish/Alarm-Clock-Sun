@@ -102,6 +102,57 @@
 				app:tint="@color/green"
 				/>
 
+			<!-- Full screen notification title. It comes before the one below
+			     because it is the permission that actually brings the screen up -->
+			<TextView
+				style="@style/Widget.MyOnboarding.Section.Title"
+				android:id="@+id/onboarding_full_screen_title"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/title_permission_full_screen_intent"
+				app:layout_constraintTop_toBottomOf="@id/onboarding_notification_description"
+				app:layout_constraintStart_toStartOf="parent"
+				/>
+
+			<!-- Full screen notification description -->
+			<TextView
+				style="@style/Widget.MyOnboarding.Section.Description"
+				android:id="@+id/onboarding_full_screen_description"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:text="@string/description_onboarding_permission_full_screen_intent"
+				app:layout_constraintTop_toBottomOf="@id/onboarding_full_screen_title"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintEnd_toStartOf="@id/onboarding_full_screen_allow_button"
+				/>
+
+			<!-- Full screen notification allow button -->
+			<com.google.android.material.button.MaterialButton
+				style="@style/Widget.MyOnboarding.Permission.Button.Allow"
+				android:id="@+id/onboarding_full_screen_allow_button"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				app:layout_constraintTop_toTopOf="@id/onboarding_full_screen_title"
+				app:layout_constraintBottom_toBottomOf="@id/onboarding_full_screen_description"
+				app:layout_constraintStart_toEndOf="@id/onboarding_full_screen_description"
+				app:layout_constraintEnd_toEndOf="parent"
+				/>
+
+			<!-- Full screen notification check mark -->
+			<ImageView
+				android:id="@+id/onboarding_full_screen_check_mark"
+				android:layout_width="@dimen/isz_xlarge"
+				android:layout_height="@dimen/isz_xlarge"
+				android:src="@drawable/check_32"
+				android:visibility="gone"
+				android:contentDescription="@string/cd_permission_check_mark"
+				app:layout_constraintTop_toTopOf="@id/onboarding_full_screen_title"
+				app:layout_constraintBottom_toBottomOf="@id/onboarding_full_screen_description"
+				app:layout_constraintStart_toStartOf="@id/onboarding_full_screen_allow_button"
+				app:layout_constraintEnd_toEndOf="@id/onboarding_full_screen_allow_button"
+				app:tint="@color/green"
+				/>
+
 			<!-- System alert (display over other apps) title -->
 			<TextView
 				style="@style/Widget.MyOnboarding.Section.Title"
@@ -109,7 +160,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:text="@string/title_permission_system_alert_window"
-				app:layout_constraintTop_toBottomOf="@id/onboarding_notification_description"
+				app:layout_constraintTop_toBottomOf="@id/onboarding_full_screen_description"
 				app:layout_constraintStart_toStartOf="parent"
 				/>
 
@@ -135,6 +186,18 @@
 				app:layout_constraintBottom_toBottomOf="@id/onboarding_system_alert_description"
 				app:layout_constraintStart_toEndOf="@id/onboarding_system_alert_description"
 				app:layout_constraintEnd_toEndOf="parent"
+				/>
+
+			<!-- Opens the app info page, where restricted settings can be unlocked -->
+			<com.google.android.material.button.MaterialButton
+				style="@style/Widget.MyOnboarding.Permission.Button.Allow"
+				android:id="@+id/onboarding_system_alert_app_info_button"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/small"
+				android:text="@string/action_open_app_info"
+				app:layout_constraintTop_toBottomOf="@id/onboarding_system_alert_description"
+				app:layout_constraintStart_toStartOf="parent"
 				/>
 
 			<!-- System alert check mark -->

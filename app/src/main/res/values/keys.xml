@@ -28,10 +28,20 @@
 	<string name="key_permission_post_notifications_requested">key_permission_post_notifications_requested</string>
 	<string name="key_permission_schedule_exact_alarm_requested">key_permission_schedule_exact_alarm_requested</string>
 	<string name="key_permission_system_alert_window_requested">key_permission_system_alert_window_requested</string>
+	<string name="key_permission_full_screen_intent_requested">key_permission_full_screen_intent_requested</string>
+	<string name="key_permission_system_alert_window_granted">key_permission_system_alert_window_granted</string>
+	<string name="key_permission_full_screen_intent_granted">key_permission_full_screen_intent_granted</string>
+	<string name="key_permission_full_screen_intent_asked_at_version">key_permission_full_screen_intent_asked_at_version</string>
 
 	<!-- Event -->
 	<string name="key_event_update_and_backup_media_info_in_alarms_db_v31">event_update_and_backup_media_info_in_alarms_db_v31</string>
 	<string name="key_event_fix_zero_auto_dismiss_and_snooze">event_fix_zero_auto_dismiss_and_snooze</string>
+	<string name="key_event_audio_source_to_keys">event_audio_source_to_keys</string>
+	<string name="key_event_timer_audio_source_to_keys">event_timer_audio_source_to_keys</string>
+	<string name="key_event_add_five_minute_timer">event_add_five_minute_timer</string>
+	<string name="key_event_egg_timer">event_egg_timer</string>
+	<string name="key_event_shake_sensitivity_finer">event_shake_sensitivity_finer</string>
+	<string name="key_event_freeze_alarm_order">event_freeze_alarm_order</string>
 
 	<!-- Main activity -->
 	<string name="key_main_should_refresh_activity">app_should_refresh_main_activity</string>
@@ -43,6 +53,8 @@
 	<string name="key_main_card_height_collapsed">card_height_collapsed</string>
 	<string name="key_main_card_height_collapsed_dismiss">card_height_collapsed_dismiss</string>
 	<string name="key_main_card_height_expanded">card_height_expanded</string>
+	<string name="key_main_card_layout_version">card_layout_version</string>
+	<string name="key_main_card_height_expanded_dismiss">card_height_expanded_dismiss</string>
 
 	<!-- General -->
 	<string name="key_settings_general">pref_screen_general</string>
@@ -73,6 +85,14 @@
 	<string name="key_default_alarm_flashlight_should_blink">pref_flashlight_should_blink</string>
 	<string name="key_default_alarm_flashlight_on_duration">pref_flashlight_on_duration</string>
 	<string name="key_default_alarm_flashlight_off_duration">pref_flashlight_off_duration</string>
+
+	<!-- Dawn / reveil lumineux -->
+	<string name="key_default_alarm_dawn_should_use_dawn">pref_use_dawn</string>
+	<string name="key_default_alarm_dawn_duration">pref_dawn_duration</string>
+	<string name="key_default_alarm_dawn_color">pref_dawn_color</string>
+	<string name="key_default_alarm_dawn_should_use_image">pref_dawn_should_use_image</string>
+	<string name="key_default_alarm_dawn_image_path">pref_dawn_image_path</string>
+	<string name="key_default_alarm_dawn_flashlight_lead">pref_dawn_flashlight_lead</string>
 	<string name="key_general_default_alarm_media_path">pref_sound</string>
 	<string name="key_general_default_alarm_media_artist">pref_default_alarm_media_artist</string>
 	<string name="key_general_default_alarm_media_title">pref_default_alarm_media_title</string>
@@ -161,6 +181,7 @@
 	<string name="key_misc_should_toggle_alarms_with_airplane_mode">pref_should_toggle_alarms_with_airplane_mode</string>
 
 	<!-- Appearance -->
+	<string name="key_settings_speak_time">pref_settings_speak_time</string>
 	<string name="key_settings_appearance">pref_screen_appearance</string>
 	<string name="key_color_theme">pref_theme_color</string>
 	<string name="key_color_name">pref_name_color</string>
@@ -174,10 +195,33 @@
 	<string name="key_show_hide_vibrate_button">pref_show_hide_vibrate_button</string>
 	<string name="key_show_hide_nfc_button">pref_show_hide_nfc_button</string>
 	<string name="key_show_hide_flashlight_button">pref_show_hide_flashlight_button</string>
+	<string name="key_show_hide_dawn_button">pref_show_hide_dawn_button</string>
+	<string name="key_dawn_reveal_duration">pref_dawn_reveal_duration</string>
+	<string name="key_dawn_reveal_return">pref_dawn_reveal_return</string>
+	<string name="key_power_dismiss">pref_power_dismiss</string>
+	<string name="key_record_statistics">pref_record_statistics</string>
+	<string name="key_clean_sounds">pref_clean_sounds</string>
+	<string name="key_clean_images">pref_clean_images</string>
+	<string name="key_clean_all">pref_clean_all</string>
+	<string name="key_say_time_from_hour">pref_say_time_from_hour</string>
+	<string name="key_say_time_to_hour">pref_say_time_to_hour</string>
+	<string name="key_say_time_language">pref_say_time_language</string>
+	<string name="key_tts_delay">pref_tts_delay</string>
+	<string name="key_analog_clock">pref_analog_clock</string>
+	<string name="key_say_time_enabled">pref_say_time_enabled</string>
+	<string name="key_shake_to_say_time">pref_shake_to_say_time</string>
+	<string name="key_shake_sensitivity">pref_shake_sensitivity</string>
+	<string name="key_wave_to_say_time">pref_wave_to_say_time</string>
+	<string name="key_wave_passes">pref_wave_passes</string>
+	<string name="key_say_time_format">pref_say_time_format</string>
+	<string name="key_app_language">pref_app_language</string>
+	<string name="key_reset_settings">pref_reset_settings</string>
+	<string name="key_dawn_preview_duration">pref_dawn_preview_duration</string>
 	<string name="key_style_day_button">pref_day_button_style</string>
 	<string name="key_style_should_show_card_button_labels">pref_should_show_card_button_labels</string>
 	<string name="key_style_start_week_on">pref_start_week_on</string>
 	<string name="key_tweak_expand_new_alarm">pref_expand_new_alarm</string>
+	<string name="key_tweak_auto_sort_alarms">pref_auto_sort_alarms</string>
 	<string name="key_tweak_next_alarm_format">pref_time_remaining_format</string>
 
 	<!-- Statistics -->

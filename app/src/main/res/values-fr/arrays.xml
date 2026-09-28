@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string-array name="days_of_week_full">
+		<item>Dimanche</item>
+		<item>Lundi</item>
+		<item>Mardi</item>
+		<item>Mercredi</item>
+		<item>Jeudi</item>
+		<item>Vendredi</item>
+		<item>Samedi</item>
+	</string-array>
+
+	<string-array name="days_of_week_abbr">
+		<item>Dim</item>
+		<item>Lun</item>
+		<item>Mar</item>
+		<item>Mer</item>
+		<item>Jeu</item>
+		<item>Ven</item>
+		<item>Sam</item>
+	</string-array>
+
+	<string-array name="days_of_week_one_letter">
+		<item>D</item>
+		<item>L</item>
+		<item>M</item>
+		<item>M</item>
+		<item>J</item>
+		<item>V</item>
+		<item>S</item>
+	</string-array>
+
+	<string-array name="start_week_on">
+		<item>Dimanche</item>
+		<item>Lundi</item>
+		<item>Automatique</item>
+	</string-array>
+
+	<string-array name="general_seconds_summaries">
+		<item>0 seconde</item>
+		<item>1 seconde</item>
+		<item>2 secondes</item>
+		<item>3 secondes</item>
+		<item>4 secondes</item>
+		<item>5 secondes</item>
+		<item>6 secondes</item>
+		<item>7 secondes</item>
+		<item>8 secondes</item>
+		<item>9 secondes</item>
+		<item>10 secondes</item>
+		<item>11 secondes</item>
+		<item>12 secondes</item>
+		<item>13 secondes</item>
+		<item>14 secondes</item>
+		<item>15 secondes</item>
+		<item>16 secondes</item>
+		<item>17 secondes</item>
+		<item>18 secondes</item>
+		<item>19 secondes</item>
+		<item>20 secondes</item>
+		<item>21 secondes</item>
+		<item>22 secondes</item>
+		<item>23 secondes</item>
+		<item>24 secondes</item>
+		<item>25 secondes</item>
+		<item>26 secondes</item>
+		<item>27 secondes</item>
+		<item>28 secondes</item>
+		<item>29 secondes</item>
+		<item>30 secondes</item>
+		<item>31 secondes</item>
+		<item>32 secondes</item>
+		<item>33 secondes</item>
+		<item>34 secondes</item>
+		<item>35 secondes</item>
+		<item>36 secondes</item>
+		<item>37 secondes</item>
+		<item>38 secondes</item>
+		<item>39 secondes</item>
+		<item>40 secondes</item>
+		<item>41 secondes</item>
+		<item>42 secondes</item>
+		<item>43 secondes</item>
+		<item>44 secondes</item>
+		<item>45 secondes</item>
+		<item>46 secondes</item>
+		<item>47 secondes</item>
+		<item>48 secondes</item>
+		<item>49 secondes</item>
+		<item>50 secondes</item>
+		<item>51 secondes</item>
+		<item>52 secondes</item>
+		<item>53 secondes</item>
+		<item>54 secondes</item>
+		<item>55 secondes</item>
+		<item>56 secondes</item>
+		<item>57 secondes</item>
+		<item>58 secondes</item>
+		<item>59 secondes</item>
+		<item>60 secondes</item>
+	</string-array>
+
+	<string-array name="say_time_format_entries">
+		<item>Comme le téléphone</item>
+		<item>Horloge 12 heures</item>
+		<item>Horloge 24 heures</item>
+	</string-array>
+
+	<string-array name="shake_sensitivity_entries">
+		<item>Le moindre mouvement</item>
+		<item>Un léger mouvement</item>
+		<item>Une secousse légère</item>
+		<item>Une secousse normale</item>
+	</string-array>
+
+	<string-array name="wave_passes_entries">
+		<item>Un passage</item>
+		<item>Deux passages</item>
+	</string-array>
+
+</resources>

@@ -29,6 +29,20 @@
 				/>
 		</com.google.android.material.appbar.AppBarLayout>
 
+		<!-- A warm halo rising off the bottom bar. It is declared before the lists so
+			that it is drawn behind them: an alarm card passing over it hides it, and it
+			only shows where there is nothing on top of it. Decoration only, a plain View
+			takes no touches -->
+		<View
+			android:id="@+id/bottom_halo"
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/bottom_halo_height"
+			android:background="@drawable/bottom_halo"
+			app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			/>
+
 		<!-- Navigation host -->
 		<androidx.fragment.app.FragmentContainerView
 			android:id="@+id/hello_content"

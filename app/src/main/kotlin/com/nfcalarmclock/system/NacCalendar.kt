@@ -1178,18 +1178,36 @@ object NacCalendar
 					// Return
 					context.resources.getString(R.string.message_next_alarm_in, timeRemaining)
 				}
-				// e.g. Alarm on ...
+				// e.g. Alarm on Mon 7:00, and how long is left under it
 				else
 				{
 					// Get the time at which the alarm will run
 					val is24HourFormat = DateFormat.is24HourFormat(context)
 					val time = getFullTime(calendar, is24HourFormat)
 
-					// Return
-					context.resources.getString(R.string.message_next_alarm_on, time)
+					// Only the day and the time
+					if (nextAlarmFormat == 1)
+					{
+						context.resources.getString(R.string.message_next_alarm_on, time)
+					}
+					// Both: the day and the time, and how long is left under it
+					else
+					{
+						val timeRemaining = getTimeRemaining(context.resources, calendar)
+
+						context.resources.getString(R.string.message_next_alarm_both,
+							time, timeRemaining)
+					}
 				}
 			}
 		}
+
+		/**
+		 * Seconds in a minute, an hour and a day, so that the arithmetic above reads.
+		 */
+		private const val SECONDS_IN_MINUTE = 60L
+		private const val SECONDS_IN_HOUR = 60L * 60L
+		private const val SECONDS_IN_DAY = 24L * 60L * 60L
 
 		/**
 		 * Get the message to display when an alarm will run IN some amount of time.
@@ -1197,19 +1215,37 @@ object NacCalendar
 		 * @return The message to display when an alarm will run IN some amount of
 		 *         time.
 		 */
-		private fun getTimeRemaining(
+		fun getTimeRemaining(
 			resources: Resources,
 			calendar: Calendar
 		): String
 		{
 			// Get the time remaining
-			val time = (calendar.timeInMillis - System.currentTimeMillis()) / 1000
+			val raw = (calendar.timeInMillis - System.currentTimeMillis()) / 1000
+
+			// Round at the smallest unit that is going to be shown, rather than cut.
+			// Cutting turned two days, twenty three hours and forty one minutes into
+			// "2 days 23 hours", which reads as a whole day less than it is. Below the
+			// hour nothing is rounded: that one counts down second by second, and a
+			// number that rounds while it falls reads as a fault
+			val time = if (raw >= SECONDS_IN_DAY)
+			{
+				((raw + SECONDS_IN_HOUR/2) / SECONDS_IN_HOUR) * SECONDS_IN_HOUR
+			}
+			else if (raw >= SECONDS_IN_HOUR)
+			{
+				((raw + SECONDS_IN_MINUTE/2) / SECONDS_IN_MINUTE) * SECONDS_IN_MINUTE
+			}
+			else
+			{
+				raw
+			}
 
 			// Get the time components
-			val day = (time / (60 * 60 * 24) % 365).toInt()
-			val hr = (time / (60 * 60) % 24).toInt()
-			val min = (time / 60 % 60).toInt()
-			val sec = (time % 60).toInt()
+			val day = (time / SECONDS_IN_DAY % 365).toInt()
+			val hr = (time / SECONDS_IN_HOUR % 24).toInt()
+			val min = (time / SECONDS_IN_MINUTE % 60).toInt()
+			val sec = (time % SECONDS_IN_MINUTE).toInt()
 
 			// Get the phrase for the different units of time
 			val dayPhrase = resources.getQuantityString(R.plurals.unit_day, day, day)
@@ -1220,15 +1256,16 @@ object NacCalendar
 			// Format the time remaining message
 			return if (day > 0)
 			{
-				// Days
-				"$dayPhrase $hrPhrase"
+				// Days. A round number of days says so on its own: "3 days 0 hours"
+				// is the sort of thing only a machine writes
+				if (hr > 0) "$dayPhrase $hrPhrase" else dayPhrase
 			}
 			else
 			{
 				if (hr > 0)
 				{
 					// Hours
-					"$hrPhrase $minPhrase"
+					if (min > 0) "$hrPhrase $minPhrase" else hrPhrase
 				}
 				else
 				{

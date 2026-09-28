@@ -193,6 +193,12 @@ class NacCardPreference @JvmOverloads constructor(
 			a.toastFlashlight(context)
 		}
 
+		// Dawn
+		card.onCardUseDawnChangedListener = NacAlarmCardHolder.OnCardUseDawnChangedListener { _, a ->
+			sharedPreferences.shouldUseDawn = a.shouldUseDawn
+			a.toastDawn(context)
+		}
+
 		// Media
 		card.onCardMediaClickedListener = NacAlarmCardHolder.OnCardMediaClickedListener { _, a ->
 			onCardMediaClickedListener?.onCardMediaClicked(a)

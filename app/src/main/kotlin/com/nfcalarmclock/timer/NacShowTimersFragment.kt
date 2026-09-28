@@ -790,6 +790,23 @@ class NacShowTimersFragment
 		recyclerView.layoutManager = NacCardLayoutManager(context)
 		recyclerView.setHasFixedSize(true)
 
+		// A list that has shrunk, after a delete, may no longer scroll at all. The
+		// button hides on the way down and nothing brings it back, because there is no
+		// way up left to scroll. Whenever everything fits on screen there is nothing to
+		// get out of the way of, so the button belongs on screen
+		recyclerView.addOnLayoutChangeListener { view, _, _, _, _, _, _, _, _ ->
+
+			val list = view as RecyclerView
+			val everythingFits = !list.canScrollVertically(-1)
+				&& !list.canScrollVertically(1)
+
+			if (everythingFits && !floatingActionButton.isShown)
+			{
+				floatingActionButton.show()
+			}
+
+		}
+
 		// Show/hide the FAB on scroll
 		recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener()
 		{
@@ -854,8 +871,29 @@ class NacShowTimersFragment
 			// Timer clicked listener
 			card.onTimerClickedListener = NacTimerCardHolder.OnTimerClickedListener { timer ->
 
+				// A timer left marked as active in the service while nothing is going on
+				// (not counting down, not ringing, not paused part way): clean it up like
+				// the reset button does, so that the edit screen opens instead of an
+				// empty countdown screen
+				if ((service?.isTimerActive(timer) == true) && (service?.isTimerInUse(timer) != true))
+				{
+					val stale = "Timer ${timer.id} marked active but not in use. Cleaning it up. " +
+						service!!.describeTimer(timer)
+
+					NacLog.w(stale)
+
+					isRunningStartingAnimation[timer.id] = false
+					service!!.resetCountdownTimer(timer)
+					service!!.cleanup(timer)
+
+					if (service!!.allTimersReadOnly.isEmpty())
+					{
+						service!!.stopThisService()
+					}
+				}
+
 				// Determine the destination fragment to use
-				val destinationId = if (service?.isTimerActive(timer) == true)
+				val destinationId = if (service?.isTimerInUse(timer) == true)
 				{
 					R.id.action_nacShowTimersFragment_to_nacActiveTimerFragment
 				}
@@ -864,13 +902,23 @@ class NacShowTimersFragment
 					R.id.action_nacShowTimersFragment_to_nacEditTimerFragment
 				}
 
+				// Where the tap goes, in the log file of the app: some
+				// timers do nothing at all when tapped (1.94), and a failed navigation was
+				// swallowed here without a trace
+				val message = "Timer ${timer.id} tapped. ${service?.describeTimer(timer)} " +
+					"serviceBound=${service != null} " +
+					"current=${findNavController().currentDestination?.label}"
+
+				NacLog.i(message)
+
 				// Navigate to the fragment
 				try
 				{
 					findNavController().navigate(destinationId, timer.toBundle())
 				}
-				catch (_: IllegalArgumentException)
+				catch (e: IllegalArgumentException)
 				{
+					NacLog.e("Navigation to the timer refused", throwable = e)
 				}
 
 			}

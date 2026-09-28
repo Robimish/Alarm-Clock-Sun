@@ -42,5 +42,5 @@ dependencyResolutionManagement {
 	}
 }
 
-rootProject.name = "NFC Alarm Clock"
+rootProject.name = "Alarm Clock Sun"
 include(":app")

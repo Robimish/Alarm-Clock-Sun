@@ -38,6 +38,7 @@
 	<string-array name="start_week_on">
 		<item>dimanch</item>
 		<item>lendi</item>
+		<item>Otomatik</item>
 	</string-array>
 
 	<!-- General list of seconds -->

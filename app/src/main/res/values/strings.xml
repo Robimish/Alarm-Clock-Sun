@@ -2,7 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
 	<!-- App -->
-	<string name="app_name">NFC Alarm Clock</string>
+	<string name="app_name">Alarm Clock Sun</string>
 	<string name="app_developer">Gabe Gonzalez</string>
 
 	<!-- Consolidate -->
@@ -75,6 +75,9 @@
 	<string name="action_alarm_snooze">Snooze</string>
 	<string name="action_alarm_dismiss">Dismiss</string>
 	<string name="action_alarm_dismiss_early">Dismiss early</string>
+	<string name="action_alarm_dismiss_next" tools:ignore="MissingTranslation">Dismiss next alarm</string>
+	<string name="action_alarm_dismiss_snoozed" tools:ignore="MissingTranslation">Dismiss snoozed alarm</string>
+	<string name="message_alarm_is_snoozed" tools:ignore="MissingTranslation">Snoozed alarm rings in %1$s</string>
 	<string name="action_alarm_copy">Copy</string>
 	<string name="action_alarm_delete">Delete</string>
 	<string name="action_timer_pause">Pause</string>
@@ -105,6 +108,7 @@
 	<string name="action_recursively_play_media">Include subfolders</string>
 	<string name="action_alarm_option_audio_source">Audio source</string>
 	<string name="action_alarm_option_flashlight">Flashlight</string>
+	<string name="action_alarm_option_dawn" tools:ignore="MissingTranslation">Dawn</string>
 	<string name="action_alarm_option_text_to_speech">Text-to-speech</string>
 	<string name="action_alarm_option_volume">Volume</string>
 	<string name="action_alarm_option_upcoming_reminder">Upcoming reminder</string>
@@ -137,7 +141,7 @@
 	<string name="message_permission_ignore_battery_optimization_request">Allow permission to avoid alarm not running if the app has not been used for a while.&lt;br/>&lt;br/>&lt;b>Note:&lt;/b>  This depends on what device you have and &lt;b>may not actually be needed&lt;/b>.</string>
 	<string name="message_permission_post_notifications_request">Allow permission for alarms to run when the app is not in focus.&lt;br/>&lt;br/>&lt;b>Note:&lt;/b>  This is a side effect of the security policies introduced in &lt;b>Android 13&lt;/b>, which are for the benefit of users, but can restrict apps in instances like this.</string>
 	<string name="message_permission_schedule_exact_alarm_request">Allow permission to have alarms run precisely when scheduled.</string>
-	<string name="message_permission_system_alert_window_request">Allow permission to display app over other apps?&lt;br/>&lt;br/>This will ensure that the alarm screen is shown, which is a requirement for audio to play, if the app is in the background.&lt;br/>&lt;br/>&lt;b>Note:&lt;/b>  This only affects Android 15.</string>
+	<string name="message_permission_system_alert_window_request">Allow the app to display over other apps?&lt;br/>&lt;br/>&lt;b>Optional.&lt;/b> The alarm screen and the sunrise come up on their own without it, through the full screen notification. This is only a safety net, for phones whose maker refuses that notification.</string>
 	<string name="message_playlist">Do you want to play all the music in this folder?</string>
 	<string name="message_nfc_enable_on_device_request">Please enable NFC on device</string>
 	<string name="message_nfc_optional">NFC optional</string>
@@ -158,7 +162,9 @@
 	<string name="message_vibrate_disabled">Vibrate off</string>
 	<string name="message_vibrate_enabled">Vibrate on</string>
 	<string name="message_flashlight_disabled">Do not use flashlight</string>
+	<string name="message_dawn_disabled" tools:ignore="MissingTranslation">Do not use the dawn simulation</string>
 	<string name="message_flashlight_enabled">Use flashlight</string>
+	<string name="message_dawn_enabled" tools:ignore="MissingTranslation">Use the dawn simulation</string>
 	<string name="message_alarm_copy">Copied alarm</string>
 	<string name="message_timer_copy">Copied timer</string>
 	<string name="message_alarm_delete">Deleted alarm</string>
@@ -173,12 +179,20 @@
 	<string name="message_required">Required</string>
 	<string name="message_optional">Optional</string>
 	<string name="message_already_have_permission">You already have this permission</string>
+	<string name="name_ready_made_timer" tools:ignore="MissingTranslation">Eggs</string>
+	<string name="title_ringing_timer_channel" tools:ignore="MissingTranslation">Ringing timer</string>
+	<string name="description_ringing_timer_channel" tools:ignore="MissingTranslation">Brings a timer that rings to the screen, even when the phone is locked.</string>
+	<string name="message_timer_ringing" tools:ignore="MissingTranslation">Time is up</string>
+	<string name="title_record_statistics" tools:ignore="MissingTranslation">Record statistics</string>
+	<string name="description_record_statistics_true" tools:ignore="MissingTranslation">Dismissed, snoozed, missed, created and deleted alarms are counted.</string>
+	<string name="description_record_statistics_false" tools:ignore="MissingTranslation">Nothing new is counted. What was counted before is kept until you reset it.</string>
+	<string name="message_set_alarm_permission_missing" tools:ignore="MissingTranslation">Android says this permission is missing, which it is not meant to allow. Other apps cannot set an alarm here.</string>
 	<string name="message_support_thank_you">Thank you for your support!</string>
 	<string name="message_reset_statistics">Are you sure you want to reset all the statistics?</string>
 	<string name="message_tts_current_time">Current time</string>
 	<string name="message_tts_alarm_name">Name of the alarm</string>
 	<string name="message_tts_timer_name">Name of the timer</string>
-	<string name="message_statistics_email_subject">NFC Alarm Clock Statistics</string>
+	<string name="message_statistics_email_subject">Alarm Clock Sun Statistics</string>
 	<string name="message_skip_general_alarm">Alarm will be skipped.</string>
 	<string name="message_skip_named_alarm">&lt;b&gt;%1$s&lt;/b&gt; will be skipped.</string>
 	<string name="message_disabled_general_alarm">Alarm is disabled.</string>
@@ -189,6 +203,7 @@
 	<string name="message_will_run_in_named_alarm">&lt;b&gt;%1$s&lt;/b&gt; will run in %2$s.</string>
 	<string name="message_next_alarm_on">Next alarm on %1$s</string>
 	<string name="message_next_alarm_in">Next alarm in %1$s</string>
+	<string name="message_next_alarm_both" tools:ignore="MissingTranslation">Next alarm on %1$s\nTime remaining %2$s</string>
 	<string name="message_export_started">Exporting…</string>
 	<string name="message_export_completed">Export completed</string>
 	<string name="message_import_started">Importing…</string>
@@ -219,6 +234,7 @@
 	<string name="error_message_play_audio">Unable to play audio</string>
 	<string name="error_message_google_play_billing">Error when connecting to the Google Play Store</string>
 	<string name="error_message_text_to_speech_audio_focus">Unable to use text-to-speech</string>
+	<string name="error_message_no_voice_for_language" tools:ignore="MissingTranslation">No text-to-speech voice installed for %1$s</string>
 	<string name="error_message_enter_timer_duration">Enter a duration</string>
 	<string name="error_message_unable_to_volume_dismiss_nfc_alarm">Unable to dismiss NFC alarm with volume button</string>
 	<string name="error_message_unable_to_email">Unable to draft email</string>
@@ -285,6 +301,7 @@
 	<string name="title_permission_set_alarm">Set alarm</string>
 	<string name="title_permission_show_notifications">Show notifications</string>
 	<string name="title_permission_system_alert_window">Display over other apps</string>
+	<string name="action_open_app_info" tools:ignore="MissingTranslation">App info</string>
 	<string name="title_permission_boot">Startup</string>
 	<string name="title_permission_wakelock">Wakelock</string>
 	<string name="title_request_permission_schedule_exact_alarm">Enable schedule exact alarms</string>
@@ -299,6 +316,7 @@
 	<string name="title_text_to_speech_speak_frequency">Speak frequency</string>
 	<string name="title_text_to_speech_speech_rate">Speech rate</string>
 	<string name="title_text_to_speech_voice">Voice</string>
+	<string name="title_volume" tools:ignore="MissingTranslation">Volume</string>
 	<string name="title_volume_gradually_increase_volume">Gradually increase volume</string>
 	<string name="title_volume_restrict_volume">Restrict volume</string>
 	<string name="title_dismiss_options_auto_dismiss">Auto-dismiss</string>
@@ -315,6 +333,8 @@
 	<string name="title_upcoming_reminder_how_early">How early…</string>
 	<string name="title_upcoming_reminder_how_frequent">How frequent…</string>
 	<string name="title_setting_general">General</string>
+	<string name="title_setting_speak_time" tools:ignore="MissingTranslation">Speak the time</string>
+	<string name="description_setting_speak_time" tools:ignore="MissingTranslation">Shake the phone or pass a hand over it to hear the time. The switch turns both off at once.</string>
 	<string name="title_setting_appearance">Appearance</string>
 	<string name="title_setting_about">About</string>
 	<string name="title_setting_help">Help</string>
@@ -364,7 +384,8 @@
 	<string name="description_onboarding_welcome">Welcome to the most customizable alarm clock app you have ever used</string>
 	<string name="description_onboarding_permissions">The app needs some permissions to work properly</string>
 	<string name="description_onboarding_permission_post_notifications_request">Required for alarms to run. Allows the app to start and stay running when not already in focus.</string>
-	<string name="description_onboarding_permission_system_alert_window_request">This is a special permission. Used to ensure that the alarm screen is shown and audio can be played. Only required on Android 15, or if there is device-specific issue where alarms are not running.</string>
+	<string name="description_onboarding_permission_full_screen_intent" tools:ignore="MissingTranslation">This is the one that brings the alarm screen, and the sunrise, up on a locked phone. Without it the alarm rings with nothing but a notification.\n\nThe button opens the right settings page.</string>
+	<string name="description_onboarding_permission_system_alert_window_request" tools:ignore="MissingTranslation">Optional. The alarm screen and the sunrise come up on their own without this: it is the &lt;b>full screen notification&lt;/b>, on the previous page, that brings them up. This one is only the safety net, for phones whose maker refuses that one.\n\nThe button below opens the right settings page: just turn the switch on.\n\nIf the switch is greyed out, the app was installed from an APK file. Go back to the app info page, open the menu at the top right and choose \"Allow restricted settings\", then come back here.</string>
 	<string name="description_onboarding_how_to_use_features">Some stuff can be hidden or confusing. Here is how to do those things</string>
 	<string name="description_onboarding_how_to_copy_and_delete">Swipe an alarm or timer right to copy and left to delete.</string>
 	<string name="description_onboarding_how_to_get_more_options">Long press on almost any button in an expanded alarm/timer to access more options.  You can even try it on an alarm card to get options like "Skip next alarm" and more.</string>
@@ -401,6 +422,8 @@
 	<string name="description_flashlight_blink_on_off">Blink the flashlight on and off at set durations.</string>
 	<string name="description_text_to_speech_what_to_say_alarm">What to say with text-to-speech when the alarm is active.</string>
 	<string name="description_text_to_speech_what_to_say_timer">What to say with text-to-speech when the timer is active.</string>
+	<string name="title_text_to_speech_delay" tools:ignore="MissingTranslation">Wait before speaking</string>
+	<string name="description_text_to_speech_delay" tools:ignore="MissingTranslation">Let the music wake you first, and only then have the voice say the time. The music carries on afterwards.</string>
 	<string name="description_text_to_speech_speak_frequency">How often to say the selected items above.</string>
 	<string name="description_text_to_speech_speech_rate">How fast text-to-speech should speak.</string>
 	<string name="description_volume_gradually_increase_volume_alarm">Increase the volume of the alarm at a set frequency.</string>
@@ -425,6 +448,7 @@
 	<string name="description_upcoming_reminder_how_frequent">How frequent should the reminder notification should be shown?</string>
 	<string name="description_upcoming_reminder_text_to_speech">Use the alarm\'s text-to-speech options when the notification is shown.</string>
 	<string name="example_name">Work</string>
+	<string name="first_alarm_name" tools:ignore="MissingTranslation">Alarm 1</string>
 	<string name="description_setting_general">General alarm settings</string>
 	<string name="description_setting_appearance">Customize how the app looks</string>
 	<string name="description_setting_about">Information about the app</string>
@@ -462,12 +486,103 @@
 	<string name="description_show_hide_nfc_button_false">Hide the NFC button when expanding an alarm.</string>
 	<string name="description_show_hide_flashlight_button_true">Show the flashlight button when expanding an alarm.</string>
 	<string name="description_show_hide_flashlight_button_false">Hide the flashlight button when expanding an alarm.</string>
+	<string name="description_show_hide_dawn_button_true" tools:ignore="MissingTranslation">Show the dawn button when expanding an alarm.</string>
+	<string name="description_show_hide_dawn_button_false" tools:ignore="MissingTranslation">Hide the dawn button when expanding an alarm.</string>
+
+	<!-- Dawn / reveil lumineux -->
+	<string name="title_dawn_duration" tools:ignore="MissingTranslation">Sunrise duration</string>
+	<string name="description_dawn_duration" tools:ignore="MissingTranslation">How long before the alarm the screen starts to light up.</string>
+	<string name="message_dawn_duration_value" tools:ignore="MissingTranslation">%1$d min</string>
+	<string name="title_dawn_color" tools:ignore="MissingTranslation">Light color</string>
+	<string name="title_dawn_flashlight" tools:ignore="MissingTranslation">Flashlight before the alarm</string>
+	<string name="description_dawn_flashlight" tools:ignore="MissingTranslation">The flashlight fades in over the last minutes of the dawn. Turn the wheel to zero to leave it off.</string>
+	<string name="message_dawn_flashlight_off" tools:ignore="MissingTranslation">Off</string>
+	<string name="title_dawn_custom_color" tools:ignore="MissingTranslation">Custom color</string>
+	<string name="title_dawn_use_image" tools:ignore="MissingTranslation">Use an image</string>
+	<string name="description_dawn_use_image" tools:ignore="MissingTranslation">Fade in a photo instead of a solid color.</string>
+	<string name="action_dawn_choose_image" tools:ignore="MissingTranslation">Choose image</string>
+	<string name="title_dawn_reveal_duration" tools:ignore="MissingTranslation">Tap to see the screen</string>
+	<string name="message_dawn_preview_over" tools:ignore="MissingTranslation">Tap to close</string>
+	<string name="title_dawn_preview_duration" tools:ignore="MissingTranslation">Preview length</string>
+	<string name="title_say_time" tools:ignore="MissingTranslation">Speak the time</string>
+	<string name="title_say_time_hours" tools:ignore="MissingTranslation">Only between</string>
+	<string name="description_say_time_hours" tools:ignore="MissingTranslation">The time is only spoken between %1$02d:00 and %2$02d:00.</string>
+	<string name="title_say_time_voice" tools:ignore="MissingTranslation">The voice itself, alarms included</string>
+	<string name="title_say_time_language" tools:ignore="MissingTranslation">Spoken language</string>
+	<string name="title_say_time_from" tools:ignore="MissingTranslation">From</string>
+	<string name="title_say_time_to" tools:ignore="MissingTranslation">To</string>
+	<string name="title_clock_style" tools:ignore="MissingTranslation">Kind of clock</string>
+	<string name="title_analog_clock" tools:ignore="MissingTranslation">Analogue clock</string>
+	<string name="description_analog_clock" tools:ignore="MissingTranslation">A dial with hands rather than the digits, on the screen of this alarm.</string>
+	<string name="message_clock_24_hour" tools:ignore="MissingTranslation">24 h</string>
+	<string name="message_clock_12_hour" tools:ignore="MissingTranslation">12 h</string>
+	<string name="title_say_time_format" tools:ignore="MissingTranslation">Clock that is said</string>
+	<string name="title_shake_to_say_time" tools:ignore="MissingTranslation">Shake the phone to hear the time</string>
+	<string name="title_shake_to_say_time_switch" tools:ignore="MissingTranslation">Shaking says the time</string>
+	<string name="description_say_time_listening_between" tools:ignore="MissingTranslation">Listening, from %1$s to %2$s</string>
+	<string name="description_say_time_listening_always" tools:ignore="MissingTranslation">Listening, at any hour</string>
+	<string name="description_shake_to_say_time_true" tools:ignore="MissingTranslation">Shaking the phone says the time out loud, within the hours below. Outside those hours nothing listens and the notification is gone. Android asks for a notification while it listens, and the movement sensor costs a little battery.</string>
+	<string name="description_shake_to_say_time_false" tools:ignore="MissingTranslation">Shaking the phone does nothing.</string>
+	<string name="title_shake_sensitivity" tools:ignore="MissingTranslation">How hard to shake</string>
+	<string name="description_say_time_notification_channel" tools:ignore="MissingTranslation">A notification with a button that says the time out loud.</string>
+	<string name="action_say_time" tools:ignore="MissingTranslation">Say the time</string>
+	<string name="title_app_language" tools:ignore="MissingTranslation">Language of the app</string>
+	<string name="title_language_system" tools:ignore="MissingTranslation">Language of the phone</string>
+	<string name="description_app_language" tools:ignore="MissingTranslation">The same setting as the one Android keeps for each app.</string>
+	<string name="title_reset_settings" tools:ignore="MissingTranslation">Back to the settings out of the box</string>
+	<string name="description_reset_settings" tools:ignore="MissingTranslation">Puts every setting back to what it was after the install. Your alarms are not touched.</string>
+	<string name="message_reset_settings_confirm" tools:ignore="MissingTranslation">Every setting goes back to what it was after the install. Your alarms are kept.</string>
+	<string name="message_reset_settings_done" tools:ignore="MissingTranslation">The settings are back to the ones out of the box.</string>
+	<string name="title_storage" tools:ignore="MissingTranslation">Storage</string>
+	<string name="title_clean_sounds" tools:ignore="MissingTranslation">Free up sound copies</string>
+	<string name="description_clean_sounds" tools:ignore="MissingTranslation">The app keeps a copy of every sound it has been given, so an alarm still rings when the original is moved or the phone has not been unlocked yet. This throws away the copies no alarm plays.</string>
+	<string name="title_clean_images" tools:ignore="MissingTranslation">Free up sunrise images</string>
+	<string name="description_clean_images" tools:ignore="MissingTranslation">An image stays in the app after you switch back to a color, so you can switch back without picking the file again. This throws away the images no sunrise is showing.</string>
+	<string name="title_clean_all" tools:ignore="MissingTranslation">Free up both</string>
+	<string name="description_clean_all" tools:ignore="MissingTranslation">Sounds and images in one go.</string>
+	<string name="message_clean_confirm" tools:ignore="MissingTranslation">Only copies that no alarm needs are deleted. Alarms themselves are left alone.</string>
+	<string name="message_clean_done" tools:ignore="MissingTranslation">Freed %1$s over %2$d file(s)</string>
+	<string name="message_clean_nothing" tools:ignore="MissingTranslation">Nothing to free up</string>
+	<string name="title_dawn_show_date" tools:ignore="MissingTranslation">Date</string>
+	<string name="title_dawn_reveal" tools:ignore="MissingTranslation">Tap to see the screen</string>
+	<string name="title_dawn_reveal_return" tools:ignore="MissingTranslation">Go back on its own</string>
+	<string name="description_dawn_reveal_return" tools:ignore="MissingTranslation">The screen goes back to the sunrise by itself, after the time set below. Turned off, each tap turns the screen over and it stays that way until the next one.</string>
+	<string name="description_dawn_reveal" tools:ignore="MissingTranslation">During the sunrise, a tap shows the alarm screen as normal for a moment, so it is plain that the alarm has not gone off yet. A second tap goes back.</string>
+	<string name="message_dawn_reveal_value" tools:ignore="MissingTranslation">%1$d sec</string>
+	<string name="title_dawn_shown" tools:ignore="MissingTranslation">Shown on the screen</string>
+	<string name="description_dawn_shown" tools:ignore="MissingTranslation">Turn off anything you would rather not see. This holds for the sunrise and for the alarm itself, and a tap on the sunrise brings back the light, not the rest.</string>
+	<string name="title_dawn_show_phrase" tools:ignore="MissingTranslation">Wake-up phrase</string>
+	<string name="title_dawn_show_name" tools:ignore="MissingTranslation">Alarm name</string>
+	<string name="title_dawn_show_clock" tools:ignore="MissingTranslation">Clock</string>
+	<string name="title_dawn_show_media" tools:ignore="MissingTranslation">Music title (once the alarm rings)</string>
+	<string name="description_dawn_preview_duration" tools:ignore="MissingTranslation">A sunrise preview holds still for a second, runs for %1$d seconds, then stays at full light for four seconds and closes on its own. Tapping it while it runs shows the screen as normal, as it does during a real sunrise.</string>
+	<string name="description_dawn_reveal_duration" tools:ignore="MissingTranslation">Tapping the screen during a sunrise shows it as normal for %1$d seconds, so that it is plain the alarm has not gone off yet.</string>
+	<string name="message_dawn_no_image" tools:ignore="MissingTranslation">No image selected</string>
+	<string name="message_volume_value" tools:ignore="MissingTranslation">%1$d%%</string>
+	<string name="message_dawn_in_progress" tools:ignore="MissingTranslation">The day is breaking\u2026</string>
+	<string name="message_dawn_unable_to_read_image" tools:ignore="MissingTranslation">Unable to read the selected image</string>
+	<string name="action_dawn_stop" tools:ignore="MissingTranslation">Stop</string>
+	<string name="action_dawn_snooze" tools:ignore="MissingTranslation">+5 min</string>
+	<string name="message_dawn_snoozed" tools:ignore="MissingTranslation">Alarm postponed by 5 minutes</string>
+	<string name="message_dawn_not_ringing_yet" tools:ignore="MissingTranslation">Sunrise in progress. The alarm has not gone off yet.</string>
+	<string name="message_dawn_too_close" tools:ignore="MissingTranslation">Alarm too close: no sunrise this time. It will run for the next one.</string>
+	<string name="message_dawn_no_more_snoozes" tools:ignore="MissingTranslation">No more postponing. Press Stop to turn the alarm off</string>
+	<string name="cd_alarm_name_color" tools:ignore="MissingTranslation">Color of the alarm name</string>
+	<string name="title_dawn_notification" tools:ignore="MissingTranslation">Dawn</string>
+	<string name="description_dawn_notification" tools:ignore="MissingTranslation">Shown while the screen is gradually lighting up before an alarm.</string>
+	<string name="dawn_color_amber" tools:ignore="MissingTranslation">Sunlight</string>
+	<string name="dawn_color_orange" tools:ignore="MissingTranslation">White</string>
+	<string name="dawn_color_red" tools:ignore="MissingTranslation">Amber</string>
+	<string name="dawn_color_white" tools:ignore="MissingTranslation">Pale green</string>
+	<string name="dawn_color_sky" tools:ignore="MissingTranslation">Pale blue</string>
+	<string name="dawn_color_lilac" tools:ignore="MissingTranslation">Lilac</string>
 	<string name="description_expand_new_alarm_true">Alarms that are copied or created with the &#8220;+&#8221; button are expanded.</string>
 	<string name="description_expand_new_alarm_false">Alarms are not expanded.</string>
 	<string name="description_start_week_on">The week shown in an expanded alarm card will start on this day.</string>
 	<string name="description_next_alarm_format">The format to use when showing when the next alarm will run.</string>
 	<string name="description_next_alarm_format_time_in">Next alarm in 7 hours 30 minutes</string>
 	<string name="description_next_alarm_format_time_on">Next alarm on Mon 7:00 AM</string>
+	<string name="description_next_alarm_format_both" tools:ignore="MissingTranslation">Next alarm on Mon 7:00 AM\nTime remaining 7 hours 30 minutes</string>
 	<string name="description_permission_disable_battery_optimization">The app will not be put to sleep, allowing alarms to be activated as normal.</string>
 	<string name="description_permission_nfc">Detect NFC tags to dismiss an alarm.</string>
 	<string name="description_permission_storage">Read music that is stored on your device.</string>
@@ -477,7 +592,7 @@
 	<string name="description_permission_schedule_alarm">Schedule exact alarms.</string>
 	<string name="description_permission_set_alarm">Set an alarm from an external source, such as the Google Assistant.</string>
 	<string name="description_permission_post_notifications">Show a notification when an alarm is activated that will keep your device from putting the app to sleep and turning the alarm off by itself.</string>
-	<string name="description_permission_system_alert_window">Ensure that the alarm screen is shown, which is a requirement for audio to play, if the app is in the background and has not been used in a while.  Should only affect Android 15.</string>
+	<string name="description_permission_system_alert_window" tools:ignore="MissingTranslation">Optional. A safety net for phones that refuse the full screen notification, which is what brings the alarm screen and the sunrise up.</string>
 	<string name="description_permission_boot">Restore alarms when your device is turned on.  Android will delete alarms when your device is turned off.</string>
 	<string name="description_permission_wakelock">Prevent your device from sleeping so that an activated alarm will continue to go off.</string>
 	<string name="message_debug_mode_on">Write to a log file in order to debug a problem. May slightly impact performance.</string>
@@ -632,5 +747,25 @@
 	</plurals>
 
 	<string name="tts_say_time">The time is %1$s:%2$s %3$s.</string>
+	<string name="tts_say_time_one_oclock">The time is %1$s:%2$s %3$s.</string>
+
+	<!-- The power button during the alarm -->
+	<string name="title_while_ringing" tools:ignore="MissingTranslation">While the alarm rings</string>
+	<string name="title_power_dismiss" tools:ignore="MissingTranslation">The power button dismisses</string>
+	<string name="description_power_dismiss_true" tools:ignore="MissingTranslation">Turning the screen off dismisses the alarm. Android never tells an app about the power button, so what is read is the screen going out: anything else that turns it off dismisses the alarm too.</string>
+	<string name="description_power_dismiss_false" tools:ignore="MissingTranslation">The power button only turns the screen off while the alarm rings.</string>
+
+	<!-- Passing a hand over the phone to hear the time -->
+	<string name="title_wave_to_say_time" tools:ignore="MissingTranslation">Pass a hand over the phone to hear the time</string>
+	<string name="title_wave_to_say_time_switch" tools:ignore="MissingTranslation">A hand says the time</string>
+	<string name="description_wave_to_say_time_true" tools:ignore="MissingTranslation">Passing a hand over the top of the screen says the time out loud, within the hours below. It is the sensor that turns the screen off against your ear that is being read, so it only works over the top of the phone.</string>
+	<string name="description_wave_to_say_time_false" tools:ignore="MissingTranslation">Passing a hand over the phone does nothing.</string>
+	<string name="title_wave_passes" tools:ignore="MissingTranslation">How many passes</string>
+	<string name="title_say_time_when" tools:ignore="MissingTranslation">When it listens</string>
+
+	<!-- Whether the alarm list rearranges itself -->
+	<string name="title_auto_sort_alarms" tools:ignore="MissingTranslation">Rearrange the list on its own</string>
+	<string name="description_auto_sort_alarms_true" tools:ignore="MissingTranslation">Whatever rings next comes to the top, and the alarms that are turned off go below. The list moves whenever an alarm is turned on or off.</string>
+	<string name="description_auto_sort_alarms_false" tools:ignore="MissingTranslation">Every alarm stays where it is. A new one is added at the bottom, and a copy right under the alarm it came from.</string>
 
 </resources>

@@ -17,6 +17,10 @@
         android:name="com.nfcalarmclock.alarm.options.flashlight.NacFlashlightOptionsDialog"
         android:label="NacFlashlightOptionsDialog" />
     <dialog
+        android:id="@+id/nacDawnOptionsDialog2"
+        android:name="com.nfcalarmclock.alarm.options.dawn.NacDawnOptionsDialog"
+        android:label="NacDawnOptionsDialog" />
+    <dialog
         android:id="@+id/nacScanNfcTagDialog2"
         android:name="com.nfcalarmclock.alarm.options.nfc.NacScanNfcTagDialog"
         android:label="NacScanNfcTagDialog" >

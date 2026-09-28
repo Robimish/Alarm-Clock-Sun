@@ -29,8 +29,42 @@ import java.util.Calendar
 @SuppressLint("FullScreenIntentPolicy")
 class NacActiveAlarmNotification(
 	context: Context,
-	private val alarm: NacAlarm?
-) : NacBaseNotificationBuilder(context, "NacNotiChannelActiveAlarm")
+	private val alarm: NacAlarm?,
+
+	/**
+	 * Whether this is the dawn, ahead of the alarm, rather than the alarm itself.
+	 *
+	 * The dawn has a channel of its own, silent but of high importance. High, because
+	 * only such a channel may carry a full screen intent, and that intent is what
+	 * lets the sunrise reach the screen when the phone is locked without leaning on
+	 * the permission to draw over other apps. Silent, because the sunrise is meant to
+	 * wake nobody: no sound, no vibration, no light, no badge.
+	 *
+	 * The channel id is a new one. The importance of a channel cannot be raised after
+	 * it has been created, so the quiet one of before could not be reused.
+	 */
+	private val isDawn: Boolean = false,
+
+	/**
+	 * Whether there is nothing left to announce, the screen being already on display.
+	 *
+	 * This is the quiet channel: low importance, no banner, no full screen intent. A
+	 * foreground service must keep a notification, and this is the least it can be.
+	 */
+	private val isSilenced: Boolean = false,
+
+	/**
+	 * Time at which the dawn started, and time at which the alarm will go off, so
+	 * that the full screen intent opens the sunrise rather than a bare alarm screen.
+	 * [Units: ms]
+	 */
+	private val dawnStartMillis: Long = 0L,
+	private val dawnAlarmAtMillis: Long = 0L
+
+) : NacBaseNotificationBuilder(context,
+	if (isSilenced) "NacNotiChannelDawnQuiet"
+	else if (isDawn) "NacNotiChannelDawnSilent"
+	else "NacNotiChannelActiveAlarm")
 {
 
 	/**
@@ -41,22 +75,54 @@ class NacActiveAlarmNotification(
 	/**
 	 * @see NacBaseNotificationBuilder.channelName
 	 */
-	override val channelName: String = context.getString(R.string.title_active_alarms)
+	override val channelName: String = if (isDawn || isSilenced)
+	{
+		context.getString(R.string.title_dawn_notification)
+	}
+	else
+	{
+		context.getString(R.string.title_active_alarms)
+	}
 
 	/**
 	 * @see NacBaseNotificationBuilder.channelDescription
 	 */
-	override val channelDescription: String = context.getString(R.string.description_active_alarm)
+	override val channelDescription: String = if (isDawn || isSilenced)
+	{
+		context.getString(R.string.description_dawn_notification)
+	}
+	else
+	{
+		context.getString(R.string.description_active_alarm)
+	}
 
 	/**
 	 * @see NacBaseNotificationBuilder.channelImportance
 	 */
-	override val channelImportance: Int = NotificationManagerCompat.IMPORTANCE_HIGH
+	override val channelImportance: Int = if (isSilenced)
+	{
+		NotificationManagerCompat.IMPORTANCE_LOW
+	}
+	else
+	{
+		NotificationManagerCompat.IMPORTANCE_HIGH
+	}
 
 	/**
 	 * @see NacBaseNotificationBuilder.priorityLevel
 	 */
-	override val priorityLevel: Int = NotificationCompat.PRIORITY_MAX
+	override val priorityLevel: Int = if (isSilenced)
+	{
+		NotificationCompat.PRIORITY_LOW
+	}
+	else if (isDawn)
+	{
+		NotificationCompat.PRIORITY_HIGH
+	}
+	else
+	{
+		NotificationCompat.PRIORITY_MAX
+	}
 
 	/**
 	 * @see NacBaseNotificationBuilder.group
@@ -97,11 +163,23 @@ class NacActiveAlarmNotification(
 			val id = alarm?.id ?: 0
 			val intent = NacActiveAlarmActivity.getStartIntent(context, alarm)
 
+			// The dawn is not the alarm screen: without these the intent would open a
+			// bare alarm screen instead of the sunrise
+			if (isDawn && (dawnAlarmAtMillis > 0L))
+			{
+				NacActiveAlarmActivity.addDawnExtras(intent, dawnStartMillis,
+					dawnAlarmAtMillis)
+			}
+
 			// Determine the pending intent flags
 			val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
 
+			// A request code of its own, so that the dawn and the alarm do not
+			// overwrite one another
+			val requestCode = if (isDawn) (id.toInt() + DAWN_REQUEST_CODE_OFFSET) else id.toInt()
+
 			// Return the pending intent for the activity
-			return PendingIntent.getActivity(context, id.toInt(), intent, flags)
+			return PendingIntent.getActivity(context, requestCode, intent, flags)
 		}
 
 	/**
@@ -184,13 +262,25 @@ class NacActiveAlarmNotification(
 					addAction(R.drawable.dismiss, R.string.action_alarm_dismiss, dismissPendingIntent)
 				}
 
-				// Check if battery saver option is disabled
-				if (!sharedPreferences.shouldSaveBatteryInAlarmScreen)
+				// Check if battery saver option is disabled. The dawn uses one too now:
+				// starting the screen straight from the service is a background launch,
+				// which Android only allows to an app that may draw over other apps
+				if (!sharedPreferences.shouldSaveBatteryInAlarmScreen && !isSilenced)
 				{
 					setFullScreenIntent(contentPendingIntent, true)
 				}
 
 			}
+	}
+
+	companion object
+	{
+
+		/**
+		 * Kept away from the request codes of the alarms, which are their ids.
+		 */
+		private const val DAWN_REQUEST_CODE_OFFSET = 1_000_000
+
 	}
 
 	/**
@@ -202,10 +292,13 @@ class NacActiveAlarmNotification(
 		// Create the channel
 		val channel = super.createChannel()
 
-		// Setup the channel
-		channel.setShowBadge(true)
-		channel.enableLights(true)
-		channel.enableVibration(true)
+		// Setup the channel. The dawn makes no sound, no light and no mark of any
+		// kind: all it is there for is to carry the screen
+		val isLoud = !isDawn && !isSilenced
+
+		channel.setShowBadge(isLoud)
+		channel.enableLights(isLoud)
+		channel.enableVibration(isLoud)
 		channel.setSound(null, null)
 
 		return channel

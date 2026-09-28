@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
-    <background android:drawable="@color/ic_launcher_background"/>
+
+    <!-- L'icone d'origine : l'horloge noire sur le carre jaune, avec le rond du
+        centre degage. Les deux dessins de la version a fond blanc, a savoir
+        ic_launcher_background_white et ic_launcher_sun_clock, restent dans le
+        projet : il suffit de les remettre ici pour y revenir. -->
+    <background android:drawable="@drawable/ic_launcher_sun"/>
     <foreground android:drawable="@drawable/ic_launcher_foreground"/>
 
     <!-- Starting with Android 13 (API level 33), you can opt-in to providing a <monochrome> drawable. -->

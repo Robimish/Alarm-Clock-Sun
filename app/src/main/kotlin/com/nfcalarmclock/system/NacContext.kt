@@ -20,6 +20,19 @@ import kotlinx.coroutines.launch
 import java.io.File
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
+import com.nfcalarmclock.BuildConfig
+
+/**
+ * Authority of the file provider. It follows the application ID so that this app
+ * can be installed alongside another build with a different application ID.
+ */
+private val FILE_PROVIDER_AUTHORITY = BuildConfig.APPLICATION_ID + ".fileprovider"
+
+/**
+ * Fully qualified name of the alias of the main activity. Component names follow
+ * the namespace of the app, not its application ID.
+ */
+private const val MAIN_ALIAS_ACTIVITY = "com.nfcalarmclock.main.NacMainAliasActivity"
 
 /**
  * Receiver for the time tick intent. This is called when the time increments
@@ -49,8 +62,9 @@ fun createTimeTickReceiver(
  */
 fun disableActivityAlias(context: Context)
 {
-	// Build the component name
-	val aliasName = "${context.packageName}.main.NacMainAliasActivity"
+	// Build the component name. This follows the namespace of the app, which is
+	// not necessarily the same as the application ID
+	val aliasName = MAIN_ALIAS_ACTIVITY
 	val componentName = ComponentName(context, aliasName)
 
 	// Disable the alias
@@ -65,8 +79,9 @@ fun disableActivityAlias(context: Context)
  */
 fun enableActivityAlias(context: Context)
 {
-	// Build the component name
-	val aliasName = "${context.packageName}.main.NacMainAliasActivity"
+	// Build the component name. This follows the namespace of the app, which is
+	// not necessarily the same as the application ID
+	val aliasName = MAIN_ALIAS_ACTIVITY
 	val componentName = ComponentName(context, aliasName)
 
 	// Enable the alias
@@ -200,7 +215,7 @@ fun Context.sendEmail(
 			{
 				val uri = FileProvider.getUriForFile(
 					this@sendEmail,
-					"com.nfcalarmclock.fileprovider",
+					FILE_PROVIDER_AUTHORITY,
 					attachment
 				)
 
@@ -215,7 +230,7 @@ fun Context.sendEmail(
 				attachmentList.forEach { a ->
 					val u = FileProvider.getUriForFile(
 						this@sendEmail,
-						"com.nfcalarmclock.fileprovider",
+						FILE_PROVIDER_AUTHORITY,
 						a
 					)
 

@@ -2,7 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
 	<!-- App -->
-	<string name="app_name">Despertador NFC</string>
+	<string name="app_name">Alarm Clock Sun</string>
 	<string name="app_developer">Gabriel González</string>
 
 	<!-- Consolidate -->
@@ -652,5 +652,62 @@
 	</plurals>
 
 	<string name="tts_say_time">O tempo é %1$s:%2$s %3$s.</string>
+	<string name="tts_say_time_one_oclock">O tempo é %1$s:%2$s %3$s.</string>
 
+	<string name="action_alarm_option_dawn">Amanhecer</string>
+	<string name="message_dawn_disabled">Não usar a simulação de amanhecer</string>
+	<string name="message_dawn_enabled">Usar a simulação de amanhecer</string>
+	<string name="description_show_hide_dawn_button_true">Mostrar o botão de amanhecer ao abrir um alarme.</string>
+	<string name="description_show_hide_dawn_button_false">Ocultar o botão de amanhecer ao abrir um alarme.</string>
+	<string name="title_dawn_duration">Duração do amanhecer</string>
+	<string name="description_dawn_duration">Quanto tempo antes do alarme a tela começa a clarear.</string>
+	<string name="title_dawn_color">Cor da luz</string>
+	<string name="title_dawn_flashlight">Lanterna antes do alarme</string>
+	<string name="description_dawn_flashlight">A lanterna acende aos poucos nos últimos minutos do amanhecer. Deixe a roda no zero para mantê-la apagada.</string>
+	<string name="message_dawn_flashlight_off">Desligada</string>
+	<string name="title_dawn_custom_color">Cor personalizada</string>
+	<string name="title_dawn_use_image">Usar uma imagem</string>
+	<string name="description_dawn_use_image">Mostrar uma foto em vez de uma cor lisa.</string>
+	<string name="action_dawn_choose_image">Escolher imagem</string>
+	<string name="message_dawn_preview_over">Toque para fechar</string>
+	<string name="title_dawn_preview_duration">Duração da prévia</string>
+	<string name="description_dawn_preview_duration">A prévia do amanhecer dura %1$d segundos e depois espera um toque para fechar. Tocar enquanto ela roda mostra a tela normal, como num amanhecer de verdade.</string>
+	<string name="title_storage">Armazenamento</string>
+	<string name="title_clean_sounds">Liberar cópias de sons</string>
+	<string name="description_clean_sounds">O app guarda uma cópia de cada som escolhido, para que o alarme toque mesmo se o original for movido ou o telefone ainda não tiver sido desbloqueado. Isto apaga as cópias que nenhum alarme toca.</string>
+	<string name="title_clean_images">Liberar imagens do amanhecer</string>
+	<string name="description_clean_images">Uma imagem fica no app mesmo depois de voltar para uma cor, para poder usá-la de novo sem escolher o arquivo outra vez. Isto apaga as imagens que nenhum amanhecer mostra.</string>
+	<string name="title_clean_all">Liberar os dois</string>
+	<string name="description_clean_all">Sons e imagens de uma vez.</string>
+	<string name="message_clean_confirm">Só são apagadas as cópias que nenhum alarme precisa. Os alarmes em si não são tocados.</string>
+	<string name="message_clean_done">Liberados %1$s em %2$d arquivo(s)</string>
+	<string name="message_clean_nothing">Nada a liberar</string>
+	<string name="title_dawn_show_date">Data</string>
+	<string name="title_dawn_reveal">Tocar para ver a tela</string>
+	<string name="description_dawn_reveal">Durante o amanhecer, um toque mostra a tela do alarme normal por um instante, para deixar claro que o alarme ainda não tocou. Um segundo toque volta.</string>
+	<string name="message_dawn_reveal_value">%1$d s</string>
+	<string name="title_dawn_shown">Visível durante o amanhecer</string>
+	<string name="description_dawn_shown">Desligue o que você preferir não ver enquanto a tela clareia.</string>
+	<string name="title_dawn_show_phrase">Frase de despertar</string>
+	<string name="title_dawn_show_name">Nome do alarme</string>
+	<string name="title_dawn_show_clock">Relógio</string>
+	<string name="title_dawn_show_media">Título da música</string>
+	<string name="message_dawn_no_image">Nenhuma imagem selecionada</string>
+	<string name="message_dawn_unable_to_read_image">Não foi possível ler a imagem selecionada</string>
+	<string name="action_dawn_stop">Parar</string>
+	<string name="message_dawn_snoozed">Alarme adiado em 5 minutos</string>
+	<string name="message_dawn_not_ringing_yet">Amanhecer em andamento. O alarme ainda não tocou.</string>
+	<string name="message_dawn_too_close">Alarme muito próximo: sem amanhecer desta vez. Ele vai rodar no próximo.</string>
+	<string name="message_dawn_no_more_snoozes">Não dá para adiar mais. Toque em Parar para desligar o alarme</string>
+	<string name="title_dawn_notification">Amanhecer</string>
+	<string name="description_dawn_notification">Mostrado enquanto a tela clareia aos poucos antes de um alarme.</string>
+	<string name="dawn_color_amber">Luz do sol</string>
+	<string name="dawn_color_orange">Branco</string>
+	<string name="dawn_color_red">Âmbar</string>
+	<string name="dawn_color_white">Verde claro</string>
+	<string name="dawn_color_sky">Azul claro</string>
+	<string name="dawn_color_lilac">Lilás</string>
+	<string name="action_alarm_dismiss_next">Cancelar próximo alarme</string>
+	<string name="action_alarm_dismiss_snoozed">Desligar alarme adiado</string>
+	<string name="message_alarm_is_snoozed">Alarme adiado toca em %1$s</string>
 </resources>

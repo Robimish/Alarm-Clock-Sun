@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+	<string-array name="whats_new_items" tools:ignore="InconsistentArrays">
+		<item>2.00</item>
+		<item>Première version &lt;b>finale&lt;/b> (release) : plus légère et plus rapide, signée avec sa propre clé. Elle ne s\'installe pas par-dessus les versions de test (debug) : exportez vos données (Paramètres, Importer | Exporter), désinstallez, installez, puis importez.</item>
+		<item>1.98</item>
+		<item>Les lignes écrites dans le journal système d\'Android (logcat) au toucher d\'un minuteur sont retirées. Elles restent dans le journal de l\'app.</item>
+		<item>1.97</item>
+		<item>Le minuteur tout prêt dure maintenant &lt;b>10 minutes&lt;/b> et s\'appelle &lt;b>Œufs&lt;/b>. Celui de 5 minutes ajouté par la 1.94 est modifié, une seule fois, sauf si vous lui avez donné un autre nom.</item>
+		<item>1.96</item>
+		<item>Corrigé : toucher un &lt;b>minuteur arrêté&lt;/b> pouvait ouvrir un écran de décompte vide, avec seulement lecture et les boutons d\'ajout de temps, au lieu de ses réglages.</item>
+		<item>1.95</item>
+		<item>La page qui demande d\'&lt;b>afficher par-dessus les autres apps&lt;/b> ne s\'affiche plus du tout, après une mise à jour ou non. L\'autorisation reste accordable depuis À propos.</item>
+		<item>Le minuteur de 5 minutes tout prêt s\'appelle &lt;b>Timer 5\'&lt;/b>. S\'il avait été ajouté sans nom en 1.94, il reçoit ce nom.</item>
+		<item>1.94</item>
+		<item>Après une mise à jour, l\'app ne redemande plus l\'autorisation d\'&lt;b>afficher par-dessus les autres apps&lt;/b>. Seule la notification plein écran est redemandée : c\'est elle qui affiche l\'alarme, l\'aube et un minuteur qui sonne.</item>
+		<item>Un &lt;b>nouveau minuteur&lt;/b> démarre au même volume qu\'une nouvelle alarme, 40 sur 100, au lieu de 75. Les minuteurs déjà créés gardent leur volume.</item>
+		<item>Un &lt;b>minuteur de 5 minutes&lt;/b> tout prêt est ajouté à la liste, une seule fois. Il ne l\'est pas s\'il y en a déjà un de 5 minutes.</item>
+		<item>1.93</item>
+		<item>Corrigé : un &lt;b>minuteur qui sonne&lt;/b> ne passait toujours pas par-dessus l\'écran verrouillé. Sa notification avait été rendue silencieuse d\'une façon qui bloquait aussi l\'écran.</item>
+		<item>1.92</item>
+		<item>Un &lt;b>minuteur qui sonne&lt;/b> s\'affiche maintenant quand le téléphone est verrouillé. Il sonnait, mais rien n\'était visible. L\'app ne passe par-dessus l\'écran verrouillé que tant qu\'un minuteur sonne.</item>
+		<item>&lt;b>Enregistrer les statistiques&lt;/b> est maintenant éteint au départ.</item>
+		<item>1.91</item>
+		<item>&lt;b>Enregistrer les statistiques&lt;/b>, un nouvel interrupteur en haut de la page des statistiques. Éteint, plus rien n\'est compté et la page se grise ; ce qui l\'a été avant est gardé jusqu\'à la remise à zéro.</item>
+		<item>Corrigé : après une mise à jour, les &lt;b>Nouveautés&lt;/b> s\'affichaient plusieurs écrans plus tard au lieu du lancement. Elles attendaient un compteur qui ne montait qu\'à chaque retour dans l\'app, et ce téléphone redemande une permission après chaque mise à jour.</item>
+		<item>1.90</item>
+		<item>Le &lt;b>cadran à aiguilles&lt;/b> s\'affiche aussi en paysage, au lieu des chiffres.</item>
+		<item>Corrigé : téléphone verrouillé, le &lt;b>bouton marche&lt;/b> arrêtait l\'alarme mais laissait son écran, et glisser dessus fermait l\'app. L\'écran d\'alarme s\'en va maintenant avec l\'alarme.</item>
+		<item>Corrigé : l\'&lt;b>aperçu&lt;/b> des options de volume laissait le téléphone au volume de l\'alarme. Le volume du téléphone est remis à l\'arrêt de l\'aperçu.</item>
+		<item>1.89</item>
+		<item>Les &lt;b>touches de volume&lt;/b> reportent ou arrêtent l\'alarme dès l\'appui, même au volume le plus fort ou le plus faible, quand l\'écran d\'alarme est affiché.</item>
+		<item>La page &lt;b>À propos&lt;/b> vérifie vraiment la permission des alarmes exactes.</item>
+		<item>1.88</item>
+		<item>L\'interrupteur à côté de &lt;b>Dire l\'heure&lt;/b> dans les paramètres coupe maintenant la secousse et la main ensemble. Il ne coupait que la secousse.</item>
+		<item>Une &lt;b>nouvelle alarme&lt;/b> ne tire plus un sarcelle impossible à distinguer du bleu.</item>
+		<item>1.87</item>
+		<item>La &lt;b>liste des alarmes ne se réorganise plus toute seule&lt;/b>. Allumer une alarme l\'envoyait en haut, parce que ce qui sonnait en premier passait devant et ce qui était éteint passait derrière. Chaque alarme reste désormais à sa place : une nouvelle s\'ajoute en bas, et une copie juste sous l\'alarme dont elle vient. &lt;b>Réorganiser la liste toute seule&lt;/b>, dans Apparence, remet l\'ancien comportement. L\'ordre affiché le jour de la mise à jour est celui qui est gardé, donc rien ne bouge.</item>
+		<item>1.86</item>
+		<item>&lt;b>La main dit l\'heure&lt;/b>, un nouvel interrupteur sur la page Dire l\'heure. Passer la main au-dessus du haut de l\'écran dit l\'heure à voix haute : c\'est le capteur qui éteint l\'écran contre l\'oreille qui est lu, donc la main doit passer au-dessus du haut du téléphone. Deux passages sont demandés au départ, parce qu\'un seul se déclenche facilement sur tout ce qui passe au-dessus du téléphone pendant la nuit ; &lt;b>Nombre de passages&lt;/b>, juste en dessous, n\'en demande qu\'un.</item>
+		<item>La &lt;b>secousse&lt;/b> peut être demandée bien plus légère. Sa liste disait une secousse légère, une normale et une ferme ; elle dit maintenant le moindre mouvement, un léger mouvement, une secousse légère et une normale. La plus ferme a disparu, et ce qui était choisi est reporté : une secousse légère reste une secousse légère.</item>
+		<item>Les &lt;b>heures&lt;/b> ont quitté la secousse et sont dans une section à elles, parce qu\'elles retiennent aussi la main. La notification ne nomme plus la secousse en particulier.</item>
+		<item>1.85</item>
+		<item>&lt;b>Le bouton marche arrête l\'alarme&lt;/b>, un nouvel interrupteur dans les paramètres, éteint au départ. Android ne signale jamais ce bouton à une application : ce qui est lu, c\'est l\'écran qui s\'éteint, donc tout ce qui l\'éteint pendant la sonnerie arrête aussi l\'alarme. Il n\'agit pas pendant l\'aube, seulement une fois l\'alarme partie. Les touches de volume avaient déjà leur interrupteur, dans les options de veille et d\'arrêt de chaque alarme.</item>
+		<item>1.84</item>
+		<item>Corrigé : le &lt;b>bouton plus&lt;/b> pouvait disparaître après la suppression d\'alarmes. Il se cache au défilement vers le bas et revient au défilement vers le haut ; une liste qui a rétréci ne défile plus vers le haut, donc rien ne le ramenait. Il revient désormais dès que tout tient à l\'écran. Les minuteurs avaient le même défaut.</item>
+		<item>&lt;b>Revenir tout seul&lt;/b>, un nouvel interrupteur dans les options de l\'aube. Éteint, un appui pendant l\'aube retourne l\'écran et il y reste jusqu\'au prochain appui, au lieu que la lumière revienne d\'elle-même.</item>
+		<item>Une &lt;b>nouvelle alarme&lt;/b> ne tire plus la couleur d\'une alarme déjà à l\'écran. Le tirage n\'avait aucune mémoire ; pour chaque couleur en usage, la plus proche de la palette est maintenant écartée, si bien qu\'une alarme portant la couleur du thème exclut aussi celle qui lui ressemble.</item>
+		<item>1.83</item>
+		<item>La &lt;b>source audio&lt;/b> d\'une alarme est notée sous un nom qui ne change pas avec la langue. Elle gardait les mots affichés à l\'écran : changer de langue ne laissait plus rien à reconnaître, le son retombait sur le canal des alarmes et un choix autre était perdu. Les alarmes déjà réglées sont converties une fois, au prochain lancement.</item>
+		<item>La &lt;b>phrase de réveil&lt;/b> apparaît aussi en mode paysage. Cet écran ne l\'avait jamais eue.</item>
+		<item>1.82</item>
+		<item>Corrigé : lâcher &lt;b>Snooze ou Dismiss&lt;/b> à mi-course envoyait le bouton courir jusqu\'au bout, comme s\'il allait s\'activer, avant de revenir. Tout relâchement était lancé comme un geste volontaire, une vitesse plus lente que le minimum étant relevée à ce minimum. Désormais c\'est la vitesse du doigt qui tranche : un geste franc lance le bouton, un simple relâchement le ramène aussitôt. Glisser jusqu\'au bout marche toujours.</item>
+		<item>1.81</item>
+		<item>La &lt;b>tuile de réglages rapides&lt;/b> qui disait l\'heure s\'en va, et sa section de la page Dire l\'heure avec elle. Elle marchait, mais elle demandait de dérouler le volet, de la trouver et de viser, ce qui est le contraire de ce qu\'on attend d\'un téléphone posé sur une table de nuit. Secouer répond toujours.</item>
+		<item>1.80</item>
+		<item>La &lt;b>rangée de boutons&lt;/b> du bas de l\'écran d\'alarme est dessinée à un seul endroit au lieu de deux. L\'écran d\'alarme et l\'aperçu de l\'aube en gardaient chacun leur copie, identique à deux vues près, et les deux dérivaient déjà : sur les vingt et une modifications faites à ces deux fichiers, quatre touchaient les deux. Rien ne bouge à l\'écran ; chaque écran ne dit plus que la place de la rangée.</item>
+		<item>1.79</item>
+		<item>La &lt;b>notification plein écran&lt;/b> est redemandée après chaque mise à jour qui la trouve manquante, et le bouton mène droit à sa propre page de réglages. C\'est elle qu\'une mise à jour emporte, et sans elle l\'alarme sonne derrière une notification, sans écran. Un dialogue par mise à jour, pas plus : réponds-y et il se tait jusqu\'à la suivante.</item>
+		<item>1.78</item>
+		<item>Les nombres sous une &lt;b>molette&lt;/b> demandent au système ce que vaut 12sp au lieu de multiplier par une échelle valable pour tout l\'écran. Android 14 n\'en a plus : au-delà d\'une certaine taille, l\'échelle des polices n\'est plus un simple multiple, pour que les titres ne grossissent pas aussi vite que le texte courant. Police système au maximum, ces nombres étaient légèrement faux.</item>
+		<item>1.77</item>
+		<item>Une &lt;b>autorisation accordée puis disparue&lt;/b> est maintenant reproposée. L\'application retient celles qu\'elle avait ; quand l\'une s\'en va, ce que fait une mise à jour, le dialogue revient avec le bouton qui ouvre la bonne page de réglages. Elle ne demandait qu\'une fois, et le seul retour possible passait par la page À propos.</item>
+		<item>La &lt;b>notification plein écran&lt;/b> rejoint les autorisations demandées au lancement. C\'est elle qui fait apparaître l\'écran d\'alarme et l\'aube sur un téléphone verrouillé, et seuls le tutoriel et À propos la proposaient.</item>
+		<item>L\'&lt;b>espagnol&lt;/b> dit l\'heure comme on la parle et non comme on lit un cadran : \"Son las cuatro y cinco\" au lieu de \"La hora es 4:05\". Une heure se dit à part, \"Es la una\", et le français y gagne la même chose : \"Il est 1 heure\" et non plus \"heures\".</item>
+		<item>1.76</item>
+		<item>Corrigé : couper le &lt;b>secouement depuis la liste des paramètres&lt;/b> ne changeait rien. L\'interrupteur enregistrait le réglage mais ne prévenait pas le service, qui continuait d\'écouter, notification comprise. La page le prévenait depuis toujours ; la nouvelle rangée, non.</item>
+		<item>1.75</item>
+		<item>La rangée &lt;b>Dire l\'heure&lt;/b> des paramètres porte maintenant son propre interrupteur, séparé par un trait. Toucher le texte ouvre la page comme avant ; toucher l\'interrupteur active ou coupe le secouement sans y entrer.</item>
+		<item>1.74</item>
+		<item>Le rond jaune au centre de l\'&lt;b>icône&lt;/b> est un peu plus petit qu\'en 1.72 : les rayons partent du rayon 6,23 au lieu de 6,5, trois dixièmes du chemin vers là où ils étaient en 1.64. Ils y gagnent un peu de longueur.</item>
+		<item>L\'&lt;b>espagnol&lt;/b> est à jour. Les 52 textes des écrans ajoutés depuis la bifurcation manquaient : dire l\'heure, les options de l\'aube, la permission plein écran, l\'horloge analogique et la remise à zéro.</item>
+		<item>1.73</item>
+		<item>Retrait de quatre &lt;b>images inutilisées&lt;/b> : l\'icône ronde orange de l\'application dont celle-ci est issue. Elles venaient du tout premier commit, n\'étaient référencées nulle part, et voyageaient dans chaque build.</item>
+		<item>1.72</item>
+		<item>L\'&lt;b>icône&lt;/b> revient à celle des débuts de l\'application : le réveil noir sur le carré jaune. Les rayons partaient du rayon 5,60 alors que les cloches du réveil vont jusqu\'à 5,49 : ils se touchaient presque. Leur bout intérieur est reculé au rayon 6,5, ce qui dégage le rond jaune du centre.</item>
+		<item>Les dix &lt;b>fichiers d\'icône&lt;/b> pour Android 7.1 et antérieur portaient encore le dessin d\'avant la bifurcation. Ils sont redessinés à partir des mêmes formes que l\'icône elle-même.</item>
+		<item>Un &lt;b>appui pendant l\'aube&lt;/b> montre l\'écran 10 secondes au lieu de 12, et les alarmes qui n\'avaient jamais touché à ce réglage passent elles aussi à 10.</item>
+		<item>1.71</item>
+		<item>L\'&lt;b>icône&lt;/b> revient au soleil de la 1.66. Il avait été agrandi deux fois, choisi sur des rendus, et sur un vrai écran d\'accueil c\'est le premier qui l\'emportait. Les rendus étaient un bon guide pour choisir, mais le téléphone a eu le dernier mot.</item>
+		<item>1.70</item>
+		<item>Le &lt;b>soleil&lt;/b> de l\'icône grandit encore, rayons compris. Leurs pointes atteignent 7,78 sur les 8 que garde un masque rond de lanceur : il n\'y a plus de place au-delà sans les couper.</item>
+		<item>1.69</item>
+		<item>Un &lt;b>appui&lt;/b> pendant que l\'alarme sonne se comporte maintenant comme pendant l\'aube : l\'écran ordinaire quelques secondes, puis la lumière revient. Il rangeait la lumière pour de bon.</item>
+		<item>1.68</item>
+		<item>Le &lt;b>soleil&lt;/b> de l\'icône est plus grand, et le réveil posé dessus avec lui, pour que les deux se lisent à la taille qu\'une icône a vraiment sur un écran d\'accueil. Les rayons n\'ont pas bougé : leur silhouette est ce qui tient dans le masque d\'un lanceur, et ça ne valait pas le risque.</item>
+		<item>1.67</item>
+		<item>Corrigé : un &lt;b>appui&lt;/b> ne faisait rien une fois l\'alarme en train de sonner. Il était bien installé, mais la première chose qu\'il vérifiait était si l\'aube était finie, et elle l\'était toujours. Un appui range maintenant la lumière de l\'aube pour de bon.</item>
+		<item>&lt;b>Secouer le téléphone&lt;/b> répond de 3:00 à 8:00 par défaut, au lieu de 3:00 à 10:00.</item>
+		<item>&lt;b>Horloge annoncée&lt;/b> nomme l\'horloge réglée sur le téléphone quand elle le suit, au lieu de laisser deviner.</item>
+		<item>La page de réglages de l\'heure parlée a quelqu\'un qui parle à côté d\'elle, plutôt qu\'un micro.</item>
+		<item>1.66</item>
+		<item>&lt;b>Dire l\'heure&lt;/b> a sa propre page de réglages, juste après Apparence, avec un micro à côté. Elle était en bas de l\'écran général, sous la langue, le stockage et l\'alarme par défaut.</item>
+		<item>L\'&lt;b>icône&lt;/b> est de nouveau le soleil détouré, cette fois sur une tuile blanche plutôt que transparente. Ses jaunes portent, et plus rien ne dépend de ce qu\'un lanceur dessine derrière une couche transparente.</item>
+		<item>1.65</item>
+		<item>Le tutoriel ne propose &lt;b>Afficher par-dessus les autres applis&lt;/b> que tant que la notification plein écran manque. Accordez celle-ci et cette page s\'efface, puisqu\'elle n\'a plus rien à apporter. Idem pour la boîte de dialogue qui revenait plus tard.</item>
+		<item>Un &lt;b>appui&lt;/b> fonctionne aussi une fois que l\'alarme sonne, et plus seulement pendant l\'aube. L\'écran garde la lumière que l\'aube a laissée, et l\'appui est le chemin de retour vers un écran d\'alarme ordinaire, sombre.</item>
+		<item>1.64</item>
+		<item>Corrigé : une alarme arrêtée &lt;b>pendant l\'aube&lt;/b> revenait aussitôt. L\'aube démarre avant l\'alarme, donc l\'heure à laquelle elle est réglée est encore à venir : l\'arrêter normalement la remettait pour cette heure-là, et elle sonnait quelques minutes plus tard. Cette occurrence est maintenant sautée, comme le fait l\'arrêt anticipé.</item>
+		<item>1.63</item>
+		<item>Le tutoriel demande maintenant la &lt;b>notification plein écran&lt;/b>, l\'autorisation qui fait réellement apparaître l\'écran d\'alarme et l\'aube sur un téléphone verrouillé. Elle n\'était nulle part dans l\'installation, seulement dans la page À propos.</item>
+		<item>1.62</item>
+		<item>&lt;b>Afficher par-dessus les autres applis&lt;/b> n\'est plus nécessaire. L\'écran d\'alarme et l\'aube passent maintenant par la notification plein écran, qui est l\'autorisation qui compte. Celle-ci est gardée comme filet de sécurité, pour les téléphones dont le constructeur refuse la première.</item>
+		<item>Cette liste n\'était plus tenue depuis la 1.46. Tout ce qui a suivi est ci-dessous.</item>
+		<item>1.61</item>
+		<item>L\'aube poste maintenant sa propre notification en premier, au lieu d\'en remplacer une ordinaire un instant plus tard. Une notification plein écran qui arrive en mise à jour d\'une notification déjà affichée risque de ne jamais se déclencher.</item>
+		<item>1.58</item>
+		<item>La notification de la secousse nomme les deux bornes de la plage, et plus seulement l\'heure de fin.</item>
+		<item>1.57</item>
+		<item>L\'écoute de la secousse est remise en place à chaque ouverture de l\'app. Android refuse de la démarrer quand le processus se réveille en arrière-plan, et ce refus était silencieux : la notification pouvait simplement manquer.</item>
+		<item>1.56</item>
+		<item>L\'aperçu de l\'aube reste immobile une seconde avant de démarrer, monte pendant sept secondes au lieu de dix, et tient la pleine lumière quatre secondes.</item>
+		<item>1.55</item>
+		<item>Une secousse légère suffit, par défaut.</item>
+		<item>1.54</item>
+		<item>Le halo chaud n\'est plus que sur les deux listes. Partout ailleurs c\'est du texte qui défile, et un voile de couleur derrière un paragraphe ne fait que gêner la lecture.</item>
+		<item>1.53</item>
+		<item>Le &lt;b>cadran&lt;/b> démarre plus bas, là où les chiffres étaient déjà. Il empruntait sa marge à l\'horloge numérique, qui est masquée quand le cadran est à l\'écran — et une vue masquée emporte sa marge avec elle.</item>
+		<item>1.52</item>
+		<item>Le rail suit aussi un &lt;b>report&lt;/b>. Une alarme reportée qui sonne dans quatre minutes est ce qu\'il y a de plus proche, et le soleil restait tout à gauche.</item>
+		<item>Quand rien n\'arrive, le soleil est dessiné en blanc et en trait, pour que la couleur chaude veuille dire que quelque chose approche.</item>
+		<item>1.51</item>
+		<item>Ce que vous choisissez d\'afficher vaut maintenant pour les deux écrans : l\'aube et la sonnerie qui la suit, une alarme sans aube comprise.</item>
+		<item>Un appui pendant l\'aube ramène la lumière, pas le reste. Ce que vous avez décoché reste décoché.</item>
+		<item>1.50</item>
+		<item>Le temps restant arrondit au lieu de couper. Deux jours, vingt-trois heures et quarante et une minutes s\'affichaient &lt;b>2 jours 23 heures&lt;/b>, soit une journée de moins qu\'en réalité.</item>
+		<item>1.49</item>
+		<item>Dans les Paramètres, l\'interrupteur qui active la secousse est écrit plus grand, et ce qui ne fonctionne qu\'à travers lui est grisé tant qu\'il est éteint. La plage d\'heures a déménagé dessous, à sa place : elle ne retient que la secousse, la tuile de réglages rapides répondant à toute heure.</item>
+		<item>1.48</item>
+		<item>L\'aube a sa propre notification : muette, mais d\'importance haute, ce qui lui permet de porter une &lt;b>notification plein écran&lt;/b>. C\'est elle qui l\'affiche sur un écran verrouillé sans dépendre de l\'autorisation de s\'afficher par-dessus les autres applis.</item>
+		<item>Le soleil du rail n\'est plus rogné, et le rail reste visible quand il n\'y a pas d\'alarme.</item>
+		<item>Le halo passe derrière les cartes d\'alarme au lieu de passer dessus.</item>
+		<item>Un appui pendant l\'aube ne montre plus ce que l\'écran n\'aurait jamais montré : deux horloges à la fois, le méridien sur un téléphone réglé en 24 h, un bloc musique vide.</item>
+		<item>1.47</item>
+		<item>L\'horloge est remontée, et un espace fixe la sépare du texte qui la suit.</item>
+		<item>1.46</item>
+		<item>Sous la ligne de la prochaine alarme, un &lt;b>rail avec un soleil&lt;/b> : il avance de gauche à droite à mesure que l\'alarme approche, et ce qu\'il a parcouru s\'allume derrière lui. Le rail couvre le dernier jour avant l\'alarme. Sans alarme, il ne s\'affiche pas.</item>
+		<item>1.45</item>
+		<item>Un halo chaud monte maintenant de la barre du bas et s\'éteint avant d\'atteindre la liste.</item>
+		<item>1.44</item>
+		<item>La ligne &lt;b>prochaine alarme&lt;/b> donne maintenant le jour et l\'heure, et le temps restant en dessous. C\'est le nouveau réglage par défaut ; les deux anciens formats restent disponibles dans Apparence.</item>
+		<item>Retirés parce qu\'ils ne fonctionnaient pas : dire l\'heure avec une &lt;b>touche de volume&lt;/b>, le choix de la touche, et le &lt;b>bouton de la notification&lt;/b>. La secousse et la tuile de réglages rapides restent, et elles marchent.</item>
+		<item>Paramètres &gt; Général est réorganisé par façon de demander : ce qui vaut pour toutes en premier (plage, langue, horloge), puis la secousse, puis la tuile.</item>
+		<item>1.43</item>
+		<item>L\'icône transparente est retirée : elle ne rend pas bien sur tous les lanceurs. Retour au soleil sur sa tuile jaune.</item>
+		<item>Une nouvelle alarme cache maintenant la &lt;b>date&lt;/b> et le &lt;b>nom de l\'alarme&lt;/b> pendant l\'aube, et garde l\'horloge, la phrase de réveil et le titre de la musique. À moitié endormi, l\'heure est la seule chose qui vaut d\'être lue.</item>
+		<item>1.42</item>
+		<item>L\'&lt;b>icône&lt;/b> est un soleil détouré : plus de carré jaune derrière lui, le fond est transparent. Ce que le lanceur met à la place ne dépend plus de l\'app.</item>
+		<item>1.41</item>
+		<item>&lt;b>Notification plein écran&lt;/b> dans la page À propos vérifie enfin. Elle affirmait que tu avais la permission sans rien regarder, ce qui était vrai jusqu\'à Android 14 et faux depuis. Si elle manque, un appui t\'emmène là où on la donne — c\'est elle qui permet à l\'écran d\'alarme de s\'ouvrir seul quand le téléphone est verrouillé.</item>
+		<item>1.40</item>
+		<item>Ce qui est désactivé dans les options de l\'aube laisse maintenant sa place aux autres : le nom de l\'alarme remonte dans le vide au lieu que l\'écran garde un trou.</item>
+		<item>L\'horloge est un peu plus haut et la date un peu plus bas sous elle.</item>
+		<item>Le titre de la musique n\'est plus collé au bord bas.</item>
+		<item>Corrigé : le premier appui sur la touche de volume ne faisait rien quand le moteur vocal n\'avait pas été réveillé. Il parle désormais tout de suite.</item>
+		<item>1.39</item>
+		<item>Plus d\'air entre l\'&lt;b>horloge analogique&lt;/b> et la date, ce dont un cadran a besoin et pas les chiffres.</item>
+		<item>Dans les options de l\'aube, le type d\'horloge a maintenant son propre titre, au lieu d\'être au milieu des interrupteurs d\'affichage où deux lignes disaient &lt;b>horloge&lt;/b>.</item>
+		<item>1.38</item>
+		<item>La notification de la &lt;b>secousse&lt;/b> n\'est là que dans la plage d\'heures choisie. En dehors, rien n\'écoute, la notification disparaît et aucune batterie n\'est dépensée. Elle revient d\'elle-même à l\'heure venue.</item>
+		<item>1.37</item>
+		<item>Corrigé : la ligne &lt;b>prochaine alarme&lt;/b> réapparaissait une demi-seconde par-dessus une alarme reportée, à chaque rafraîchissement de la liste.</item>
+		<item>1.36</item>
+		<item>L\'horloge, chiffres ou cadran, commence un dixième plus bas au lieu de frôler le bord haut. Une fraction plutôt qu\'une marge fixe, donc le même dixième sur n\'importe quel téléphone.</item>
+		<item>1.35</item>
+		<item>Nouveau : &lt;b>secouer le téléphone&lt;/b> pour entendre l\'heure. Uniquement dans la plage d\'heures choisie, pour qu\'un téléphone en poche reste muet. Trois niveaux de force. Android exige une notification permanente tant que c\'est activé, et le capteur de mouvement coûte un peu de batterie.</item>
+		<item>1.34</item>
+		<item>Cette liste de nouveautés est enfin en &lt;b>français&lt;/b>. Les entrées de ce fork étaient restées en anglais dans toutes les langues, et le français n\'avait aucune liste.</item>
+		<item>1.33</item>
+		<item>Nouveau : une &lt;b>tuile de réglages rapides&lt;/b> qui dit l\'heure. À deux glissements de n\'importe où, écran verrouillé compris. À ajouter une fois, depuis le crayon en bas du volet des réglages rapides.</item>
+		<item>L\'aperçu de l\'aube range les éléments dans l\'ordre de l\'écran d\'alarme : horloge, date, nom, phrase, et le titre de la musique sous les commandes.</item>
+		<item>« Revenir aux réglages d\'origine » est passé à côté du nettoyage du stockage, là où il a sa place.</item>
+		<item>1.32</item>
+		<item>Nouveau dans les options de l\'aube : une &lt;b>horloge à aiguilles&lt;/b> à la place des chiffres. Dessinée pour l\'occasion, donc ses aiguilles passent du blanc au sombre à mesure que la lumière monte, comme tout le reste de l\'écran. En portrait seulement pour l\'instant.</item>
+		<item>L\'interrupteur du titre de la musique indique qu\'il ne vaut qu\'une fois l\'alarme lancée.</item>
+		<item>1.31</item>
+		<item>Après l\'annonce vocale, la musique reprend où elle en était plutôt que de repartir du début — y compris quand elle était en train de charger ou entre deux morceaux.</item>
+		<item>1.30</item>
+		<item>L\'aperçu de l\'aube montre maintenant les &lt;b>vraies commandes&lt;/b> de l\'écran d\'alarme, recopiées depuis lui, plutôt que deux boutons à lui. Un appui sur l\'une ou l\'autre, ou n\'importe où ailleurs, le ferme.</item>
+		<item>Dans les options de l\'aube, ce qui est affiché est listé dans l\'ordre de l\'écran d\'alarme : horloge, date, nom, phrase, musique.</item>
+		<item>Nouveau dans les options de synthèse vocale de l\'alarme : &lt;b>attendre avant de parler&lt;/b>. La musique te réveille d\'abord, et seulement ensuite la voix dit l\'heure.</item>
+		<item>Nouveau dans Paramètres &gt; Général : remettre tous les réglages &lt;b>tels qu\'ils étaient à l\'installation&lt;/b>. Les alarmes sont gardées.</item>
+		<item>1.29</item>
+		<item>Corrigé : l\'&lt;b>heure dite&lt;/b> sur un téléphone en 24 h. 16:00 était annoncé « quatre ». Les deux horloges étaient inversées dans le code. L\'horloge qui est dite peut aussi être réglée indépendamment de celle du téléphone.</item>
+		<item>La &lt;b>langue de l\'application&lt;/b> se choisit dans Paramètres &gt; Général. C\'est le même réglage qu\'Android garde pour chaque application, atteint sans sortir d\'ici.</item>
+		<item>Nouveau : une &lt;b>notification&lt;/b> avec un bouton qui dit l\'heure à voix haute, à n\'importe quelle heure. Une notification ne peut pas écouter les touches de volume, c\'est donc le bouton qu\'on appuie.</item>
+		<item>La touche qui dit l\'heure pendant une aube : volume haut, volume bas, ou l\'une ou l\'autre.</item>
+		<item>L\'aperçu de l\'aube montre de nouveau &lt;b>Snooze&lt;/b> et &lt;b>Dismiss&lt;/b>, pour être jugé avec les mêmes choses à l\'écran. L\'un ou l\'autre le ferme, comme un appui ailleurs.</item>
+		<item>1.28</item>
+		<item>L\'&lt;b>aperçu&lt;/b> de l\'aube n\'a plus de boutons : un appui n\'importe où le ferme, et il tient trois secondes à pleine lumière avant de se fermer tout seul.</item>
+		<item>Corrigé : l\'&lt;b>heure dite&lt;/b> était lue avec la mauvaise voix. Le moteur remettait la langue du téléphone à chaque phrase. Il prévient maintenant quand aucune voix n\'est installée pour la langue choisie.</item>
+		<item>Plus de clignotement au lancement d\'une aube : ce que tu avais caché s\'affichait d\'abord puis disparaissait un instant après.</item>
+		<item>L\'icône des réglages de l\'alarme est plus claire ; elle avait l\'air désactivée.</item>
+		<item>1.27</item>
+		<item>Correction du build : deux apostrophes de cette liste même n\'étaient pas échappées, ce qu\'Android refuse.</item>
+		<item>1.26</item>
+		<item>Une alarme reportée ne compte plus comme la prochaine alarme. La liste annonçait une sonnerie à l\'heure normale de l\'alarme, que le report avait déjà déplacée.</item>
+		<item>1.25</item>
+		<item>L\'application parle &lt;b>français&lt;/b>. Chaque écran, chaque message, chaque option.</item>
+		<item>1.24</item>
+		<item>Le bandeau qui apparaissait en haut de l\'écran d\'alarme s\'efface dès que cet écran est là. Android ouvre toujours l\'écran de lui-même quand le téléphone est verrouillé ou endormi.</item>
+		<item>1.23</item>
+		<item>Nouveau dans Paramètres &gt; Général : &lt;b>dire l\'heure&lt;/b>. Pendant une aube, monter le volume dit l\'heure à voix haute, seulement entre les heures choisies, et jamais une fois l\'alarme lancée. La langue parlée se règle indépendamment de celle de l\'application.</item>
+		<item>1.22</item>
+		<item>Corrigé : ce qui était désactivé dans les options de l\'aube revenait sur l\'écran d\'alarme. L\'écran remettait l\'horloge, la date, le nom et la musique de lui-même.</item>
+		<item>La première alarme n\'est plus activée après une installation.</item>
+		<item>Le bleu pâle passe avant le lilas, et la couleur personnalisée montre un &lt;b>+&lt;/b> tant qu\'aucune n\'est choisie, au lieu d\'avoir l\'air grise.</item>
+		<item>1.21</item>
+		<item>Une &lt;b>alarme reportée&lt;/b> le dit maintenant en haut de la liste, avec le temps restant, au lieu de laisser la prochaine heure normale à l\'écran.</item>
+		<item>1.20</item>
+		<item>Corrigé : l\'&lt;b>horloge&lt;/b> et la &lt;b>date&lt;/b> s\'affichaient pendant une aube même quand elles étaient désactivées.</item>
+		<item>1.19</item>
+		<item>&lt;b>Dismiss&lt;/b> est un bouton pleine largeur sous le résumé de l\'alarme : contouré pour l\'alarme à venir, plein pour une alarme reportée ou qui sonne. Il reste visible quand l\'alarme est ouverte.</item>
+		<item>La flèche d\'ouverture est devenue un bouton rond à côté.</item>
+		<item>1.18</item>
+		<item>Correction du build : un nettoyage de la 1.17 avait retiré plus des réglages d\'apparence qu\'il ne fallait.</item>
+		<item>&lt;b>Dismiss early&lt;/b> est remonté à côté de l\'heure de l\'alarme, en pastille colorée sur fond plus clair. Il est en vue que l\'alarme soit ouverte ou fermée.</item>
+		<item>1.17</item>
+		<item>&lt;b>Appuyer pour voir l\'écran&lt;/b> est passé dans les options de l\'aube, là où il a sa place, et peut être désactivé. Il se règle par alarme.</item>
+		<item>L\'horloge et la date s\'affichent ou se cachent séparément.</item>
+		<item>L\'&lt;b>aperçu&lt;/b> de l\'aube montre le nom de l\'alarme, la date et le titre de la musique, et suit les options d\'affichage.</item>
+		<item>Nouveau dans Paramètres &gt; Général : &lt;b>stockage&lt;/b>. Libère les copies de sons et d\'images dont aucune alarme n\'a besoin, l\'un des deux ou les deux.</item>
+		<item>Les menus de l\'aube sont traduits dans toutes les langues de l\'application.</item>
+		<item>1.16</item>
+		<item>Chaque version de cette liste a son propre titre, les mises à jour ne se confondent plus.</item>
+		<item>Les réglages d\'une alarme sont remontés à côté de son interrupteur, avec leur propre icône. &lt;b>Snooze&lt;/b> et &lt;b>Dismiss&lt;/b> sont centrés sur la rangée du dessous.</item>
+		<item>&lt;b>Dismiss early&lt;/b> est contouré, et reste visible quand l\'alarme est ouverte.</item>
+		<item>Une seule alarme reste ouverte à la fois.</item>
+		<item>Les couleurs de l\'aube sont rondes au lieu d\'être étirées.</item>
+		<item>Nouvelles options d\'aube : afficher ou cacher la phrase de réveil, le nom de l\'alarme, l\'horloge et le titre de la musique. Un appui les ramène tous un instant.</item>
+		<item>Aperçu de l\'aube : 10 secondes par défaut.</item>
+		<item>1.15</item>
+		<item>Maintenir le curseur de &lt;b>volume&lt;/b> une seconde joue la musique de l\'alarme, pour juger le niveau à l\'oreille. Relâcher l\'arrête et rend le volume.</item>
+		<item>La pastille de couleur personnalisée garde la couleur choisie, au lieu de repasser au gris quand une couleur prédéfinie est prise.</item>
+		<item>L\'&lt;b>aperçu&lt;/b> de l\'aube reste à l\'écran une fois fini, et attend un appui pour se fermer. Durée par défaut : 12 secondes.</item>
+		<item>La première alarme s\'appelle Aube.</item>
+		<item>1.14</item>
+		<item>Les réglages de l\'aube se rouvrent d\'eux-mêmes après le choix d\'une &lt;b>image&lt;/b>, au lieu de te laisser sur la liste des alarmes.</item>
+		<item>L\'&lt;b>aperçu&lt;/b> de l\'aube dure 15 secondes par défaut, réglable entre 5 et 30.</item>
+		<item>1.13</item>
+		<item>Le &lt;b>volume&lt;/b> d\'alarme par défaut est de 40 %.</item>
+		<item>L\'&lt;b>aperçu&lt;/b> d\'une aube se joue à l\'intérieur des réglages, et y revient au lieu d\'aller sur la liste des alarmes. Sa durée est réglable, et un appui montre l\'écran normal.</item>
+		<item>Roues plus courtes dans les réglages de l\'aube.</item>
+		<item>1.11</item>
+		<item>Ajout d\'un réglage pour la durée pendant laquelle un appui montre l\'écran normal pendant une aube.</item>
+		<item>1.9</item>
+		<item>Les pastilles de couleur ne sont plus ternies, et un point marque celle qui est utilisée.</item>
+		<item>Corrigé : le libellé &lt;b>Snooze&lt;/b> était illisible pendant une aube.</item>
+		<item>1.8</item>
+		<item>La phrase de l\'aube ne change plus entre l\'aube et l\'alarme.</item>
+		<item>Le nom de l\'alarme garde sa propre couleur pendant une aube.</item>
+		<item>&lt;b>Volume&lt;/b> : les très faibles pourcentages sont réellement discrets, et la valeur exacte peut être saisie.</item>
+		<item>1.7</item>
+		<item>Nouvelle palette d\'aube, prise sur un soleil bas.</item>
+		<item>Corrigé : l\'&lt;b>image&lt;/b> choisie était perdue quand le sélecteur de fichiers fermait les réglages.</item>
+		<item>L\'aube n\'est plus perdue après un report.</item>
+		<item>Chaque nouvelle alarme reçoit une couleur de nom vive qui lui est propre.</item>
+		<item>1.6</item>
+		<item>Une phrase sous l\'horloge pendant l\'aube, en trois langues.</item>
+		<item>Le curseur de volume se fait glisser, et affiche un pourcentage.</item>
+		<item>Plus de bandeau de notification pendant l\'aube.</item>
+		<item>1.1</item>
+		<item>L\'&lt;b>aube&lt;/b> se fait maintenant sur l\'écran d\'alarme lui-même : il s\'éclaire à l\'avance, et la lumière reste quand l\'alarme sonne.</item>
+		<item>Appuyer sur l\'écran pendant une aube le montre normal, pour bien voir que l\'alarme n\'a pas encore sonné.</item>
+		<item>1.0</item>
+		<item>Ajout de l\'&lt;b>aube&lt;/b> : l\'écran s\'éclaire progressivement avant l\'alarme, dans une couleur ou avec une image à toi.</item>
+		<item>Ajout d\'une &lt;b>lampe torche&lt;/b> qui monte sur les dernières minutes.</item>
+		<item>Ajout d\'un point de couleur à côté du nom de l\'alarme, pour les distinguer d\'un coup d\'œil.</item>
+		<item>La semaine peut commencer le lundi, le dimanche, ou suivre le téléphone.</item>
+		<item>12.7.2</item>
+		<item>Ajout d\'une option pour jouer le son par les &lt;b>haut-parleurs&lt;/b> et le &lt;b>bluetooth&lt;/b> en même temps.</item>
+		<item>Correction du clignotement de la &lt;b>lampe torche&lt;/b> : les durées allumé/éteint n\'étaient pas converties correctement selon la langue.</item>
+		<item>12.7.1</item>
+		<item>Correction du clignotement de la &lt;b>lampe torche&lt;/b> : les durées allumé/éteint étaient vides.</item>
+		<item>Correction d\'un défaut d\'affichage sur &lt;b>Android 15&lt;/b>.</item>
+		<item>Correction d\'un problème d\'alarme/minuteur touchant &lt;b>Android 13&lt;/b>.</item>
+		<item>Corrigé : l\'application tentait de rafraîchir les &lt;b>widgets&lt;/b> alors que l\'appareil était verrouillé.</item>
+		<item>Corrigé : le dialogue de l\'&lt;b>heure&lt;/b> réapparaissait après un changement d\'orientation ou la fermeture de l\'application, ce qui provoquait un plantage.</item>
+		<item>Le &lt;b>mode débogage&lt;/b> produit des journaux plus parlants.</item>
+		<item>12.7.0</item>
+		<item>Ajout de &lt;b>libellés&lt;/b> sous les boutons pour qu\'on comprenne mieux ce qu\'ils font. Modifiable dans &lt;b>Paramètres &gt; Apparence &gt; Styles&lt;/b>.</item>
+		<item>Ajout d\'une option pour activer/désactiver les alarmes quand le &lt;b>mode avion&lt;/b> change.</item>
+		<item>Ajout d\'une option pour arrêter l\'alarme avec les &lt;b>touches de volume&lt;/b>.</item>
+		<item>Ajout d\'un &lt;b>aperçu&lt;/b> dans les options de volume.</item>
+		<item>Ajout d\'un écran de &lt;b>prise en main&lt;/b> pour les nouveaux utilisateurs.</item>
+		<item>Ajout d\'une section &lt;b>aide&lt;/b> dans les paramètres.</item>
+		<item>Ajout du choix de la langue par application.</item>
+		<item>Prise en charge d\'&lt;b>Android 16&lt;/b>.</item>
+		<item>Le &lt;b>widget&lt;/b> affiche la date au format de la langue.</item>
+		<item>Revue de la logique d\'&lt;b>arrêt par NFC&lt;/b> quand plusieurs badges doivent être scannés. On peut reporter librement, et les badges déjà scannés n\'ont pas à l\'être de nouveau.</item>
+		<item>La &lt;b>carte d\'alarme&lt;/b> permet de glisser pour copier/supprimer même quand elle est ouverte.</item>
+		<item>&lt;b>Choix de la date&lt;/b> : l\'heure est aussi enregistrée quand la date est posée.</item>
+		<item>La notification d\'&lt;b>alarme manquée&lt;/b> montre le nom et l\'heure de l\'alarme manquée.</item>
+		<item>Boutons de report et d\'arrêt agrandis sur l\'&lt;b>écran d\'alarme&lt;/b>.</item>
+		<item>Correction d\'un problème de &lt;b>vibreur&lt;/b> sur certains téléphones.</item>
+		<item>Correction d\'un problème d\'&lt;b>import&lt;/b> et d\'&lt;b>export&lt;/b>.</item>
+		<item>Corrigé : l\'&lt;b>écran d\'alarme&lt;/b> ne se fermait pas, dans de rares cas, après l\'arrêt de l\'alarme, ce qui créait une boucle.</item>
+		<item>Correction d\'un petit défaut de la notification &lt;b>dismiss early&lt;/b>.</item>
+		<item>12.6.4</item>
+		<item>Corrigé : l\'usage du &lt;b>NFC&lt;/b> pour arrêter une alarme ou un minuteur alors que les options d\'&lt;b>ordre d\'arrêt&lt;/b> étaient aussi réglées.</item>
+		<item>Corrigé : le &lt;b>clignotement de la lampe torche&lt;/b> provoquait un plantage.</item>
+		<item>Correction de plusieurs défauts d\'affichage du &lt;b>minuteur&lt;/b>.</item>
+		<item>Ajout d\'un &lt;b>bouton d\'enregistrement&lt;/b> à la création d\'un &lt;b>minuteur&lt;/b>, pour ne plus être obligé de le lancer aussitôt afin de le garder.</item>
+		<item>Meilleur rendu des écrans d\'&lt;b>alarme&lt;/b> et de &lt;b>minuteur&lt;/b> sur les appareils à faible densité de pixels.</item>
+		<item>12.6.3</item>
+		<item>Le dialogue des &lt;b>options NFC&lt;/b> a été revu pour tout regrouper sur un seul écran.</item>
+		<item>Correction d\'un problème lors de l\'&lt;b>arrêt&lt;/b> par &lt;b>NFC&lt;/b>.</item>
+		<item>Corrigé : en &lt;b>masquant&lt;/b> le &lt;b>bouton NFC&lt;/b>, l\'option NFC de l\'alarme/du minuteur restait affichée.</item>
+		<item>Correction d\'un problème de temporisation à la suppression d\'une &lt;b>alarme&lt;/b> ou d\'un &lt;b>minuteur&lt;/b>.</item>
+		<item>Correction d\'un rare problème au lancement d\'un &lt;b>minuteur&lt;/b>.</item>
+		<item>Corrigé : la &lt;b>sonnerie&lt;/b> ne se jouait pas avec le &lt;b>téléphone verrouillé&lt;/b> et le &lt;b>NFC&lt;/b>.</item>
+		<item>12.6.2</item>
+		<item>Correction d\'un problème de traduction en &lt;b>portugais&lt;/b>.</item>
+		<item>Corrigé : la &lt;b>lampe torche&lt;/b> ne fonctionnait pas.</item>
+		<item>Correction d\'une erreur d\'affichage dans les &lt;b>paramètres&lt;/b>.</item>
+		<item>Meilleur rendu de l\'écran d\'&lt;b>alarme active&lt;/b> sur les appareils à faible densité.</item>
+		<item>12.6.1</item>
+		<item>Correction d\'un problème à la modification d\'un &lt;b>minuteur&lt;/b>.</item>
+		<item>12.6.0</item>
+		<item>Ajout du &lt;b>minuteur&lt;/b>. Les badges NFC peuvent aussi lancer des minuteurs.</item>
+		<item>Ajout des options de &lt;b>répétition&lt;/b> dans les réglages d\'alarme. Répétition par heures, jours, semaines ou mois.</item>
+		<item>Ajout de l\'option &lt;b>date&lt;/b> pour qu\'une alarme sonne un jour précis. Accessible au choix de l\'heure.</item>
+		<item>Ajout du &lt;b>report&lt;/b> avec les &lt;b>touches de volume&lt;/b>.</item>
+		<item>Ajout de l\'&lt;b>ordre&lt;/b> des &lt;b>badges NFC&lt;/b> quand plusieurs sont sélectionnés : quelconque, aléatoire ou séquentiel.</item>
+		<item>Ajout de la &lt;b>notification d\'arrêt anticipé&lt;/b>. Au choix, une notification quand une alarme peut être arrêtée en avance.</item>
+		<item>Ajout de l\'&lt;b>appui long&lt;/b> sur les boutons répétition, vibreur, NFC et lampe torche pour accéder vite à ces options.</item>
+		<item>Corrigé : jouer ou mélanger toute la &lt;b>musique&lt;/b> d\'un &lt;b>dossier&lt;/b> ne fonctionnait pas.</item>
+		<item>Prise en charge d\'&lt;b>Android 15&lt;/b>.</item>
+		<item>Passage au thème &lt;b>Material 3&lt;/b> d\'Android.</item>
+		<item>12.5.4</item>
+		<item>Corrigé : &lt;b>sauter la prochaine alarme&lt;/b> continuait de la sauter indéfiniment.</item>
+		<item>12.5.3</item>
+		<item>Corrigé : la &lt;b>voix&lt;/b> de la synthèse vocale restait celle par défaut même quand une autre était choisie.</item>
+		<item>Ajout d\'une option d\'&lt;b>alignement&lt;/b> du texte dans le &lt;b>widget&lt;/b>.</item>
+		<item>Ajout d\'une option de &lt;b>position&lt;/b> du texte de l\'alarme dans le &lt;b>widget&lt;/b>.</item>
+		<item>Ajout de l\'option &lt;b>n\'afficher que les alarmes de l\'app&lt;/b> dans le &lt;b>widget&lt;/b> : soit seulement les alarmes créées ici, soit celles de toutes les applications.</item>
+		<item>Le &lt;b>nombre de reports restants&lt;/b> est indiqué quand on glisse pour reporter une alarme active.</item>
+		<item>Nouvelle présentation du dialogue &lt;b>nouveautés&lt;/b>.</item>
+		<item>12.5.2</item>
+		<item>Ajout de la &lt;b>sélection de plusieurs badges NFC&lt;/b> pour arrêter une alarme.</item>
+		<item>Ajout de la &lt;b>vitesse de parole&lt;/b> dans les options de synthèse vocale.</item>
+		<item>Corrigé : la &lt;b>lampe torche&lt;/b> clignotait alors que le clignotement était désactivé.</item>
+		<item>12.5.0</item>
+		<item>Nouvelle présentation de la &lt;b>carte d\'alarme&lt;/b>, avec des boutons pour les options d\'arrêt, de report et les options générales.</item>
+		<item>Ajout d\'un &lt;b>motif de vibration personnalisé&lt;/b> pour les alarmes.</item>
+		<item>Ajout de l\'option &lt;b>économie de batterie&lt;/b>, qui garde l\'écran éteint pendant une alarme active. Dans Paramètres &gt; Général.</item>
+		<item>Ajout du choix de la &lt;b>voix&lt;/b> pour la &lt;b>synthèse vocale&lt;/b>.</item>
+	</string-array>
+
+</resources>

@@ -2,7 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
 	<!-- App -->
-	<string name="app_name">NFC Despertador</string>
+	<string name="app_name">Alarm Clock Sun</string>
 	<string name="app_developer">Gabe Gonzalez</string>
 
 	<!-- Consolidate -->
@@ -173,6 +173,13 @@
 	<string name="message_required">Requerido</string>
 	<string name="message_optional">Opcional</string>
 	<string name="message_already_have_permission">Ya tienes este permiso</string>
+	<string name="title_ringing_timer_channel">Temporizador que suena</string>
+	<string name="description_ringing_timer_channel">Muestra un temporizador que suena, incluso con el teléfono bloqueado.</string>
+	<string name="message_timer_ringing">Se acabó el tiempo</string>
+	<string name="title_record_statistics">Registrar estadísticas</string>
+	<string name="description_record_statistics_true">Se cuentan las alarmas apagadas, pospuestas, perdidas, creadas y eliminadas.</string>
+	<string name="description_record_statistics_false">Ya no se cuenta nada nuevo. Lo contado antes se conserva hasta que lo reinicies.</string>
+	<string name="message_set_alarm_permission_missing">Android dice que falta este permiso, algo que no debería permitir. Otras aplicaciones no pueden poner una alarma aquí.</string>
 	<string name="message_support_thank_you">¡Gracias por su apoyo!</string>
 	<string name="message_reset_statistics">¿Estás seguro de que quieres restablecer todas las estadísticas?</string>
 	<string name="message_tts_current_time">Hora actual</string>
@@ -649,6 +656,137 @@
 		<item quantity="other">Recordatorio. %1$s, sonará en, %2$d, minutos.</item>
 	</plurals>
 
-	<string name="tts_say_time">La hora es %1$s:%2$s %3$s.</string>
+	<string name="tts_say_time">Son las %1$s y %2$s %3$s.</string>
+	<string name="tts_say_time_one_oclock">Es la %1$s y %2$s %3$s.</string>
+
+	<string name="action_alarm_option_dawn">Amanecer</string>
+	<string name="message_dawn_disabled">No usar la simulación de amanecer</string>
+	<string name="message_dawn_enabled">Usar la simulación de amanecer</string>
+	<string name="description_show_hide_dawn_button_true">Mostrar el botón de amanecer al abrir una alarma.</string>
+	<string name="description_show_hide_dawn_button_false">Ocultar el botón de amanecer al abrir una alarma.</string>
+	<string name="title_dawn_duration">Duración del amanecer</string>
+	<string name="description_dawn_duration">Cuánto antes de la alarma empieza a iluminarse la pantalla.</string>
+	<string name="title_dawn_color">Color de la luz</string>
+	<string name="title_dawn_flashlight">Linterna antes de la alarma</string>
+	<string name="description_dawn_flashlight">La linterna se enciende poco a poco en los últimos minutos del amanecer. Pon la rueda a cero para dejarla apagada.</string>
+	<string name="message_dawn_flashlight_off">Apagada</string>
+	<string name="title_dawn_custom_color">Color personalizado</string>
+	<string name="title_dawn_use_image">Usar una imagen</string>
+	<string name="description_dawn_use_image">Mostrar una foto en vez de un color liso.</string>
+	<string name="action_dawn_choose_image">Elegir imagen</string>
+	<string name="message_dawn_preview_over">Toca para cerrar</string>
+	<string name="title_dawn_preview_duration">Duración de la vista previa</string>
+	<string name="description_dawn_preview_duration">La vista previa del amanecer dura %1$d segundos y luego espera un toque para cerrarse. Tocarla mientras corre muestra la pantalla normal, como en un amanecer real.</string>
+	<string name="title_storage">Almacenamiento</string>
+	<string name="title_clean_sounds">Liberar copias de sonidos</string>
+	<string name="description_clean_sounds">La app guarda una copia de cada sonido elegido, para que la alarma suene aunque el original se mueva o el teléfono aún no se haya desbloqueado. Esto borra las copias que ninguna alarma usa.</string>
+	<string name="title_clean_images">Liberar imágenes del amanecer</string>
+	<string name="description_clean_images">Una imagen se queda en la app aunque vuelvas a un color, para poder volver a usarla sin elegir el archivo otra vez. Esto borra las imágenes que ningún amanecer muestra.</string>
+	<string name="title_clean_all">Liberar ambos</string>
+	<string name="description_clean_all">Sonidos e imágenes de una vez.</string>
+	<string name="message_clean_confirm">Solo se borran las copias que ninguna alarma necesita. Las alarmas no se tocan.</string>
+	<string name="message_clean_done">Se liberaron %1$s en %2$d archivo(s)</string>
+	<string name="message_clean_nothing">No hay nada que liberar</string>
+	<string name="title_dawn_show_date">Fecha</string>
+	<string name="title_dawn_reveal">Tocar para ver la pantalla</string>
+	<string name="title_dawn_reveal_return">Volver solo</string>
+	<string name="description_dawn_reveal_return">La pantalla vuelve al amanecer por sí sola, tras el tiempo de abajo. Apagado, cada toque le da la vuelta y se queda así hasta el siguiente.</string>
+	<string name="description_dawn_reveal">Durante el amanecer, un toque muestra la pantalla de alarma normal un momento, para que quede claro que la alarma aún no ha sonado. Un segundo toque vuelve atrás.</string>
+	<string name="message_dawn_reveal_value">%1$d s</string>
+	<string name="title_dawn_shown">Visible durante el amanecer</string>
+	<string name="description_dawn_shown">Desactiva lo que prefieras no ver mientras la pantalla se ilumina.</string>
+	<string name="title_dawn_show_phrase">Frase de despertar</string>
+	<string name="title_dawn_show_name">Nombre de la alarma</string>
+	<string name="title_dawn_show_clock">Reloj</string>
+	<string name="title_dawn_show_media">Título de la música</string>
+	<string name="message_dawn_no_image">Ninguna imagen seleccionada</string>
+	<string name="message_dawn_unable_to_read_image">No se puede leer la imagen seleccionada</string>
+	<string name="action_dawn_stop">Parar</string>
+	<string name="message_dawn_snoozed">Alarma aplazada 5 minutos</string>
+	<string name="message_dawn_not_ringing_yet">Amanecer en curso. La alarma aún no ha sonado.</string>
+	<string name="message_dawn_too_close">Alarma demasiado cerca: esta vez sin amanecer. Funcionará en la próxima.</string>
+	<string name="message_dawn_no_more_snoozes">No se puede aplazar más. Pulsa Parar para apagar la alarma</string>
+	<string name="title_dawn_notification">Amanecer</string>
+	<string name="description_dawn_notification">Se muestra mientras la pantalla se ilumina poco a poco antes de una alarma.</string>
+	<string name="dawn_color_amber">Luz de sol</string>
+	<string name="dawn_color_orange">Blanco</string>
+	<string name="dawn_color_red">Ámbar</string>
+	<string name="dawn_color_white">Verde pálido</string>
+	<string name="dawn_color_sky">Azul pálido</string>
+	<string name="dawn_color_lilac">Lila</string>
+	<string name="action_alarm_dismiss_next">Descartar próxima alarma</string>
+	<string name="action_alarm_dismiss_snoozed">Descartar alarma pospuesta</string>
+	<string name="message_alarm_is_snoozed">La alarma pospuesta suena en %1$s</string>
+
+	<!-- Ecrans ajoutes par le fork : dire l'heure, options de l'aube,
+	     permission plein ecran, reveil analogique, remise a zero -->
+	<string name="action_dawn_snooze">+5 min</string>
+	<string name="action_open_app_info">Info de la app</string>
+	<string name="action_say_time">Decir la hora</string>
+	<string name="cd_alarm_name_color">Color del nombre de la alarma</string>
+	<string name="description_analog_clock">Una esfera con agujas en vez de los dígitos, en la pantalla de esta alarma.</string>
+	<string name="description_app_language">El mismo ajuste que Android guarda para cada aplicación.</string>
+	<string name="description_dawn_reveal_duration">Tocar la pantalla durante un amanecer la muestra como de costumbre durante %1$d segundos, para que quede claro que la alarma aún no ha sonado.</string>
+	<string name="description_dismiss_options_auto_dismiss_alarm">Parar la alarma automáticamente tras un tiempo determinado.</string>
+	<string name="description_dismiss_options_auto_dismiss_timer">Parar el temporizador automáticamente tras un tiempo determinado.</string>
+	<string name="description_next_alarm_format_both">Próxima alarma el lun 7:00\nTiempo restante 7 horas 30 minutos</string>
+	<string name="description_onboarding_permission_full_screen_intent">Es la que hace aparecer la pantalla de alarma, y el amanecer, en un teléfono bloqueado. Sin ella la alarma suena sin nada más que una notificación.\n\nEl botón abre la página de ajustes correcta.</string>
+	<string name="description_reset_settings">Devuelve todos los ajustes a como estaban tras la instalación. Tus alarmas no se tocan.</string>
+	<string name="description_say_time_hours">La hora solo se dice entre las %1$02d:00 y las %2$02d:00.</string>
+	<string name="description_say_time_listening_always">A la escucha, a cualquier hora</string>
+	<string name="description_say_time_listening_between">A la escucha, de %1$s a %2$s</string>
+	<string name="description_say_time_notification_channel">Una notificación con un botón que dice la hora en voz alta.</string>
+	<string name="description_setting_speak_time">Agitar el teléfono o pasar la mano por encima para oír la hora. El interruptor apaga las dos cosas a la vez.</string>
+	<string name="description_shake_to_say_time_false">Agitar el teléfono no hace nada.</string>
+	<string name="description_shake_to_say_time_true">Agitar el teléfono dice la hora en voz alta, dentro de las horas de abajo. Fuera de ellas nada escucha y la notificación desaparece. Android exige una notificación mientras escucha, y el sensor de movimiento gasta algo de batería.</string>
+	<string name="description_text_to_speech_delay">Deja que la música te despierte primero, y solo después la voz dice la hora. La música sigue luego.</string>
+	<string name="error_message_no_voice_for_language">No hay ninguna voz de síntesis instalada para %1$s</string>
+	<string name="first_alarm_name">Alarma 1</string>
+	<string name="message_clock_12_hour">12 h</string>
+	<string name="message_clock_24_hour">24 h</string>
+	<string name="message_dawn_duration_value">%1$d min</string>
+	<string name="message_dawn_in_progress">Está amaneciendo\u2026</string>
+	<string name="message_next_alarm_both">Próxima alarma el %1$s\nTiempo restante %2$s</string>
+	<string name="message_reset_settings_confirm">Todos los ajustes vuelven a como estaban tras la instalación. Tus alarmas se conservan.</string>
+	<string name="message_reset_settings_done">Los ajustes han vuelto a los de fábrica.</string>
+	<string name="message_volume_value">%1$d%%</string>
+	<string name="title_analog_clock">Reloj analógico</string>
+	<string name="title_app_language">Idioma de la aplicación</string>
+	<string name="title_clock_style">Tipo de reloj</string>
+	<string name="title_dawn_reveal_duration">Tocar para ver la pantalla</string>
+	<string name="title_language_system">Idioma del teléfono</string>
+	<string name="title_reset_settings">Volver a los ajustes de fábrica</string>
+	<string name="title_say_time">Decir la hora</string>
+	<string name="title_say_time_format">Reloj que se dice</string>
+	<string name="title_say_time_from">Desde</string>
+	<string name="title_say_time_hours">Solo entre</string>
+	<string name="title_say_time_language">Idioma hablado</string>
+	<string name="title_say_time_to">Hasta</string>
+	<string name="title_say_time_voice">La voz en sí, alarmas incluidas</string>
+	<string name="title_setting_speak_time">Decir la hora</string>
+	<string name="title_shake_sensitivity">Fuerza de la sacudida</string>
+	<string name="title_shake_to_say_time">Agitar el teléfono para oír la hora</string>
+	<string name="title_shake_to_say_time_switch">Agitar dice la hora</string>
+	<string name="title_text_to_speech_delay">Esperar antes de hablar</string>
+	<string name="title_volume">Volumen</string>
+
+	<!-- El boton de encendido mientras suena la alarma -->
+	<string name="title_while_ringing">Mientras suena la alarma</string>
+	<string name="title_power_dismiss">El botón de encendido la descarta</string>
+	<string name="description_power_dismiss_true">Apagar la pantalla descarta la alarma. Android nunca avisa a una aplicación del botón de encendido, así que lo que se lee es que la pantalla se apaga: cualquier otra cosa que la apague también descarta la alarma.</string>
+	<string name="description_power_dismiss_false">El botón de encendido solo apaga la pantalla mientras suena la alarma.</string>
+
+	<!-- Pasar la mano por encima del telefono para oir la hora -->
+	<string name="title_wave_to_say_time">Pasar la mano para oír la hora</string>
+	<string name="title_wave_to_say_time_switch">La mano dice la hora</string>
+	<string name="description_wave_to_say_time_true">Pasar la mano por encima de la parte alta de la pantalla dice la hora en voz alta, dentro de las horas de abajo. Se lee el sensor que apaga la pantalla contra la oreja, así que solo funciona por encima de la parte alta del teléfono.</string>
+	<string name="description_wave_to_say_time_false">Pasar la mano por encima del teléfono no hace nada.</string>
+	<string name="title_wave_passes">Número de pasadas</string>
+	<string name="title_say_time_when">Cuándo escucha</string>
+
+	<!-- Si la lista de alarmas se reorganiza sola -->
+	<string name="title_auto_sort_alarms">Reorganizar la lista sola</string>
+	<string name="description_auto_sort_alarms_true">Lo que suena primero sube arriba, y las alarmas apagadas pasan debajo. La lista se mueve en cuanto se enciende o se apaga una alarma.</string>
+	<string name="description_auto_sort_alarms_false">Cada alarma se queda en su sitio. Una nueva se añade abajo, y una copia justo debajo de la alarma de la que viene.</string>
 
 </resources>

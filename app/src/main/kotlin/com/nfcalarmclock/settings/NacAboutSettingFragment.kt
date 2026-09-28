@@ -5,9 +5,12 @@ import androidx.preference.Preference
 import com.nfcalarmclock.BuildConfig
 import com.nfcalarmclock.R
 import com.nfcalarmclock.log.NacLog
+import com.nfcalarmclock.system.permission.fullscreenintent.NacFullScreenIntentPermission
 import com.nfcalarmclock.system.permission.ignorebatteryoptimization.NacIgnoreBatteryOptimizationPermission
 import com.nfcalarmclock.system.permission.postnotifications.NacPostNotificationsPermission
 import com.nfcalarmclock.system.permission.readmediaaudio.NacReadMediaAudioPermission
+import com.nfcalarmclock.system.permission.scheduleexactalarm.NacScheduleExactAlarmPermission
+import com.nfcalarmclock.system.permission.setalarm.NacSetAlarmPermission
 import com.nfcalarmclock.system.permission.systemalertwindow.NacSystemAlertWindowPermission
 import com.nfcalarmclock.view.quickToast
 import com.nfcalarmclock.whatsnew.NacWhatsNewDialog
@@ -132,20 +135,51 @@ class NacAboutSettingFragment
 		// Full screen
 		else if (preferenceKey == fullScreenKey)
 		{
-			NacLog.i("App already has full screen permission")
-			quickToast(context, messageId)
+			// From Android 14 the user can refuse this one, and then the alarm screen
+			// never comes up by itself. This used to say "already have it" without
+			// checking anything
+			if (NacFullScreenIntentPermission.hasPermission(context))
+			{
+				NacLog.i("App already has full screen permission")
+				quickToast(context, messageId)
+			}
+			else
+			{
+				NacLog.i("Requesting the full screen intent permission")
+				NacFullScreenIntentPermission.requestPermission(activity)
+			}
 		}
 		// Schedule exact alarms
 		else if (preferenceKey == scheduleAlarmsKey)
 		{
-			NacLog.i("App already has schedule exact alarms permission")
-			quickToast(context, messageId)
+			// On Android 12 and 12L the user can take this one away, and then an alarm
+			// may ring late. This used to say "already have it" without checking
+			if (NacScheduleExactAlarmPermission.hasPermission(context))
+			{
+				NacLog.i("App already has schedule exact alarms permission")
+				quickToast(context, messageId)
+			}
+			else
+			{
+				NacLog.i("Requesting the schedule exact alarms permission")
+				NacScheduleExactAlarmPermission.requestPermission(activity)
+			}
 		}
 		// Set alarm
 		else if (preferenceKey == setAlarmKey)
 		{
-			NacLog.i("App already has set alarm permission")
-			quickToast(context, messageId)
+			// Granted at install time and cannot be taken away, but asked all the same
+			// rather than taken for granted
+			if (NacSetAlarmPermission.hasPermission(context))
+			{
+				NacLog.i("App already has set alarm permission")
+				quickToast(context, messageId)
+			}
+			else
+			{
+				NacLog.w("Set alarm permission missing, which Android is not meant to allow")
+				quickToast(context, R.string.message_set_alarm_permission_missing)
+			}
 		}
 		// Show notifications
 		else if (preferenceKey == showNotificationsKey)

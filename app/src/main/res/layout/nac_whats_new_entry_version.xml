@@ -11,7 +11,7 @@
 		android:id="@+id/version"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/medium"
+		android:layout_marginTop="@dimen/xlarge"
 		android:layout_marginBottom="@dimen/nudge"
 		android:text=""
 		/>

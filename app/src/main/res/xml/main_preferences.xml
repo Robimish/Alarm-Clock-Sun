@@ -19,6 +19,16 @@
 		android:summary="@string/description_setting_appearance"
 		/>
 
+	<!-- Speak the time. Two controls in one row, like the Wi-Fi of the Android
+		settings: the text opens the page, the switch beside it turns the shake on
+		or off without going in -->
+	<com.nfcalarmclock.settings.preference.NacTwoTargetSwitchPreference
+		android:icon="@drawable/voice_32"
+		android:key="@string/key_settings_speak_time"
+		android:title="@string/title_setting_speak_time"
+		android:summary="@string/description_setting_speak_time"
+		/>
+
 	<!-- Manage NFC tags-->
 	<Preference
 		android:icon="@drawable/list"

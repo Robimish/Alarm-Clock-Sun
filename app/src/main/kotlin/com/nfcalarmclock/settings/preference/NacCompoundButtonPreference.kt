@@ -178,8 +178,20 @@ abstract class NacCompoundButtonPreference(
 		// Persist the state
 		persistBoolean(state)
 
-		// Don't know what this does
+		// Turn whatever hangs on this switch on or off with it
 		notifyDependencyChange(!state)
+	}
+
+	/**
+	 * Whether whatever hangs on this preference should be turned off.
+	 *
+	 * The library asks this once, when the screen is built. Without it, a section
+	 * would come up alive under a switch that is off, and only fall asleep at the
+	 * first touch of that switch.
+	 */
+	override fun shouldDisableDependents(): Boolean
+	{
+		return !isChecked
 	}
 
 	/**

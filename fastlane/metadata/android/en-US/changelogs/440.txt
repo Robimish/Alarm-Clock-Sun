@@ -1,3 +1,0 @@
-* Fixed issue with clock widget.
-* Fixed issue with color picker.
-* Fixed issue with computing correct values with the new minute/second dropdowns.

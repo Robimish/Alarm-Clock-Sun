@@ -1,10 +1,17 @@
 package com.nfcalarmclock.alarm.card
 
+import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.widget.NumberPicker
 import android.animation.Animator
 import android.animation.AnimatorInflater
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.res.ColorStateList
+import android.graphics.Color
+import android.os.Handler
+import android.os.Looper
+import android.view.MotionEvent
 import android.view.View
 import android.view.View.MeasureSpec
 import android.view.View.OnCreateContextMenuListener
@@ -130,6 +137,14 @@ class NacAlarmCardHolder(root: View)
 	}
 
 	/**
+	 * Listener for when the color swatch next to the name is clicked.
+	 */
+	fun interface OnCardNameColorClickedListener
+	{
+		fun onCardNameColorClicked(card: NacAlarmCardHolder, alarm: NacAlarm)
+	}
+
+	/**
 	 * Listener for when the snooze options button is clicked.
 	 */
 	fun interface OnCardSnoozeOptionsClickedListener
@@ -170,6 +185,14 @@ class NacAlarmCardHolder(root: View)
 	}
 
 	/**
+	 * Listener for when a card will use the dawn simulation or not is changed.
+	 */
+	fun interface OnCardUseDawnChangedListener
+	{
+		fun onCardUseDawnChanged(card: NacAlarmCardHolder, alarm: NacAlarm)
+	}
+
+	/**
 	 * Listener for when a card will use NFC or not is changed.
 	 */
 	fun interface OnCardUseNfcChangedListener
@@ -199,6 +222,25 @@ class NacAlarmCardHolder(root: View)
 	fun interface OnCardVolumeChangedListener
 	{
 		fun onCardVolumeChanged(card: NacAlarmCardHolder, alarm: NacAlarm)
+	}
+
+	/**
+	 * Listener for when the volume slider is held long enough to hear the media.
+	 */
+	fun interface OnCardVolumePreviewListener
+	{
+		fun onCardVolumePreview(card: NacAlarmCardHolder, alarm: NacAlarm,
+			state: VolumePreviewState)
+	}
+
+	/**
+	 * What the volume slider is asking of the preview.
+	 */
+	enum class VolumePreviewState
+	{
+		START,
+		CHANGE,
+		STOP
 	}
 
 	/**
@@ -302,6 +344,11 @@ class NacAlarmCardHolder(root: View)
 	private val flashlightButton: MaterialButton = root.findViewById(R.id.nac_flashlight)
 
 	/**
+	 * Dawn button.
+	 */
+	private val dawnButton: MaterialButton = root.findViewById(R.id.nac_dawn)
+
+	/**
 	 * Media button.
 	 */
 	private val mediaButton: MaterialButton = root.findViewById(R.id.nac_media)
@@ -317,9 +364,24 @@ class NacAlarmCardHolder(root: View)
 	private val volumeSeekBar: SeekBar = root.findViewById(R.id.nac_volume_slider)
 
 	/**
+	 * Volume level, in percent.
+	 */
+	private val volumeValueTextView: TextView = root.findViewById(R.id.nac_volume_value)
+
+	/**
 	 * Name button.
 	 */
 	private val nameButton: MaterialButton = root.findViewById(R.id.nac_name)
+
+	/**
+	 * Container of the color swatch next to the name.
+	 */
+	private val nameColorContainer: View = root.findViewById(R.id.nac_name_color_container)
+
+	/**
+	 * Color swatch next to the name.
+	 */
+	private val nameColorSwatch: View = root.findViewById(R.id.nac_name_color)
 
 	/**
 	 * Dismiss options button.
@@ -417,6 +479,11 @@ class NacAlarmCardHolder(root: View)
 	var onCardNameClickedListener: OnCardNameClickedListener? = null
 
 	/**
+	 * Listener for when the color swatch next to the name is clicked.
+	 */
+	var onCardNameColorClickedListener: OnCardNameColorClickedListener? = null
+
+	/**
 	 * Listener for when the snooze options button is clicked.
 	 */
 	var onCardSnoozeOptionsClickedListener: OnCardSnoozeOptionsClickedListener? = null
@@ -442,6 +509,11 @@ class NacAlarmCardHolder(root: View)
 	var onCardUseFlashlightChangedListener: OnCardUseFlashlightChangedListener? = null
 
 	/**
+	 * Listener for when a card will use the dawn simulation or not is changed.
+	 */
+	var onCardUseDawnChangedListener: OnCardUseDawnChangedListener? = null
+
+	/**
 	 * Listener for when a card will use NFC or not is changed.
 	 */
 	var onCardUseNfcChangedListener: OnCardUseNfcChangedListener? = null
@@ -462,6 +534,21 @@ class NacAlarmCardHolder(root: View)
 	var onCardVolumeChangedListener: OnCardVolumeChangedListener? = null
 
 	/**
+	 * Listener for when the volume slider is held long enough to hear the media.
+	 */
+	var onCardVolumePreviewListener: OnCardVolumePreviewListener? = null
+
+	/**
+	 * Handler used to wait before the volume preview starts.
+	 */
+	private val volumePreviewHandler: Handler = Handler(Looper.getMainLooper())
+
+	/**
+	 * Whether the volume preview is running or not.
+	 */
+	private var isPreviewingVolume: Boolean = false
+
+	/**
 	 * The context.
 	 */
 	val context: Context
@@ -471,8 +558,10 @@ class NacAlarmCardHolder(root: View)
 	 * The height when the card is collapsed.
 	 */
 	private val heightCollapsed: Int
-		// Check if the alarm is snoozed or will alarm soon
-		get() = if ((alarm!!.snoozeCount > 0) || alarm!!.willAlarmSoon())
+		// Check if the alarm is snoozed or will alarm soon. This has to agree with
+		// shouldShowExtraView(), otherwise the card is either cut off or left with an
+		// empty gap under the summary
+		get() = if (alarm!!.isInUse || alarm!!.willAlarmSoon())
 		{
 			// Show a little extra space for stuff right beneath the summary
 			sharedPreferences.cardHeightCollapsedDismiss
@@ -487,7 +576,16 @@ class NacAlarmCardHolder(root: View)
 	 * The height when the card is expanded.
 	 */
 	private val heightExpanded: Int
-		get() = sharedPreferences.cardHeightExpanded
+		// Same rule as the collapsed height: the dismiss row stays while the card is
+		// open, so the open card is a row taller when there is one
+		get() = if (alarm!!.isInUse || alarm!!.willAlarmSoon())
+		{
+			sharedPreferences.cardHeightExpandedDismiss
+		}
+		else
+		{
+			sharedPreferences.cardHeightExpanded
+		}
 
 	/**
 	 * Check if the alarm card is collapsed.
@@ -503,6 +601,7 @@ class NacAlarmCardHolder(root: View)
 	val isExpanded: Boolean
 		get() = (expandedView.isVisible)
 			|| (cardView.measuredHeight == sharedPreferences.cardHeightExpanded)
+			|| (cardView.measuredHeight == sharedPreferences.cardHeightExpandedDismiss)
 
 	/**
 	 * Flag indicating that the card view is being bound to an alarm.
@@ -822,13 +921,13 @@ class NacAlarmCardHolder(root: View)
 				start()
 			}
 
-		// Hide the extra summary view
-		extraBelowSummaryView.visibility = View.GONE
-		extraBelowSummaryView.isEnabled = false
-
 		// Setup the expanded view
 		expandedView.visibility = View.VISIBLE
 		expandedView.isEnabled = true
+
+		// Keep the dismiss row. It is the only way to call off an alarm, so it stays
+		// reachable while the card is open
+		refreshExtraView()
 	}
 
 	/**
@@ -910,6 +1009,12 @@ class NacAlarmCardHolder(root: View)
 		{
 			flashlightButton.visibility = View.GONE
 		}
+
+		// Dawn
+		if (!sharedPreferences.shouldShowDawnButton)
+		{
+			dawnButton.visibility = View.GONE
+		}
 	}
 
 	/**
@@ -952,6 +1057,7 @@ class NacAlarmCardHolder(root: View)
 		vibrateButton.setupRippleColor(sharedPreferences)
 		nfcButton.setupRippleColor(sharedPreferences)
 		flashlightButton.setupRippleColor(sharedPreferences)
+		dawnButton.setupRippleColor(sharedPreferences)
 		mediaButton.setupRippleColor(sharedPreferences)
 		volumeSeekBar.setupProgressAndThumbColor(sharedPreferences)
 		nameButton.setupRippleColor(sharedPreferences)
@@ -959,6 +1065,36 @@ class NacAlarmCardHolder(root: View)
 		snoozeOptionsButton.setupRippleColor(sharedPreferences)
 		alarmOptionsButton.setupRippleColor(sharedPreferences)
 		expandButton.setupRippleColor(sharedPreferences)
+
+		// The two dismiss buttons are the loudest thing on the card, because they are
+		// the only way to call off an alarm. "Dismiss early" is outlined, since it acts
+		// on something that has not happened yet; "Dismiss" is filled, since the alarm
+		// is snoozed or ringing right now
+		val theme = sharedPreferences.themeColor
+		val lightTheme = blendColors(theme, Color.WHITE, 0.35f)
+
+		dismissEarlyButton.backgroundTintList = ColorStateList.valueOf(
+			blendColors(Color.BLACK, theme, 0.22f))
+		dismissEarlyButton.strokeColor = ColorStateList.valueOf(theme)
+		dismissEarlyButton.setTextColor(lightTheme)
+		dismissEarlyButton.iconTint = ColorStateList.valueOf(lightTheme)
+
+		dismissButton.backgroundTintList = ColorStateList.valueOf(theme)
+		dismissButton.setTextColor(Color.BLACK)
+		dismissButton.iconTint = ColorStateList.valueOf(Color.BLACK)
+	}
+
+	/**
+	 * Mix two colors together.
+	 */
+	private fun blendColors(from: Int, to: Int, fraction: Float): Int
+	{
+		val f = fraction.coerceIn(0f, 1f)
+		val r = Color.red(from) + ((Color.red(to) - Color.red(from)) * f).toInt()
+		val g = Color.green(from) + ((Color.green(to) - Color.green(from)) * f).toInt()
+		val b = Color.blue(from) + ((Color.blue(to) - Color.blue(from)) * f).toInt()
+
+		return Color.argb(255, r, g, b)
 	}
 
 	/**
@@ -981,9 +1117,12 @@ class NacAlarmCardHolder(root: View)
 		setupNfcButtonLongClickListener()
 		setupFlashlightButtonListener()
 		setupFlashlightButtonLongClickListener()
+		setupDawnButtonListener()
+		setupDawnButtonLongClickListener()
 		setupMediaButtonListener()
 		setupVolumeSeekBarListener()
 		setupNameListener()
+		setupNameColorListener()
 		setupDismissOptionsListener()
 		setupSnoozeOptionsListener()
 		setupAlarmOptionsListener()
@@ -1008,10 +1147,12 @@ class NacAlarmCardHolder(root: View)
 		setVibrateButton()
 		setNfcButton()
 		setFlashlightButton()
+		setDawnButton()
 		setMediaButton()
 		setVolumeSeekBar()
 		setVolumeImageView()
 		setNameButton()
+		setNameColorSwatch()
 		setupButtonLabels()
 	}
 
@@ -1030,7 +1171,7 @@ class NacAlarmCardHolder(root: View)
 	fun measureCard(heights: IntArray?)
 	{
 		// Check if heights is the right length
-		if (heights == null || heights.size != 3)
+		if (heights == null || heights.size != 4)
 		{
 			return
 		}
@@ -1038,8 +1179,17 @@ class NacAlarmCardHolder(root: View)
 		// Expand the alarm
 		doExpand()
 
+		// Hide the extra view
+		extraBelowSummaryView.visibility = View.GONE
+
 		// Save the height
 		heights[2] = getHeight(cardView)
+
+		// Show the extra view
+		extraBelowSummaryView.visibility = View.VISIBLE
+
+		// Save the height
+		heights[3] = getHeight(cardView)
 
 		// Collapse the card
 		doCollapse()
@@ -1086,20 +1236,18 @@ class NacAlarmCardHolder(root: View)
 			expandButton.visibility = expandVis
 		}
 
-		// Set the extra view visibility
+		// Only one of the two is ever shown, and it takes the whole width
 		if (extraVis == View.VISIBLE)
 		{
-			// Alarm is in use
+			// Alarm is snoozed or ringing
 			if (alarm!!.isInUse)
 			{
-				// Show the "Dismiss" button
 				dismissButton.visibility = View.VISIBLE
 				dismissEarlyButton.visibility = View.GONE
 			}
-			// Alarm will alarm soon
-			else if (alarm!!.willAlarmSoon())
+			// Alarm will go off soon
+			else
 			{
-				// Show the "Dismiss early" button
 				dismissButton.visibility = View.GONE
 				dismissEarlyButton.visibility = View.VISIBLE
 			}
@@ -1139,6 +1287,7 @@ class NacAlarmCardHolder(root: View)
 	{
 		setNameButton()
 		setSummaryNameView()
+		setNameColorSwatch()
 		setSummarySkipNextAlarmIcon()
 	}
 
@@ -1268,6 +1417,22 @@ class NacAlarmCardHolder(root: View)
 	}
 
 	/**
+	 * Set the dawn button to its proper settings.
+	 */
+	private fun setDawnButton()
+	{
+		// Get the dawn state from the alarm
+		val shouldUseDawn = alarm!!.shouldUseDawn
+
+		// Check if the state of the button and the alarm are different
+		if (dawnButton.isChecked != shouldUseDawn)
+		{
+			// Set the new state of the button
+			dawnButton.isChecked = shouldUseDawn
+		}
+	}
+
+	/**
 	 * Set the media button to its proper setting.
 	 */
 	fun setMediaButton()
@@ -1348,8 +1513,31 @@ class NacAlarmCardHolder(root: View)
 	/**
 	 * Set the name button to its proper settings.
 	 */
+	private fun getNameColor(): Int
+	{
+		val color = alarm?.nameColor ?: 0
+
+		// Zero means that no color was picked for this alarm, so fall back on the
+		// color from the settings
+		return if (color == 0) sharedPreferences.nameColor else color
+	}
+
+	/**
+	 * Set the color swatch next to the name to its proper color.
+	 */
+	private fun setNameColorSwatch()
+	{
+		nameColorSwatch.backgroundTintList = ColorStateList.valueOf(getNameColor())
+	}
+
+	/**
+	 * Set the name button to its proper settings.
+	 */
 	private fun setNameButton()
 	{
+		// Set the color of the name
+		nameButton.setTextColor(getNameColor())
+
 		// Get the name message
 		val message = alarm!!.nameNormalized.ifEmpty {
 			context.resources.getString(R.string.title_alarm_name)
@@ -1439,6 +1627,9 @@ class NacAlarmCardHolder(root: View)
 	 */
 	private fun setSummaryNameView()
 	{
+		// Set the color of the name
+		summaryNameView.setTextColor(getNameColor())
+
 		// Get the name of the alarm
 		val name = alarm!!.nameNormalized
 
@@ -1582,6 +1773,57 @@ class NacAlarmCardHolder(root: View)
 			// Set the new volume level in the view
 			volumeSeekBar.progress = volume
 		}
+
+		// Show the volume level as a percentage
+		setVolumeValueView(volume)
+	}
+
+	/**
+	 * Ask for an exact volume level.
+	 *
+	 * The slider cannot be aimed at a single percent, so this gives a way to set
+	 * one, which matters at the very low end where every percent is audible.
+	 */
+	private fun showVolumeDialog()
+	{
+		// The alarm cannot be changed right now
+		if (!checkCanModifyAlarm())
+		{
+			return
+		}
+
+		// Build the picker
+		val picker = NumberPicker(context)
+
+		// Note: the wheel counts down, so that the loud end is at the top
+		picker.minValue = 0
+		picker.maxValue = 100
+		picker.displayedValues = Array(101) { (100 - it).toString() }
+		picker.value = 100 - alarm!!.volume
+		picker.wrapSelectorWheel = false
+
+		// Show it
+		AlertDialog.Builder(context)
+			.setTitle(R.string.title_volume)
+			.setView(picker)
+			.setPositiveButton(R.string.action_ok) { _, _ ->
+
+				// Take whatever is showing, even if the user did not let go of the
+				// wheel, and let the slider listener do the saving
+				picker.clearFocus()
+				volumeSeekBar.progress = 100 - picker.value
+
+			}
+			.setNegativeButton(R.string.action_cancel, null)
+			.show()
+	}
+
+	/**
+	 * Show the volume level as a percentage, next to the slider.
+	 */
+	private fun setVolumeValueView(volume: Int)
+	{
+		volumeValueTextView.text = context.getString(R.string.message_volume_value, volume)
 	}
 
 	/**
@@ -1614,9 +1856,9 @@ class NacAlarmCardHolder(root: View)
 			vibrateButton.text = context.resources.getString(R.string.title_alarm_vibrate)
 			nfcButton.text = context.resources.getString(R.string.title_alarm_nfc)
 			flashlightButton.text = context.resources.getString(R.string.action_alarm_option_flashlight)
+			dawnButton.text = context.resources.getString(R.string.action_alarm_option_dawn)
 			dismissOptionsButton.text = context.resources.getString(R.string.action_alarm_dismiss)
 			snoozeOptionsButton.text = context.resources.getString(R.string.action_alarm_snooze)
-			alarmOptionsButton.text = context.resources.getString(R.string.title_settings)
 		}
 		// Only show icons. Do not show labels
 		else
@@ -1625,9 +1867,9 @@ class NacAlarmCardHolder(root: View)
 			vibrateButton.text = ""
 			nfcButton.text = ""
 			flashlightButton.text = ""
+			dawnButton.text = ""
 			dismissOptionsButton.text = ""
 			snoozeOptionsButton.text = ""
-			alarmOptionsButton.text = ""
 		}
 	}
 
@@ -1928,6 +2170,58 @@ class NacAlarmCardHolder(root: View)
 	}
 
 	/**
+	 * Setup the listener for the dawn button.
+	 */
+	private fun setupDawnButtonListener()
+	{
+		// Set the listener
+		dawnButton.setOnClickListener { view ->
+
+			// Check if the alarm can be modified
+			if (checkCanModifyAlarm(view))
+			{
+				// Reset the skip next alarm flag
+				alarm!!.shouldSkipNextAlarm = false
+
+				// Toggle the dawn button
+				alarm!!.toggleUseDawn()
+
+				// Setup the skip icon
+				setSummarySkipNextAlarmIcon()
+
+				// Call the listener
+				onCardUseDawnChangedListener?.onCardUseDawnChanged(this, alarm!!)
+			}
+			// Alarm cannot be modified
+			else
+			{
+				// Revert the button press
+				(view as MaterialButton).toggle()
+			}
+
+		}
+	}
+
+	/**
+	 * Setup the listener for when the dawn button is long clicked.
+	 */
+	private fun setupDawnButtonLongClickListener()
+	{
+		// Set the listener
+		dawnButton.setOnLongClickListener {
+
+			// Check if the alarm can be modified
+			if (checkCanModifyAlarm(it))
+			{
+				// Call the listener
+				onCardButtonLongClickedListener?.onCardButtonLongClicked(this, alarm!!, R.id.nacDawnOptionsDialog2)
+			}
+
+			true
+		}
+	}
+
+	/**
 	 * Setup the listener for the media button.
 	 */
 	private fun setupMediaButtonListener()
@@ -1958,6 +2252,24 @@ class NacAlarmCardHolder(root: View)
 			{
 				// Call the listener
 				onCardNameClickedListener?.onCardNameClicked(this, alarm!!)
+			}
+
+		}
+	}
+
+	/**
+	 * Setup the listener of the color swatch next to the name.
+	 */
+	private fun setupNameColorListener()
+	{
+		// Set the listener
+		nameColorContainer.setOnClickListener { view ->
+
+			// Check if the alarm can be modified
+			if (checkCanModifyAlarm(view))
+			{
+				// Call the listener
+				onCardNameColorClickedListener?.onCardNameColorClicked(this, alarm!!)
 			}
 
 		}
@@ -2206,8 +2518,26 @@ class NacAlarmCardHolder(root: View)
 	/**
 	 * Setup the listener for when the volume slider is changed.
 	 */
+	@SuppressLint("ClickableViewAccessibility")
 	private fun setupVolumeSeekBarListener()
 	{
+		// Take the touch over from the list behind the card while the slider is being
+		// used. Without this, dragging sideways is caught by the card itself and the
+		// slider can only be tapped, not dragged
+		volumeSeekBar.setOnTouchListener { view, event ->
+
+			val isUsingSlider = (event.actionMasked == MotionEvent.ACTION_DOWN)
+				|| (event.actionMasked == MotionEvent.ACTION_MOVE)
+
+			view.parent?.requestDisallowInterceptTouchEvent(isUsingSlider)
+
+			// Let the slider itself handle the touch
+			false
+		}
+
+		// Tapping the percentage asks for an exact value
+		volumeValueTextView.setOnClickListener { showVolumeDialog() }
+
 		// Set the listener
 		volumeSeekBar.setOnSeekBarChangeListener(object: OnSeekBarChangeListener {
 
@@ -2232,8 +2562,16 @@ class NacAlarmCardHolder(root: View)
 					// Set the new volume
 					alarm!!.volume = progress
 
-					// Change the volume icon, if needed
+					// Change the volume icon and the percentage, if needed
 					setVolumeImageView()
+					setVolumeValueView(progress)
+
+					// Follow the slider with the sound, when it is being heard
+					if (isPreviewingVolume)
+					{
+						onCardVolumePreviewListener?.onCardVolumePreview(
+							this@NacAlarmCardHolder, alarm!!, VolumePreviewState.CHANGE)
+					}
 
 					// Setup the skip icon
 					setSummarySkipNextAlarmIcon()
@@ -2251,6 +2589,20 @@ class NacAlarmCardHolder(root: View)
 			 */
 			override fun onStartTrackingTouch(seekBar: SeekBar)
 			{
+				// Play the media of the alarm once the slider has been held for a
+				// moment, so that the level can be judged by ear. A quick tap stays
+				// silent
+				volumePreviewHandler.removeCallbacksAndMessages(null)
+				volumePreviewHandler.postDelayed({
+
+					val a = alarm ?: return@postDelayed
+
+					isPreviewingVolume = true
+
+					onCardVolumePreviewListener?.onCardVolumePreview(
+						this@NacAlarmCardHolder, a, VolumePreviewState.START)
+
+				}, VOLUME_PREVIEW_DELAY_MILLIS)
 			}
 
 			/**
@@ -2258,6 +2610,9 @@ class NacAlarmCardHolder(root: View)
 			 */
 			override fun onStopTrackingTouch(seekBar: SeekBar)
 			{
+				// Stop listening to the media
+				stopVolumePreview()
+
 				// Unable to update the alarm. It is currently in use (active or snoozed)
 				if (alarm!!.isInUse)
 				{
@@ -2269,6 +2624,27 @@ class NacAlarmCardHolder(root: View)
 			}
 
 		})
+	}
+
+	/**
+	 * Stop playing the media of the alarm, whatever the reason.
+	 */
+	fun stopVolumePreview()
+	{
+		volumePreviewHandler.removeCallbacksAndMessages(null)
+
+		// Nothing is playing
+		if (!isPreviewingVolume)
+		{
+			return
+		}
+
+		isPreviewingVolume = false
+
+		val a = alarm ?: return
+
+		onCardVolumePreviewListener?.onCardVolumePreview(this, a,
+			VolumePreviewState.STOP)
 	}
 
 	/**
@@ -2298,8 +2674,11 @@ class NacAlarmCardHolder(root: View)
 	 */
 	private fun shouldShowExtraView(): Boolean
 	{
-		//return (alarm!!.isInUse || alarm!!.willAlarmSoon())
-		return (alarm!!.isInUse || alarm!!.willAlarmSoon()) && isCollapsed
+		// Note: no "&& isCollapsed" here on purpose. That is what used to hide this row
+		// the moment the card was opened, which is why the dismiss button could not be
+		// found. The card has its own height for this row being shown, so it can stay
+		// while the card is open
+		return alarm!!.isInUse || alarm!!.willAlarmSoon()
 	}
 
 	/**
@@ -2345,6 +2724,12 @@ class NacAlarmCardHolder(root: View)
 		 * Expand duration.
 		 */
 		private const val EXPAND_DURATION = 250
+
+		/**
+		 * How long the volume slider has to be held before the media is heard.
+		 * [Units: ms]
+		 */
+		private const val VOLUME_PREVIEW_DELAY_MILLIS = 1000L
 
 	}
 

@@ -166,6 +166,7 @@
 			android:exported="false"
 			/>
 
+		<!-- Dawn simulation screen -->
 		<!-- Import -->
 		<service
 			android:name=".settings.importexport.NacImportService"
@@ -241,6 +242,42 @@
 			</intent-filter>
 		</receiver>
 
+		<!-- Says the time out loud from the button of its notification, and puts that
+			notification back after a reboot -->
+		<receiver
+			android:name=".alarm.options.tts.NacSayTimeReceiver"
+			android:enabled="true"
+			android:exported="false">
+
+			<intent-filter>
+				<action android:name="com.nfcalarmclock.ACTION_SAY_TIME" />
+			</intent-filter>
+
+			<intent-filter>
+				<action android:name="android.intent.action.BOOT_COMPLETED" />
+			</intent-filter>
+		</receiver>
+
+		<!-- Listens to the accelerometer so that shaking the phone says the time -->
+		<service
+			android:name=".alarm.options.tts.NacSayTimeService"
+			android:foregroundServiceType="systemExempted"
+			android:exported="false"
+			/>
+
+		<!-- Lets the language that is chosen inside the app be remembered on Android 12
+			and older, where the system does not keep it for each app -->
+		<service
+			android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
+			android:enabled="false"
+			android:exported="false">
+
+			<meta-data
+				android:name="autoStoreLocales"
+				android:value="true"
+				/>
+		</service>
+
 		<!-- Restore alarms after the app is updated. Alarms are lost after an update -->
 		<receiver
 			android:name=".system.broadcasts.appupdate.NacAppUpdatedBroadcastReceiver"
@@ -255,7 +292,7 @@
 		<!-- File provider to email statistics files -->
 		<provider
 			android:name="androidx.core.content.FileProvider"
-			android:authorities="com.nfcalarmclock.fileprovider"
+			android:authorities="${applicationId}.fileprovider"
 			android:exported="false"
 			android:grantUriPermissions="true">
 

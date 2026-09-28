@@ -1,6 +1,8 @@
 package com.nfcalarmclock.statistics
 
+import android.content.Context
 import com.nfcalarmclock.alarm.db.NacAlarm
+import com.nfcalarmclock.shared.NacSharedPreferences
 import com.nfcalarmclock.statistics.db.NacAlarmCreatedStatistic
 import com.nfcalarmclock.statistics.db.NacAlarmCreatedStatisticDao
 import com.nfcalarmclock.statistics.db.NacAlarmDeletedStatistic
@@ -14,6 +16,7 @@ import com.nfcalarmclock.statistics.db.NacAlarmSnoozedStatisticDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Inject
 
@@ -45,10 +48,22 @@ class NacAlarmStatisticRepository @Inject constructor(
 	/**
 	 * Data access object for a snoozed alarm statistic.
 	 */
-	private val alarmSnoozedStatisticDao: NacAlarmSnoozedStatisticDao
+	private val alarmSnoozedStatisticDao: NacAlarmSnoozedStatisticDao,
+
+	/**
+	 * Context, to read whether statistics are recorded at all.
+	 */
+	@param:ApplicationContext private val context: Context
 
 )
 {
+
+	/**
+	 * Whether statistics are recorded. Read afresh each time, since the switch can
+	 * be turned while the app runs.
+	 */
+	private val isRecording: Boolean
+		get() = NacSharedPreferences(context).shouldRecordStatistics
 
 	/**
 	 * The number of created alarm statistics.
@@ -167,6 +182,12 @@ class NacAlarmStatisticRepository @Inject constructor(
 	 */
 	suspend fun insertCreated(): Long
 	{
+		// Statistics are turned off
+		if (!isRecording)
+		{
+			return -1
+		}
+
 		// Create the statistic
 		val stat = NacAlarmCreatedStatistic()
 
@@ -183,8 +204,8 @@ class NacAlarmStatisticRepository @Inject constructor(
 	 */
 	suspend fun insertDeleted(alarm: NacAlarm?): Long
 	{
-		// Check if alarm is null
-		if (alarm == null)
+		// Check if alarm is null, or statistics are turned off
+		if ((alarm == null) || !isRecording)
 		{
 			return -1
 		}
@@ -206,8 +227,8 @@ class NacAlarmStatisticRepository @Inject constructor(
 	 */
 	suspend fun insertDismissed(alarm: NacAlarm?, usedNfc: Boolean): Long
 	{
-		// Check if alarm is null
-		if (alarm == null)
+		// Check if alarm is null, or statistics are turned off
+		if ((alarm == null) || !isRecording)
 		{
 			return -1
 		}
@@ -228,8 +249,8 @@ class NacAlarmStatisticRepository @Inject constructor(
 	 */
 	suspend fun insertMissed(alarm: NacAlarm?): Long
 	{
-		// Check if alarm is null
-		if (alarm == null)
+		// Check if alarm is null, or statistics are turned off
+		if ((alarm == null) || !isRecording)
 		{
 			return -1
 		}
@@ -251,8 +272,8 @@ class NacAlarmStatisticRepository @Inject constructor(
 	 */
 	suspend fun insertSnoozed(alarm: NacAlarm?, duration: Long): Long
 	{
-		// Check if alarm is null
-		if (alarm == null)
+		// Check if alarm is null, or statistics are turned off
+		if ((alarm == null) || !isRecording)
 		{
 			return -1
 		}
@@ -283,7 +304,8 @@ class NacAlarmStatisticRepositoryModule
 		alarmDeletedStatisticDao: NacAlarmDeletedStatisticDao,
 		alarmDismissedStatisticDao: NacAlarmDismissedStatisticDao,
 		alarmMissedStatisticDao: NacAlarmMissedStatisticDao,
-		alarmSnoozedStatisticDao: NacAlarmSnoozedStatisticDao
+		alarmSnoozedStatisticDao: NacAlarmSnoozedStatisticDao,
+		@ApplicationContext context: Context
 	) : NacAlarmStatisticRepository
 	{
 		return NacAlarmStatisticRepository(
@@ -291,7 +313,8 @@ class NacAlarmStatisticRepositoryModule
 			alarmDeletedStatisticDao,
 			alarmDismissedStatisticDao,
 			alarmMissedStatisticDao,
-			alarmSnoozedStatisticDao)
+			alarmSnoozedStatisticDao,
+			context)
 	}
 
 }

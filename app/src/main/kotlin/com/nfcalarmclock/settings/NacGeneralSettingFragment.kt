@@ -8,14 +8,23 @@ import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.util.UnstableApi
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import android.widget.LinearLayout
+import android.widget.NumberPicker
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
+import androidx.preference.Preference
 import androidx.preference.PreferenceManager
 import com.nfcalarmclock.R
+import com.nfcalarmclock.alarm.NacAlarmViewModel
 import com.nfcalarmclock.alarm.options.NacAlarmOptionsDialog
 import com.nfcalarmclock.alarm.options.dismissoptions.NacDismissOptionsDialog
 import com.nfcalarmclock.alarm.options.name.NacNameDialog
 import com.nfcalarmclock.alarm.options.snoozeoptions.NacSnoozeOptionsDialog
+import com.nfcalarmclock.alarm.options.tts.NacSayTimeService
 import com.nfcalarmclock.card.NacCardPreference
 import com.nfcalarmclock.log.NacLog
+import com.nfcalarmclock.shared.NacSharedPreferences
 import com.nfcalarmclock.nfc.NacNfcTagViewModel
 import com.nfcalarmclock.system.addMediaInfo
 import com.nfcalarmclock.system.daysToValue
@@ -27,6 +36,7 @@ import com.nfcalarmclock.system.getMediaType
 import com.nfcalarmclock.system.getRecursivelyPlayMedia
 import com.nfcalarmclock.system.getShuffleMedia
 import com.nfcalarmclock.system.media.buildLocalMediaPath
+import com.nfcalarmclock.view.quickToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -51,6 +61,11 @@ class NacGeneralSettingFragment
 	private val nfcTagViewModel: NacNfcTagViewModel by viewModels()
 
 	/**
+	 * Alarm view model, used to know which sounds and images are still in use.
+	 */
+	private val alarmViewModel: NacAlarmViewModel by viewModels()
+
+	/**
 	 * Called when the preference is created.
 	 */
 	override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?)
@@ -72,6 +87,192 @@ class NacGeneralSettingFragment
 
 		// Setup the preferences
 		setupDefaultAlarmCard()
+		setupAppLanguage()
+		setupResetSettings()
+		setupCleanup()
+	}
+
+	/**
+	 * Setup the language the app is shown in.
+	 *
+	 * This is the very same setting that Android keeps for each app, so changing it
+	 * here and changing it in the settings of the phone are one and the same thing.
+	 */
+	private fun setupAppLanguage()
+	{
+		val pref = findPreference<Preference>(getString(R.string.key_app_language)) ?: return
+		val names = resources.getStringArray(R.array.say_time_language_entries).clone()
+		val codes = resources.getStringArray(R.array.say_time_language_values)
+
+		// The first entry means the language of the phone, which is worth saying in the
+		// language the app is showing rather than always in English
+		names[0] = getString(R.string.title_language_system)
+
+		// Which entry is the one in use
+		fun currentIndex(): Int
+		{
+			val locales = AppCompatDelegate.getApplicationLocales()
+
+			if (locales.isEmpty())
+			{
+				return 0
+			}
+
+			val tag = locales[0]?.toLanguageTag() ?: return 0
+
+			// A tag such as "fr-BE" belongs to the French entry
+			return codes
+				.indexOfFirst { it.isNotEmpty() && ((tag == it) || tag.startsWith("$it-")) }
+				.coerceAtLeast(0)
+		}
+
+		pref.summary = names[currentIndex()]
+
+		pref.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+
+			AlertDialog.Builder(requireContext())
+				.setTitle(R.string.title_app_language)
+				.setSingleChoiceItems(names, currentIndex()) { d, which ->
+
+					val code = codes.getOrNull(which) ?: ""
+
+					d.dismiss()
+
+					// Android puts the screen back together in the new language by
+					// itself, so there is nothing to refresh here
+					AppCompatDelegate.setApplicationLocales(
+						if (code.isEmpty())
+						{
+							LocaleListCompat.getEmptyLocaleList()
+						}
+						else
+						{
+							LocaleListCompat.forLanguageTags(code)
+						})
+
+				}
+				.setNegativeButton(R.string.action_cancel, null)
+				.show()
+
+			true
+		}
+	}
+
+	/**
+	 * Setup the preference that puts every setting back to what it was out of the box.
+	 */
+	private fun setupResetSettings()
+	{
+		val pref = findPreference<Preference>(getString(R.string.key_reset_settings)) ?: return
+
+		pref.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+
+			AlertDialog.Builder(requireContext())
+				.setTitle(pref.title)
+				.setMessage(R.string.message_reset_settings_confirm)
+				.setPositiveButton(R.string.action_ok) { _, _ ->
+
+					val context = requireContext()
+
+					NacSharedPreferences(context).resetToDefaults()
+
+					quickToast(context, R.string.message_reset_settings_done)
+
+					// The screen is showing what was just thrown away, so build it again
+					requireActivity().recreate()
+
+				}
+				.setNegativeButton(R.string.action_cancel, null)
+				.show()
+
+			true
+		}
+	}
+
+	/**
+	 * Setup the preferences that free up the copies the app is holding on to.
+	 */
+	private fun setupCleanup()
+	{
+		setupCleanupPreference(R.string.key_clean_sounds, sounds = true, images = false)
+		setupCleanupPreference(R.string.key_clean_images, sounds = false, images = true)
+		setupCleanupPreference(R.string.key_clean_all, sounds = true, images = true)
+	}
+
+	/**
+	 * Setup one of the clean up preferences.
+	 */
+	private fun setupCleanupPreference(keyId: Int, sounds: Boolean, images: Boolean)
+	{
+		val pref = findPreference<Preference>(getString(keyId)) ?: return
+
+		pref.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+
+			AlertDialog.Builder(requireContext())
+				.setTitle(pref.title)
+				.setMessage(R.string.message_clean_confirm)
+				.setPositiveButton(R.string.action_ok) { _, _ -> runCleanup(sounds, images) }
+				.setNegativeButton(R.string.action_cancel, null)
+				.show()
+
+			true
+		}
+	}
+
+	/**
+	 * Throw away the copies that no alarm needs, and say what that freed.
+	 */
+	private fun runCleanup(sounds: Boolean, images: Boolean)
+	{
+		val context = requireContext()
+
+		lifecycleScope.launch {
+
+			val alarms = alarmViewModel.getAllAlarms()
+
+			var files = 0
+			var bytes = 0L
+
+			// Images first, since it also tells which alarms were pointing at one
+			if (images)
+			{
+				val result = NacStorageCleanup.cleanImages(context, alarms)
+
+				files += result.files
+				bytes += result.bytes
+
+				// Forget the images that are gone, so that nothing points at a file
+				// that no longer exists
+				result.alarmsToClear.forEach {
+
+					it.dawnImagePath = ""
+					it.shouldUseDawnImage = false
+
+					alarmViewModel.update(it)
+
+				}
+			}
+
+			if (sounds)
+			{
+				val result = NacStorageCleanup.cleanSounds(context, alarms)
+
+				files += result.files
+				bytes += result.bytes
+			}
+
+			// Say what happened
+			if (files > 0)
+			{
+				quickToast(context, getString(R.string.message_clean_done,
+					NacStorageCleanup.readableSize(bytes), files))
+			}
+			else
+			{
+				quickToast(context, R.string.message_clean_nothing)
+			}
+
+		}
 	}
 
 	/**
@@ -299,6 +500,7 @@ class NacGeneralSettingFragment
 							sharedPreferences!!.shouldSayCurrentTime = a.shouldSayCurrentTime
 							sharedPreferences!!.shouldSayAlarmName = a.shouldSayName
 							sharedPreferences!!.ttsFrequency = a.ttsFrequency
+							sharedPreferences!!.ttsDelay = a.ttsDelay
 							sharedPreferences!!.ttsVoice = a.ttsVoice
 						}
 

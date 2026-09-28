@@ -36,6 +36,11 @@ open class NacAudioSourceDialog
 	override val array: Array<String> by lazy { resources.getStringArray(R.array.audio_sources) }
 
 	/**
+	 * What is written down for each source, in the same order as the words above.
+	 */
+	private val keys: Array<String> by lazy { resources.getStringArray(R.array.audio_source_keys) }
+
+	/**
 	 * Speakers and bluetooth switch.
 	 */
 	private lateinit var speakersAndBluetoothSwitch: SwitchCompat
@@ -45,8 +50,11 @@ open class NacAudioSourceDialog
 	 */
 	override fun onOkClicked(alarm: NacAlarm)
 	{
-		// Update the alarm
-		alarm.audioSource = radioGroup.getCheckedText()
+		// Update the alarm. What is kept is the name that does not change with the
+		// language, not the words that were touched
+		val index = array.indexOf(radioGroup.getCheckedText())
+
+		alarm.audioSource = keys.getOrElse(index) { keys[0] }
 		alarm.shouldPlayAudioThroughSpeakersAndBluetooth = speakersAndBluetoothSwitch.isChecked
 	}
 
@@ -55,9 +63,11 @@ open class NacAudioSourceDialog
 	 */
 	override fun setupAlarmOptions(alarm: NacAlarm)
 	{
-		// Set the default index
-		defaultSelectedIndex = array.indexOf(alarm.audioSource)
-			.coerceAtLeast(0)
+		// Set the default index. An alarm from before 1.83 still holds the words that
+		// were shown, so they are looked for too
+		defaultSelectedIndex = keys.indexOf(alarm.audioSource)
+			.takeIf { it >= 0 }
+			?: array.indexOf(alarm.audioSource).coerceAtLeast(0)
 
 		// Super
 		super.setupAlarmOptions(alarm)

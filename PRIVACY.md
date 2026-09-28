@@ -3,8 +3,8 @@
 
 ## Key Terms
 
-- _Application_ : The NFC Alarm Clock application.
-- _Developer_ : Gabe Gonzalez, the developer of the _Application_.
+- _Application_ : The Alarm Clock Sun application, a fork of NFC Alarm Clock by Gabe Gonzalez.
+- _Developer_ : Robimish, who maintains the _Application_.
 - _User_ : Anyone that uses the _Application_, or is curious about the _Application_'s policies.
 - _PSI_ : Short for Personal and Sensitive Information, which includes, but isn't limited to, personally identifiable information, financial and payment information, authentication information, phonebook, contacts SMS and call related data, microphone and camera sensor data, and sensitive device or usage data.
 
@@ -19,6 +19,8 @@ This Privacy Policy is meant to help the _User_ understand the information that 
 The _Application_ only stores information pertaining to alarms, _User_ preferences, or data meant to enhance the _User_ experience.
 
 This information is stored locally, only visible to the _Application_, and is never shared with anyone or any other app. (See **Security** for more information)
+
+The _Application_ has no permission to access the internet and does not use any cloud backup. Nothing leaves the phone unless the _User_ chooses to send it, for example by exporting data or sharing the logs by email.
 
 The _Application_ never accesses or saves Sensitive Personal Information.
 
@@ -44,4 +46,4 @@ The _Developer_ may update this Privacy Policy from time to time, as a result, t
 
 ## Contact Me
 
-If you have any questions or suggestions about the _Developer_'s Privacy Policy, do not hesitate to contact me at gabeg805@gmail.com.
+If you have any questions or suggestions about the _Developer_'s Privacy Policy, do not hesitate to contact me through my GitHub page: https://github.com/Robimish.

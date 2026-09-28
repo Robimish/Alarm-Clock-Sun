@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+	android:shape="rectangle">
+
+	<!-- A breath of warm light rising off the bottom bar and dying out before it
+		reaches the list. Angle 90 puts the start colour at the bottom. -->
+	<gradient
+		android:type="linear"
+		android:angle="90"
+		android:startColor="@color/bottom_halo_warm"
+		android:endColor="@color/bottom_halo_clear"
+		/>
+
+</shape>

@@ -33,6 +33,40 @@
 		app:layout_constraintEnd_toEndOf="parent"
 		/>
 
+	<!-- Clock with hands, shown instead of the digits when the alarm asks for it.
+		It takes the place of the digits, at the top and in the middle, smaller than
+		in portrait since the screen is short this way round -->
+	<com.nfcalarmclock.view.NacAnalogClockView
+		android:id="@+id/current_analog_clock"
+		android:layout_width="@dimen/analog_clock_size_land"
+		android:layout_height="@dimen/analog_clock_size_land"
+		android:layout_marginTop="@dimen/analog_clock_top_land"
+		android:visibility="gone"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		/>
+
+	<!-- Whichever clock is shown, the date sits to its left, level with its bottom.
+		Gone views are left out, so the barriers follow the one that is there -->
+	<androidx.constraintlayout.widget.Barrier
+		android:id="@+id/clock_start_barrier"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		app:barrierDirection="start"
+		app:barrierAllowsGoneWidgets="false"
+		app:constraint_referenced_ids="current_time,current_analog_clock"
+		/>
+
+	<androidx.constraintlayout.widget.Barrier
+		android:id="@+id/clock_bottom_barrier"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		app:barrierDirection="bottom"
+		app:barrierAllowsGoneWidgets="false"
+		app:constraint_referenced_ids="current_meridian,current_analog_clock"
+		/>
+
 	<!-- Date -->
 	<TextView
 		style="@style/My.Alarm.Active.Date"
@@ -40,8 +74,8 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:text=""
-		app:layout_constraintBottom_toBottomOf="@id/current_meridian"
-		app:layout_constraintEnd_toStartOf="@id/current_time"
+		app:layout_constraintBottom_toBottomOf="@id/clock_bottom_barrier"
+		app:layout_constraintEnd_toStartOf="@id/clock_start_barrier"
 		/>
 
 	<!-- Alarm name -->
@@ -55,6 +89,24 @@
 		app:layout_constraintTop_toBottomOf="@id/current_date"
 		/>
 
+	<!-- Dawn phrase, shown only while the sunrise is running. Hidden it takes no room
+		and gives up its margin, so what follows sits exactly where it did before -->
+	<TextView
+		android:id="@+id/dawn_phrase"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/tiny"
+		android:paddingStart="@dimen/large"
+		android:paddingEnd="@dimen/large"
+		android:gravity="center_horizontal"
+		android:textSize="16sp"
+		android:text=""
+		android:visibility="gone"
+		app:layout_constraintTop_toBottomOf="@id/alarm_name"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		/>
+
 	<!-- Scan NFC -->
 	<LinearLayout
 		android:id="@+id/scan_nfc_view"
@@ -64,7 +116,7 @@
 		android:orientation="horizontal"
 		android:visibility="invisible"
 		android:animateLayoutChanges="true"
-		app:layout_constraintTop_toBottomOf="@id/alarm_name"
+		app:layout_constraintTop_toBottomOf="@id/dawn_phrase"
 		app:layout_constraintBottom_toTopOf="@id/slider_instructions">
 
 

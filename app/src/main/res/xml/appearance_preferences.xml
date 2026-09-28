@@ -122,6 +122,24 @@
 			app:allowDividerAbove="false"
 			app:allowDividerBelow="true"
 			/>
+
+		<com.nfcalarmclock.settings.preference.NacSwitchPreference
+			android:title="@string/action_alarm_option_dawn"
+			android:key="@string/key_show_hide_dawn_button"
+			android:summaryOn="@string/description_show_hide_dawn_button_true"
+			android:summaryOff="@string/description_show_hide_dawn_button_false"
+			android:defaultValue="@bool/default_show_hide_dawn_button"
+			app:allowDividerAbove="false"
+			app:allowDividerBelow="false"
+			/>
+
+		<Preference
+			android:title="@string/title_dawn_preview_duration"
+			android:key="@string/key_dawn_preview_duration"
+			android:layout="@layout/nac_preference"
+			app:allowDividerAbove="false"
+			app:allowDividerBelow="true"
+			/>
 	</com.nfcalarmclock.settings.preference.NacPreferenceCategory>
 
 	<!-- Styling -->
@@ -164,6 +182,16 @@
 			android:summaryOn="@string/description_expand_new_alarm_true"
 			android:summaryOff="@string/description_expand_new_alarm_false"
 			android:defaultValue="@bool/default_expand_new_alarm"
+			app:allowDividerAbove="false"
+			app:allowDividerBelow="false"
+			/>
+
+		<com.nfcalarmclock.settings.preference.NacSwitchPreference
+			android:title="@string/title_auto_sort_alarms"
+			android:key="@string/key_tweak_auto_sort_alarms"
+			android:summaryOn="@string/description_auto_sort_alarms_true"
+			android:summaryOff="@string/description_auto_sort_alarms_false"
+			android:defaultValue="@bool/default_auto_sort_alarms"
 			app:allowDividerAbove="false"
 			app:allowDividerBelow="false"
 			/>

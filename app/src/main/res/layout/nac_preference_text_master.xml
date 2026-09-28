@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The text of a switch a whole section hangs on: the same two lines, with a title
+	written larger and in bold so that the eye lands on it first -->
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="0dp"
+	android:layout_height="wrap_content"
+	android:layout_weight="1">
+
+	<TextView
+		style="@style/Widget.TextView.Primary"
+		android:id="@android:id/title"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:singleLine="true"
+		android:textSize="@dimen/tsz_medium"
+		android:textStyle="bold"
+		android:ellipsize="marquee"
+		android:fadingEdge="horizontal"
+		/>
+
+	<TextView
+		style="@style/Widget.TextView.Secondary"
+		android:id="@android:id/summary"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@android:id/title"
+		android:layout_alignStart="@android:id/title"
+		android:maxLines="5"
+		/>
+
+</RelativeLayout>

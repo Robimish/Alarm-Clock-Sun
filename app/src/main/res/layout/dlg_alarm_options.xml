@@ -16,6 +16,15 @@
 		android:text="@string/action_alarm_option_flashlight"
 		/>
 
+	<!-- Dawn -->
+	<Button
+		style="@style/Widget.AlarmOptionMain.Button"
+		android:id="@+id/option_dawn"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/action_alarm_option_dawn"
+		/>
+
 	<!-- NFC -->
 	<Button
 		style="@style/Widget.AlarmOptionMain.Button"

@@ -39,7 +39,7 @@ class NacSupportSetting(
 		onSupportEventListener?.onSupported()
 
 		// Open the browser
-		val uri = "https://www.nfcalarmclock.com".toUri()
+		val uri = "https://github.com/Robimish".toUri()
 		val intent = Intent(Intent.ACTION_VIEW, uri)
 
 		fragmentActivity.startActivity(intent)

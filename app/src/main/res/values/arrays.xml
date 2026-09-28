@@ -35,9 +35,44 @@
 	</string-array>
 
 	<!-- Start week on days -->
+	<!-- Phrases shown while the dawn is running. One is picked at random -->
+	<string-array name="dawn_phrases" translatable="false">
+		<item>The day is breaking\u2026</item>
+		<item>The light is coming back\u2026</item>
+		<item>A new day is rising\u2026</item>
+		<item>Take your time, the sun is\u00a0up soon</item>
+		<item>Slowly, the night lets go\u2026</item>
+		<item>The sky is turning\u2026</item>
+		<item>Morning is finding you\u2026</item>
+		<item>The sun beat you to it</item>
+		<item>Your bed will still be here tonight</item>
+		<item>Somewhere, a rooster is showing off</item>
+		<item>Le jour se l\u00e8ve\u2026</item>
+		<item>La lumi\u00e8re revient doucement\u2026</item>
+		<item>Prends ton temps, le soleil arrive</item>
+		<item>L\'aube pointe\u2026</item>
+		<item>La nuit l\u00e2che prise\u2026</item>
+		<item>Le ciel change de couleur\u2026</item>
+		<item>Le soleil s\'est lev\u00e9 avant toi</item>
+		<item>Ton lit sera encore l\u00e0 ce soir</item>
+		<item>Encore cinq minutes\u00a0? Le soleil dit non</item>
+		<item>Debout, la caf\u00e9ti\u00e8re s\'impatiente</item>
+		<item>Amanece\u2026</item>
+		<item>La luz vuelve poco a poco\u2026</item>
+		<item>T\u00f3mate tu tiempo, ya sale el sol</item>
+		<item>La noche se va soltando\u2026</item>
+		<item>El cielo est\u00e1 cambiando\u2026</item>
+		<item>La ma\u00f1ana te encuentra\u2026</item>
+		<item>El sol madrug\u00f3 m\u00e1s que t\u00fa</item>
+		<item>Tu cama seguir\u00e1 ah\u00ed esta noche</item>
+		<item>\u00bfCinco minutos m\u00e1s? El sol dice que no</item>
+		<item>Arriba, que el caf\u00e9 espera</item>
+	</string-array>
+
 	<string-array name="start_week_on">
 		<item>Sunday</item>
 		<item>Monday</item>
+		<item>Automatic</item>
 	</string-array>
 
 	<!-- General list of seconds -->
@@ -103,6 +138,51 @@
 		<item>58 seconds</item>
 		<item>59 seconds</item>
 		<item>60 seconds</item>
+	</string-array>
+
+	<!-- Languages the time can be spoken in. The first one follows the phone. -->
+	<string-array name="say_time_language_entries" translatable="false">
+		<item>System language</item>
+		<item>English</item>
+		<item>Français</item>
+		<item>Español</item>
+		<item>Deutsch</item>
+		<item>Português (Brasil)</item>
+		<item>Tiếng Việt</item>
+		<item>Kreyòl ayisyen</item>
+		<item>हिन्दी</item>
+		<item>বাংলা</item>
+	</string-array>
+
+	<string-array name="say_time_language_values" translatable="false">
+		<item></item>
+		<item>en</item>
+		<item>fr</item>
+		<item>es</item>
+		<item>de</item>
+		<item>pt-BR</item>
+		<item>vi</item>
+		<item>ht</item>
+		<item>hi</item>
+		<item>bn</item>
+	</string-array>
+
+	<string-array name="say_time_format_entries">
+		<item>Same as the phone</item>
+		<item>12-hour clock</item>
+		<item>24-hour clock</item>
+	</string-array>
+
+	<string-array name="shake_sensitivity_entries">
+		<item>The slightest movement</item>
+		<item>A slight movement</item>
+		<item>A light shake</item>
+		<item>A normal shake</item>
+	</string-array>
+
+	<string-array name="wave_passes_entries">
+		<item>One pass</item>
+		<item>Two passes</item>
 	</string-array>
 
 </resources>

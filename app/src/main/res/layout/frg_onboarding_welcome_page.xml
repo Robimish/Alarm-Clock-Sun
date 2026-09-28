@@ -11,7 +11,7 @@
 		android:layout_width="@dimen/isz_attention"
 		android:layout_height="@dimen/isz_attention"
 		android:contentDescription="@string/app_name"
-		android:src="@mipmap/app"
+		android:src="@mipmap/ic_launcher"
 		app:layout_constraintBottom_toTopOf="@id/onboarding_title"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"

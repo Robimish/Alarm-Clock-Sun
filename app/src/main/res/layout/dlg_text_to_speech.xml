@@ -80,6 +80,43 @@
 	<!-- Separator -->
 	<Space style="@style/Widget.AlarmOptionDialog.Separator" />
 
+	<!-- Delay before speaking title -->
+	<TextView
+		style="@style/Widget.AlarmOptionDialog.Title"
+		android:id="@+id/tts_delay_title"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/title_text_to_speech_delay"
+		/>
+
+	<!-- Delay before speaking description -->
+	<TextView
+		style="@style/Widget.AlarmOptionDialog.Description"
+		android:id="@+id/tts_delay_description"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/description_text_to_speech_delay"
+		/>
+
+	<!-- Pick how long to wait before speaking -->
+	<com.google.android.material.textfield.TextInputLayout
+		style="@style/Widget.AlarmOptionDialog.DropdownRow"
+		android:id="@+id/tts_delay_input_layout"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+		<com.google.android.material.textfield.MaterialAutoCompleteTextView
+			android:id="@+id/tts_delay_dropdown_menu"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:inputType="none"
+			app:simpleItems="@array/tts_delay"
+			/>
+	</com.google.android.material.textfield.TextInputLayout>
+
+	<!-- Separator -->
+	<Space style="@style/Widget.AlarmOptionDialog.Separator" />
+
 	<!-- Speech rate -->
 	<TextView
 		style="@style/Widget.AlarmOptionDialog.Title"

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<!-- Le français dit les minutes comme un nombre : « 05 » serait lu « zéro cinq » -->
+	<bool name="tts_should_pad_minutes">false</bool>
+
+</resources>

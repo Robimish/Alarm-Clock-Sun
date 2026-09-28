@@ -38,6 +38,7 @@
 	<string-array name="start_week_on">
 		<item>रविवार</item>
 		<item>सोमवार</item>
+		<item>स्वचालित</item>
 	</string-array>
 
 	<!-- General list of seconds -->

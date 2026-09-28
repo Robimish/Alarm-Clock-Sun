@@ -35,8 +35,10 @@ class NacSystemAlertWindowPermissionRequestDialog
 	 */
 	override fun doPermissionRequestAccepted()
 	{
-		// Set the flag that the permission was requested
+		// Set the flag that the permission was requested, and forget that it was ever
+		// granted, so that one loss brings up one dialog and not one at every launch
 		sharedPreferences.wasSystemAlertWindowPermissionRequested = true
+		sharedPreferences.wasSystemAlertWindowPermissionGranted = false
 
 		// Call the accepeted listeners
 		super.doPermissionRequestAccepted()
@@ -47,8 +49,10 @@ class NacSystemAlertWindowPermissionRequestDialog
 	 */
 	override fun doPermissionRequestCanceled()
 	{
-		// Set the flag that the permission was requested
+		// Set the flag that the permission was requested, and forget that it was ever
+		// granted, so that one loss brings up one dialog and not one at every launch
 		sharedPreferences.wasSystemAlertWindowPermissionRequested = true
+		sharedPreferences.wasSystemAlertWindowPermissionGranted = false
 
 		// Call the canceled listeners
 		super.doPermissionRequestCanceled()

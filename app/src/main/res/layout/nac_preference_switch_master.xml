@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:padding="?android:attr/listPreferredItemPaddingLeft"
+	android:minHeight="?android:attr/listPreferredItemHeight"
+	android:baselineAligned="false"
+	android:gravity="center_vertical"
+	android:orientation="horizontal"
+	tools:ignore="UselessParent">
+
+	<!-- Icon frame, to set padding and width without affecting image size -->
+	<LinearLayout
+		android:id="@+id/icon_frame"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:paddingTop="@dimen/nudge"
+		android:paddingBottom="@dimen/nudge"
+		android:paddingEnd="@dimen/tiny"
+		android:minWidth="56dp"
+		android:visibility="gone"
+		tools:ignore="RtlSymmetry">
+
+		<!-- Icon -->
+		<ImageView
+			android:id="@+id/icon"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:contentDescription="@string/cd_preference_icon"
+			/>
+	</LinearLayout>
+
+	<!-- Icon -->
+	<include layout="@layout/nac_preference_text_master" />
+
+	<!-- Switch -->
+	<androidx.appcompat.widget.SwitchCompat
+		android:id="@+id/widget"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/normal"
+		android:focusable="false"
+		/>
+</LinearLayout>

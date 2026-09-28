@@ -394,6 +394,10 @@ class NacActiveTimerService
 		// Clean the wakeup process
 		allWakeupProcesses[timer.id]?.cleanup()
 
+		// It no longer rings: its notification goes, and the main screen leaves the
+		// lock screen
+		NacRingingTimerScreen.cancel(this, timer)
+
 		// Cleanup the auto dismiss handler
 		allAutoDismissHandlers[timer.id]?.removeCallbacksAndMessages(null)
 
@@ -575,6 +579,46 @@ class NacActiveTimerService
 	fun isTimerRinging(timer: NacTimer): Boolean
 	{
 		return allMillisUntilFinished[timer.id] == 0L
+	}
+
+	/**
+	 * Check if the service really has the timer going: counting down, ringing, or
+	 * paused part way through.
+	 *
+	 * A timer can stay marked as active in the service while nothing is left of it
+	 * (seen in 1.95: a stopped timer opened the countdown screen, with only
+	 * play and the add time buttons, instead of the edit screen).
+	 */
+	fun isTimerInUse(timer: NacTimer): Boolean
+	{
+		// Not active in the service
+		if (!isTimerActive(timer))
+		{
+			return false
+		}
+
+		// Ringing or counting down
+		if (isTimerRinging(timer) || (allCountdownTimers[timer.id] != null))
+		{
+			return true
+		}
+
+		// Paused part way through
+		val millisUntilFinished = allMillisUntilFinished[timer.id] ?: return false
+		val totalDurationMillis = allTotalDurationMillis[timer.id] ?: return false
+
+		return millisUntilFinished < totalDurationMillis
+	}
+
+	/**
+	 * State of the timer in the service, for the logs.
+	 */
+	fun describeTimer(timer: NacTimer): String
+	{
+		return "inService=${isUsingTimer(timer)} active=${isTimerActive(timer)} " +
+			"countingDown=${allCountdownTimers[timer.id] != null} " +
+			"left=${allMillisUntilFinished[timer.id]} total=${allTotalDurationMillis[timer.id]} " +
+			"firstTick=${allIsFirstTick[timer.id]} inUse=${isTimerInUse(timer)}"
 	}
 
 	/**
@@ -928,6 +972,9 @@ class NacActiveTimerService
 				val wakeupProcess = NacWakeupProcess(this@NacActiveTimerService, timer)
 				wakeupProcess.start()
 				allWakeupProcesses[timer.id] = wakeupProcess
+
+				// Bring the timer to the screen, the phone locked included
+				NacRingingTimerScreen.show(this@NacActiveTimerService, timer)
 
 				// Call the listener
 				allOnCountdownTimerChangedListeners[timer.id]?.forEach { it.onCountdownFinished(timer) }
