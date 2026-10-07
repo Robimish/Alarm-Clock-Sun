@@ -3,7 +3,7 @@
 
 	<!-- App -->
 	<string name="app_name">Alarm Clock Sun</string>
-	<string name="app_developer">Gabe Gonzalez</string>
+	<string name="app_developer" translatable="false">Robimish</string>
 
 	<!-- Consolidate -->
 	<string name="version">Version</string>
@@ -387,6 +387,8 @@
 	<string name="title_how_to_get_more_options">Long press for more options</string>
 	<string name="title_how_to_change_appearance">Settings > Appearance</string>
 	<string name="title_developer">Developer</string>
+	<string name="title_based_on" tools:ignore="MissingTranslation">Based on</string>
+	<string name="description_based_on" tools:ignore="MissingTranslation">NFC Alarm Clock 12.7.2 by Gabe Gonzalez, free software under the GNU GPL v3. Alarm Clock Sun is a fork of it and stays under the same license.</string>
 	<string name="title_alignment">Alignment</string>
 	<string name="title_position">Position</string>
 	<string name="title_only_show_app_alarms">Only show app alarms</string>
@@ -805,6 +807,8 @@
 
 	<string name="title_snooze_button" tools:ignore="MissingTranslation">Button that snoozes</string>
 	<string name="title_dismiss_button" tools:ignore="MissingTranslation">Button that dismisses</string>
+	<string name="title_swipe_threshold" tools:ignore="MissingTranslation">How far to swipe</string>
+	<string name="description_swipe_threshold" tools:ignore="MissingTranslation">%1$d %% of the way, to snooze or dismiss with the slider.</string>
 	<string name="description_alarm_buttons" tools:ignore="MissingTranslation">For every alarm, while it rings. %1$s</string>
 	<string name="word_button_none" tools:ignore="MissingTranslation">None</string>
 	<string name="word_button_any" tools:ignore="MissingTranslation">Any button (volume or power)</string>

@@ -2414,6 +2414,23 @@ class NacSharedPreferences(context: Context)
 		}
 
 	/**
+	 * How far the slider of the alarm screen must go before it snoozes or dismisses,
+	 * from 80 to 100. [Units: %]
+	 */
+	var swipeThreshold: Int
+		get()
+		{
+			val key = resources.getString(R.string.key_swipe_threshold)
+			val defaultValue = resources.getInteger(R.integer.default_swipe_threshold)
+
+			return instance.getInt(key, defaultValue).coerceIn(80, 100)
+		}
+		set(value)
+		{
+			saveInt(resources.getString(R.string.key_swipe_threshold), value.coerceIn(80, 100))
+		}
+
+	/**
 	 * First hour at which the time can be spoken. [Units: h]
 	 */
 	var sayTimeFromHour: Int

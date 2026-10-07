@@ -42,6 +42,7 @@
 	<integer name="default_dawn_reveal_duration">10</integer>
 	<!-- How long a dawn preview runs, in seconds -->
 	<integer name="default_dawn_preview_duration">7</integer>
+	<integer name="default_swipe_threshold">97</integer>
 	<integer name="default_say_time_from_hour">3</integer>
 	<integer name="default_say_time_to_hour">8</integer>
 	<integer name="default_say_time_format">0</integer>

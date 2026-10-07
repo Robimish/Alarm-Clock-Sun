@@ -17,6 +17,15 @@
 			/>
 
 		<Preference
+			android:key="@string/key_settings_about_based_on"
+			android:title="@string/title_based_on"
+			android:summary="@string/description_based_on"
+			app:iconSpaceReserved="false"
+			app:allowDividerAbove="false"
+			app:allowDividerBelow="false"
+			/>
+
+		<Preference
 			android:key="@string/key_settings_about_version"
 			android:title="@string/word_version"
 			android:summary=""

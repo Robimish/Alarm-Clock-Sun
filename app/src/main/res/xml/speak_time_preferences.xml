@@ -3,6 +3,20 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto">
 
+	<!-- Speak the time: the hours. They hold back both the shake and the hand, so
+		they sit apart from either rather than under one of them, and come first (2.12) -->
+	<com.nfcalarmclock.settings.preference.NacPreferenceCategory
+		android:title="@string/title_say_time_when">
+
+		<com.nfcalarmclock.settings.preference.NacPreference
+			android:title="@string/title_say_time_hours"
+			android:key="@string/key_say_time_from_hour"
+			android:layout="@layout/nac_preference"
+			app:allowDividerAbove="false"
+			app:allowDividerBelow="true"
+			/>
+	</com.nfcalarmclock.settings.preference.NacPreferenceCategory>
+
 	<!-- Speak the time: shaking the phone. The switch comes first and is written
 		larger, and everything that only works through it is greyed out until it is
 		on -->
@@ -59,20 +73,6 @@
 			android:title="@string/title_proximity_test"
 			android:key="@string/key_proximity_test"
 			android:summary="@string/message_proximity_test_hint"
-			android:layout="@layout/nac_preference"
-			app:allowDividerAbove="false"
-			app:allowDividerBelow="true"
-			/>
-	</com.nfcalarmclock.settings.preference.NacPreferenceCategory>
-
-	<!-- Speak the time: the hours. They hold back both the shake and the hand, so
-		they sit apart from either rather than under one of them -->
-	<com.nfcalarmclock.settings.preference.NacPreferenceCategory
-		android:title="@string/title_say_time_when">
-
-		<com.nfcalarmclock.settings.preference.NacPreference
-			android:title="@string/title_say_time_hours"
-			android:key="@string/key_say_time_from_hour"
 			android:layout="@layout/nac_preference"
 			app:allowDividerAbove="false"
 			app:allowDividerBelow="true"

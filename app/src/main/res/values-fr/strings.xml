@@ -2,7 +2,6 @@
 <resources>
 
 	<string name="app_name">Alarm Clock Sun</string>
-	<string name="app_developer">Gabe Gonzalez</string>
 	<string name="version">Version</string>
 	<string name="am">AM</string>
 	<string name="pm">PM</string>
@@ -365,6 +364,8 @@
 	<string name="title_how_to_get_more_options">Appui long pour plus d\'options</string>
 	<string name="title_how_to_change_appearance">Paramètres > Apparence</string>
 	<string name="title_developer">Développeur</string>
+	<string name="title_based_on">Basé sur</string>
+	<string name="description_based_on">NFC Alarm Clock 12.7.2 de Gabe Gonzalez, logiciel libre sous licence GNU GPL v3. Alarm Clock Sun en est un fork et reste sous la même licence.</string>
 	<string name="title_alignment">Alignement</string>
 	<string name="title_position">Position</string>
 	<string name="title_only_show_app_alarms">N\'afficher que les alarmes de l\'app</string>
@@ -751,6 +752,8 @@
 	<string name="name_ready_made_timer">Œufs</string>
 	<string name="title_snooze_button">Bouton qui reporte</string>
 	<string name="title_dismiss_button">Bouton qui arrête</string>
+	<string name="title_swipe_threshold">Distance à glisser</string>
+	<string name="description_swipe_threshold">%1$d %% de la course, pour reporter ou arrêter avec le curseur.</string>
 	<string name="description_alarm_buttons">Pour toutes les alarmes, pendant la sonnerie. %1$s</string>
 	<string name="word_button_none">Aucun</string>
 	<string name="word_button_any">N\'importe quel bouton (volume ou marche)</string>

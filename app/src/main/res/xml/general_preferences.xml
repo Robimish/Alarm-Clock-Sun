@@ -31,6 +31,14 @@
 			android:key="@string/key_dismiss_button"
 			android:layout="@layout/nac_preference"
 			app:allowDividerAbove="false"
+			app:allowDividerBelow="false"
+			/>
+
+		<Preference
+			android:title="@string/title_swipe_threshold"
+			android:key="@string/key_swipe_threshold"
+			android:layout="@layout/nac_preference"
+			app:allowDividerAbove="false"
 			app:allowDividerBelow="true"
 			/>
 

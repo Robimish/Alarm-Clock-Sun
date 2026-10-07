@@ -5,6 +5,10 @@
 	<!-- &lt;/b> -->
 
 	<string-array name="whats_new_items" tools:ignore="InconsistentArrays">
+		<item>2.12</item>
+		<item>New in General settings: &lt;b>How far to swipe&lt;/b>, from 80 to 100 % of the way (97 % at first), to snooze or dismiss with the slider.</item>
+		<item>&lt;b>Speak the time&lt;/b>: the hours during which it listens come first on its page.</item>
+		<item>&lt;b>About&lt;/b> names the developer of Alarm Clock Sun and the app it is a fork of, NFC Alarm Clock by Gabe Gonzalez.</item>
 		<item>2.11</item>
 		<item>&lt;b>Speak the time&lt;/b> in Spanish no longer leaves a lonely \"y\" on the hour. In French and Spanish, a 12-hour clock says the part of the day (\"du matin\", \"de la tarde\") instead of AM or PM, and midnight and noon by their names (\"minuit\", \"midi\", \"medianoche\", \"mediodía\").</item>
 		<item>In English, the time is now said the everyday way: \"It\'s 7:05\" instead of \"The time is 7:05\".</item>

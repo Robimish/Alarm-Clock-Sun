@@ -6,16 +6,22 @@ the screen lights up little by little, like a sunrise, then the alarm rings.
 **Alarm Clock Sun is a fork of [NFC Alarm Clock](https://github.com/gabeg805/NFC-Alarm-Clock)
 by Gabriel Gonzalez**, version 12.7.2-beta025. All the features of NFC Alarm Clock are
 still there (NFC tag to dismiss, own music, gradual volume, text-to-speech, reminders,
-statistics…). Modified by Robimish from September 2026.
+statistics…). Alarm Clock Sun is developed by **[Robimish](https://github.com/Robimish)**
+since September 2026; the original NFC Alarm Clock remains the work of Gabriel Gonzalez.
 
 ## What the fork adds
 
 * **Sunrise**: the screen goes from black to a colour or an image of your choice,
   from 5 to 60 minutes before the alarm, with an analog or digital clock
-* **Say the time**: shake the phone or wave a hand over it to hear the time,
-  within the hours you choose
+* **Say the time**: shake the phone or wave a hand over it to hear the time, within
+  hours you choose to the half hour, with a voice volume of its own and a notification
+  to speak now or pause until the next time the hours start
 * **Timers** that come over the lock screen when they ring, and a ready-made one
-* Volume keys and power button to snooze or dismiss, statistics that can be turned off
+* Volume keys and power button to snooze or dismiss, a slider whose distance can be set
+  (80 to 100 %), or a simple screen with plain buttons
+* **My wake-up phrases** shown under the clock, alarms reordered by hand, one-time alarms
+  that turn themselves off
+* Statistics that can be turned off
 * The app is in **English, French and Spanish**
 * **100 % offline**: no internet permission, no cloud backup, nothing is sent anywhere
 

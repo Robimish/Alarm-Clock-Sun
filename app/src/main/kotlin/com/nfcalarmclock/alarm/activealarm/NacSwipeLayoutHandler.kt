@@ -1144,7 +1144,10 @@ class NacSwipeLayoutHandler(
 	{
 		val travel = endAlarmActionX - startAlarmActionX
 
-		return if (travel > 0f) travel * (1f - ACTION_THRESHOLD) else 0f
+		// The share of the way chosen in the General settings (97 % unless changed)
+		val threshold = sharedPreferences.swipeThreshold / 100f
+
+		return if (travel > 0f) travel * (1f - threshold) else 0f
 	}
 
 	/**

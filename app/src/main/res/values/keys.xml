@@ -203,6 +203,7 @@
 	<string name="key_dawn_reveal_return">pref_dawn_reveal_return</string>
 	<string name="key_power_dismiss">pref_power_dismiss</string>
 	<string name="key_snooze_button">pref_snooze_button</string>
+	<string name="key_swipe_threshold">pref_swipe_threshold</string>
 	<string name="key_dismiss_button">pref_dismiss_button</string>
 	<string name="key_event_power_dismiss_to_alarms">event_power_dismiss_to_alarms</string>
 	<string name="key_event_buttons_to_general">event_buttons_to_general</string>
@@ -246,6 +247,7 @@
 	<!-- About -->
 	<string name="key_settings_about">pref_screen_about</string>
 	<string name="key_settings_about_author">pref_about_author</string>
+	<string name="key_settings_about_based_on">pref_about_based_on</string>
 	<string name="key_settings_about_version">pref_about_version</string>
 	<string name="key_settings_about_ignore_battery_optimization">pref_about_ignore_battery_optimization</string>
 	<string name="key_settings_about_nfc">pref_about_nfc</string>

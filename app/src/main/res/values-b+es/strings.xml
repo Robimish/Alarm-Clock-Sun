@@ -3,7 +3,6 @@
 
 	<!-- App -->
 	<string name="app_name">Alarm Clock Sun</string>
-	<string name="app_developer">Gabe Gonzalez</string>
 
 	<!-- Consolidate -->
 	<string name="version">Versión</string>
@@ -374,6 +373,8 @@
 	<string name="title_how_to_get_more_options">Mantén pulsado para ver más opciones.</string>
 	<string name="title_how_to_change_appearance">Ajustes > Apariencia</string>
 	<string name="title_developer">Creador de la aplicacion</string>
+	<string name="title_based_on">Basado en</string>
+	<string name="description_based_on">NFC Alarm Clock 12.7.2 de Gabe Gonzalez, software libre con licencia GNU GPL v3. Alarm Clock Sun es un fork de esta aplicación y conserva la misma licencia.</string>
 	<string name="title_alignment">Alineación</string>
 	<string name="title_position">Posición</string>
 	<string name="title_only_show_app_alarms">Mostrar solo alarmas de aplicaciones</string>

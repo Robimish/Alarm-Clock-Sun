@@ -2,6 +2,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
 	<string-array name="whats_new_items" tools:ignore="InconsistentArrays">
+		<item>2.12</item>
+		<item>Nouveau dans Paramètres généraux : &lt;b>Distance à glisser&lt;/b>, de 80 à 100 % de la course (97 % au départ), pour reporter ou arrêter avec le curseur.</item>
+		<item>&lt;b>Dire l\'heure&lt;/b> : la plage horaire est maintenant en haut de sa page.</item>
+		<item>&lt;b>À propos&lt;/b> indique le développeur d\'Alarm Clock Sun et l\'app dont il est un fork, NFC Alarm Clock de Gabe Gonzalez.</item>
 		<item>2.11</item>
 		<item>&lt;b>Dire l\'heure&lt;/b> en espagnol ne laisse plus un « y » tout seul à l\'heure pile. En français et en espagnol, l\'horloge 12 heures dit le moment de la journée (« du matin », « de la tarde ») au lieu de AM ou PM, et minuit et midi par leur nom (« minuit », « midi », « medianoche », « mediodía »).</item>
 		<item>En anglais, l\'heure est dite comme dans la vie : « It\'s 7:05 » au lieu de « The time is 7:05 ».</item>

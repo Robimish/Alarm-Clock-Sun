@@ -89,6 +89,7 @@ class NacGeneralSettingFragment
 		// Setup the preferences
 		setupDefaultAlarmCard()
 		setupAlarmButtons()
+		setupSwipeThreshold()
 		setupAppLanguage()
 		setupResetSettings()
 		setupCleanup()
@@ -171,6 +172,50 @@ class NacGeneralSettingFragment
 	{
 		setupAlarmButton(R.string.key_snooze_button, isSnooze = true)
 		setupAlarmButton(R.string.key_dismiss_button, isSnooze = false)
+	}
+
+	/**
+	 * Setup how far the slider of the alarm screen must go, from 80 to 100 %.
+	 */
+	private fun setupSwipeThreshold()
+	{
+		val pref = findPreference<Preference>(getString(R.string.key_swipe_threshold)) ?: return
+		val shared = sharedPreferences ?: return
+		val context = requireContext()
+
+		fun refreshSummary()
+		{
+			pref.summary = getString(R.string.description_swipe_threshold, shared.swipeThreshold)
+		}
+
+		refreshSummary()
+
+		pref.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+
+			// One wheel, from 80 to 100 %
+			val picker = NumberPicker(context)
+
+			picker.minValue = 80
+			picker.maxValue = 100
+			picker.displayedValues = Array(21) { "${it + 80} %" }
+			picker.wrapSelectorWheel = false
+			picker.value = shared.swipeThreshold
+
+			AlertDialog.Builder(context)
+				.setTitle(pref.title)
+				.setView(picker)
+				.setPositiveButton(R.string.action_ok) { _, _ ->
+
+					picker.clearFocus()
+					shared.swipeThreshold = picker.value
+					refreshSummary()
+
+				}
+				.setNegativeButton(R.string.action_cancel, null)
+				.show()
+
+			true
+		}
 	}
 
 	/**
