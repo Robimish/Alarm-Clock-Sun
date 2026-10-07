@@ -231,11 +231,13 @@
 	</RelativeLayout>
 
 	<!-- Separator -->
-	<Space style="@style/Widget.AlarmOptionDialog.SeparatorAfterCheckBox" />
+	<Space style="@style/Widget.AlarmOptionDialog.SeparatorAfterCheckBox" android:visibility="gone"
+		/>
 
-	<!-- Volume snooze -->
+	<!-- Volume snooze: chosen in Settings, General, for every alarm since 2.02 -->
 	<RelativeLayout
 		android:id="@+id/volume_snooze_container"
+		android:visibility="gone"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:clickable="true"

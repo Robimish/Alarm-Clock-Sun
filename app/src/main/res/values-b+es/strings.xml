@@ -205,8 +205,6 @@
 	<string name="message_text_to_speech_default_voice">Voz predeterminada</string>
 	<string name="message_text_to_speech_voice">Voz %1$d</string>
 	<string name="message_text_to_speech_network_required">Es posible que se requiera una conexión de red para que la voz funcione</string>
-	<string name="message_volume_dismiss_priority">El volumen de descarte tendrá prioridad</string>
-	<string name="message_volume_snooze_ignored">Se ignorará la función de posponer volumen.</string>
 
 	<!-- Error messages -->
 	<string name="error_message_active_delete">Incapaz de borrar una alarma activa</string>
@@ -220,6 +218,8 @@
 	<string name="error_message_nfc_id_exists">Esta identificación NFC ya está en uso.</string>
 	<string name="error_message_unable_to_scan_nfc">No se pueden escanear etiquetas NFC</string>
 	<string name="error_message_snooze">Incapaz de posponer la alarma</string>
+	<string name="error_message_unable_to_vibrate">No se puede vibrar en este teléfono. La alarma suena sin vibrar.</string>
+	<string name="error_message_out_of_memory">No hay memoria suficiente para vibrar. La alarma suena sin vibrar.</string>
 	<string name="error_message_snoozed_delete">Incapaz de borrar una alarma pospuesta</string>
 	<string name="error_message_snoozed_modify">Incapaz de modificar una alarma pospuesta</string>
 	<string name="error_message_select_color">Color inválido</string>
@@ -312,12 +312,12 @@
 	<string name="title_dismiss_options_dismiss_early">Despedida temprana</string>
 	<string name="title_dismiss_options_dismiss_early_notification">Rechazar notificación anticipada</string>
 	<string name="title_dismiss_options_delete_after_dismissed">Eliminar después de descartar</string>
-	<string name="title_dismiss_options_volume_dismiss">Volumen descartar</string>
+	<string name="title_dismiss_options_volume_dismiss">Detener con un botón</string>
 	<string name="title_snooze_options_auto_snooze">Posponer automáticamente</string>
 	<string name="title_snooze_options_max_snooze">Dormitar la máxima numero de veces</string>
 	<string name="title_snooze_options_snooze_duration">Duracion de dormitar</string>
 	<string name="title_snooze_options_easy_snooze">Dormitar fácilmente</string>
-	<string name="title_snooze_options_volume_snooze">Repetición de volumen</string>
+	<string name="title_snooze_options_volume_snooze">Posponer con un botón</string>
 	<string name="title_upcoming_reminder_show_reminder">Mostrar recordatorio</string>
 	<string name="title_upcoming_reminder_how_early">¿Qué tan temprano…?</string>
 	<string name="title_upcoming_reminder_how_frequent">¿Con qué frecuencia…?</string>
@@ -342,7 +342,18 @@
 	<string name="title_style">Style</string>
 	<string name="title_tweaks">Modificaciones</string>
 	<string name="title_misc">Misceláneas</string>
-	<string name="title_new_screen">Nueva pantalla</string>
+	<string name="title_my_phrases">Mis frases de despertar</string>
+	<string name="message_my_phrases_hint">Una frase por línea.</string>
+	<string name="description_my_phrases_none">Aún no hay frases tuyas. Toca para escribir algunas.</string>
+	<string name="description_my_phrases_count">%1$d frase(s) tuya(s)</string>
+	<string name="title_only_my_phrases">Solo mis frases</string>
+	<string name="description_only_my_phrases_true">Solo se muestran tus frases bajo el reloj.</string>
+	<string name="description_only_my_phrases_false">Tus frases se muestran con las de la app.</string>
+	<string name="message_proximity_passes">Pasadas vistas: %1$d</string>
+	<string name="title_simple_screen">Pantalla sencilla</string>
+	<string name="description_use_simple_screen_true">La pantalla de alarma original: el nombre de la alarma y dos botones, Posponer y Descartar.</string>
+	<string name="description_use_simple_screen_false">La pantalla de alarma completa: reloj, fecha, nombre, frase y música.</string>
+	<string name="title_new_screen">Deslizar para posponer o descartar</string>
 	<string name="title_show_alarm_name">Muestra nombre de alarma</string>
 	<string name="title_show_current_date_and_time">Mostrar fecha y hora actuales</string>
 	<string name="title_show_music_info">Mostrar información musical</string>
@@ -420,11 +431,11 @@
 	<string name="description_dismiss_options_delete_after_dismissed_timer">El temporizador se eliminará después de que se cierre.</string>
 	<string name="description_snooze_options_auto_snooze">Posponer la alarma automáticamente después de una duración establecida.</string>
 	<string name="description_snooze_options_max_snooze">Número máximo de veces que se puede posponer la alarma.</string>
-	<string name="description_dismiss_options_volume_dismiss_alarm">Desactive la alarma pulsando el botón de subir o bajar volumen.</string>
+	<string name="description_dismiss_options_volume_dismiss_alarm">Detener la alarma con el botón elegido en Ajustes, General (al principio: el botón de encendido).</string>
 	<string name="description_dismiss_options_volume_dismiss_timer">Desactive el temporizador pulsando el botón de subir o bajar volumen.</string>
 	<string name="description_snooze_options_snooze_duration">Cantidad de tiempo durante el cual se debe posponer la alarma.</string>
 	<string name="description_snooze_options_easy_snooze">Posponga la alarma tocando en cualquier parte de la pantalla de alarma.</string>
-	<string name="description_snooze_options_volume_snooze">Para posponer la alarma, pulse el botón de subir o bajar el volumen.</string>
+	<string name="description_snooze_options_volume_snooze">Posponer la alarma con el botón elegido en Ajustes, General (al principio: volumen + o −).</string>
 	<string name="description_upcoming_reminder_show_reminder">Mostrar una notificación de recordatorio antes de que suene la alarma.</string>
 	<string name="description_upcoming_reminder_how_early">¿Con qué anticipación debe mostrarse la notificación de recordatorio?</string>
 	<string name="description_upcoming_reminder_how_frequent">¿Con qué frecuencia debe mostrarse la notificación de recordatorio?</string>
@@ -438,8 +449,8 @@
 	<string name="description_setting_help">Avísame si tienes algún problema o sugerencia.</string>
 	<string name="description_setting_support">Se agradecería mucho el apoyo, ¡pero no hay presión! Esta aplicación siempre será gratis</string>
 	<string name="description_setting_import_export">Importa o exporta todos tus datos guardados</string>
-	<string name="description_use_new_screen_true">Utilice la nueva pantalla de alarma, donde desliza el dedo para posponero descartar la alarma.</string>
-	<string name="description_use_new_screen_false">No utilice la nueva pantalla de alarma. Utilice la pantalla original con botones simples para posponer o descartar la alarma.</string>
+	<string name="description_use_new_screen_true">Desliza el botón Posponer o Descartar hasta el otro extremo.</string>
+	<string name="description_use_new_screen_false">Toca el botón Posponer o Descartar, sin deslizar.</string>
 	<string name="description_toggle_alarms_with_airplane_mode_on">Desactivación de todas las alarmas debido al cambio al modo avión.</string>
 	<string name="description_toggle_alarms_with_airplane_mode_off">Activación de todas las alarmas debido al cambio al modo avión.</string>
 	<string name="description_alarm_screen_show_alarm_name_true">Muestra el nombre de la alarma en la pantalla de alarma.</string>
@@ -678,11 +689,11 @@
 	<string name="title_dawn_preview_duration">Duración de la vista previa</string>
 	<string name="description_dawn_preview_duration">La vista previa del amanecer dura %1$d segundos y luego espera un toque para cerrarse. Tocarla mientras corre muestra la pantalla normal, como en un amanecer real.</string>
 	<string name="title_storage">Almacenamiento</string>
-	<string name="title_clean_sounds">Liberar copias de sonidos</string>
-	<string name="description_clean_sounds">La app guarda una copia de cada sonido elegido, para que la alarma suene aunque el original se mueva o el teléfono aún no se haya desbloqueado. Esto borra las copias que ninguna alarma usa.</string>
-	<string name="title_clean_images">Liberar imágenes del amanecer</string>
+	<string name="title_clean_sounds">Vaciar la caché de sonidos</string>
+	<string name="description_clean_sounds">La app guarda una copia de cada sonido elegido, para que la alarma suene aunque el original se mueva o el teléfono aún no se haya desbloqueado. Esto borra las copias que ninguna alarma usa. Tus archivos de música no se tocan.</string>
+	<string name="title_clean_images">Vaciar la caché de imágenes del amanecer</string>
 	<string name="description_clean_images">Una imagen se queda en la app aunque vuelvas a un color, para poder volver a usarla sin elegir el archivo otra vez. Esto borra las imágenes que ningún amanecer muestra.</string>
-	<string name="title_clean_all">Liberar ambos</string>
+	<string name="title_clean_all">Vaciar ambas cachés</string>
 	<string name="description_clean_all">Sonidos e imágenes de una vez.</string>
 	<string name="message_clean_confirm">Solo se borran las copias que ninguna alarma necesita. Las alarmas no se tocan.</string>
 	<string name="message_clean_done">Se liberaron %1$s en %2$d archivo(s)</string>
@@ -734,6 +745,9 @@
 	<string name="description_reset_settings">Devuelve todos los ajustes a como estaban tras la instalación. Tus alarmas no se tocan.</string>
 	<string name="description_say_time_hours">La hora solo se dice entre las %1$02d:00 y las %2$02d:00.</string>
 	<string name="description_say_time_listening_always">A la escucha, a cualquier hora</string>
+	<string name="word_once">Una vez</string>
+	<string name="action_say_time_now">Decir la hora</string>
+	<string name="action_say_time_pause">Detener</string>
 	<string name="description_say_time_listening_between">A la escucha, de %1$s a %2$s</string>
 	<string name="description_say_time_notification_channel">Una notificación con un botón que dice la hora en voz alta.</string>
 	<string name="description_setting_speak_time">Agitar el teléfono o pasar la mano por encima para oír la hora. El interruptor apaga las dos cosas a la vez.</string>
@@ -748,14 +762,24 @@
 	<string name="message_dawn_in_progress">Está amaneciendo\u2026</string>
 	<string name="message_next_alarm_both">Próxima alarma el %1$s\nTiempo restante %2$s</string>
 	<string name="message_reset_settings_confirm">Todos los ajustes vuelven a como estaban tras la instalación. Tus alarmas se conservan.</string>
-	<string name="message_reset_settings_done">Los ajustes han vuelto a los de fábrica.</string>
+	<string name="message_reset_settings_done">Ajustes restablecidos.</string>
 	<string name="message_volume_value">%1$d%%</string>
 	<string name="title_analog_clock">Reloj analógico</string>
 	<string name="title_app_language">Idioma de la aplicación</string>
 	<string name="title_clock_style">Tipo de reloj</string>
 	<string name="title_dawn_reveal_duration">Tocar para ver la pantalla</string>
 	<string name="title_language_system">Idioma del teléfono</string>
-	<string name="title_reset_settings">Volver a los ajustes de fábrica</string>
+	<string name="title_reset_settings">Restablecer ajustes</string>
+	<string name="title_say_time_volume">Volumen de la voz</string>
+	<string name="description_say_time_volume">Porcentaje del volumen máximo del teléfono, sea cual sea el volumen de las alarmas. El volumen de las alarmas se restablece justo después.</string>
+	<string name="title_proximity_test">Probar el sensor de la mano</string>
+	<string name="message_proximity_test_hint">Pon la mano sobre la parte superior de la pantalla y luego retírala.</string>
+	<string name="message_proximity_test_values">Sensor: %1$s\nVe hasta: %2$s cm\nValor actual: %3$s cm\n%4$s</string>
+	<string name="word_proximity_near">Algo delante</string>
+	<string name="word_proximity_far">Nada delante</string>
+	<string name="message_proximity_binary">Este sensor solo dice cerca o lejos: la distancia no se puede elegir.</string>
+	<string name="message_proximity_distance">Este sensor da distancias reales.</string>
+	<string name="message_proximity_none">No hay sensor de proximidad en este teléfono.</string>
 	<string name="title_say_time">Decir la hora</string>
 	<string name="title_say_time_format">Reloj que se dice</string>
 	<string name="title_say_time_from">Desde</string>
@@ -772,9 +796,6 @@
 
 	<!-- El boton de encendido mientras suena la alarma -->
 	<string name="title_while_ringing">Mientras suena la alarma</string>
-	<string name="title_power_dismiss">El botón de encendido la descarta</string>
-	<string name="description_power_dismiss_true">Apagar la pantalla descarta la alarma. Android nunca avisa a una aplicación del botón de encendido, así que lo que se lee es que la pantalla se apaga: cualquier otra cosa que la apague también descarta la alarma.</string>
-	<string name="description_power_dismiss_false">El botón de encendido solo apaga la pantalla mientras suena la alarma.</string>
 
 	<!-- Pasar la mano por encima del telefono para oir la hora -->
 	<string name="title_wave_to_say_time">Pasar la mano para oír la hora</string>
@@ -787,6 +808,23 @@
 	<!-- Si la lista de alarmas se reorganiza sola -->
 	<string name="title_auto_sort_alarms">Reorganizar la lista sola</string>
 	<string name="description_auto_sort_alarms_true">Lo que suena primero sube arriba, y las alarmas apagadas pasan debajo. La lista se mueve en cuanto se enciende o se apaga una alarma.</string>
-	<string name="description_auto_sort_alarms_false">Cada alarma se queda en su sitio. Una nueva se añade abajo, y una copia justo debajo de la alarma de la que viene.</string>
+	<string name="description_auto_sort_alarms_false">Cada alarma se queda en su sitio: mantén pulsada una tarjeta cerrada para subirla o bajarla. Una nueva se añade abajo, y una copia justo debajo de la alarma de la que viene.</string>
 
+	<string name="title_snooze_button">Botón que pospone</string>
+	<string name="title_dismiss_button">Botón que detiene</string>
+	<string name="description_alarm_buttons">Para todas las alarmas, mientras suenan. %1$s</string>
+	<string name="word_button_none">Ninguno</string>
+	<string name="word_button_any">Cualquier botón (volumen o encendido)</string>
+	<string name="word_button_volume_up">Volumen +</string>
+	<string name="word_button_volume_down">Volumen −</string>
+	<string name="word_button_volume_any">Volumen + o −</string>
+	<string name="word_button_power">Botón de encendido</string>
+	<string name="message_button_used_by_other">Este botón ya detiene la alarma. Elija otro, o cambie primero el botón que detiene.</string>
+	<string name="message_button_used_by_other_snooze">Este botón ya pospone la alarma. Elija otro, o cambie primero el botón que pospone.</string>
+	<string name="message_power_button_note">El botón de encendido se lee como la pantalla que se apaga: cualquier otra cosa que la apague también cuenta.</string>
+	<string name="title_apply_to_all_alarms">¿Aplicar a todas las alarmas?</string>
+	<string name="message_apply_snooze_button_to_all">¿%1$s también posponer con el botón en todas las alarmas ya creadas?</string>
+	<string name="message_apply_dismiss_button_to_all">¿%1$s también detener con el botón en todas las alarmas ya creadas?</string>
+	<string name="word_on">Activar</string>
+	<string name="word_off">Desactivar</string>
 </resources>

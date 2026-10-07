@@ -8,6 +8,7 @@ import androidx.preference.Preference
 import java.util.Calendar
 import com.nfcalarmclock.R
 import com.nfcalarmclock.shared.NacSharedPreferences
+import com.nfcalarmclock.system.getPhoneFirstDayOfWeek
 
 /**
  * Preference that prompts the user what day to start the week on.
@@ -65,7 +66,8 @@ class NacStartWeekOnPreference @JvmOverloads constructor(
 				// summary matches what the week actually shows
 				2 ->
 				{
-					val day = Calendar.getInstance().firstDayOfWeek - Calendar.SUNDAY
+					// The week only starts on Sunday or Monday in the app
+					val day = if (getPhoneFirstDayOfWeek(context) == Calendar.MONDAY) 1 else 0
 
 					"${options[2]} (${week[day.coerceIn(0, 6)]})"
 				}

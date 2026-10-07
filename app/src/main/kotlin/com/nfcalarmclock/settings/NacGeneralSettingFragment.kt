@@ -17,6 +17,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceManager
 import com.nfcalarmclock.R
 import com.nfcalarmclock.alarm.NacAlarmViewModel
+import com.nfcalarmclock.alarm.options.NacAlarmButton
 import com.nfcalarmclock.alarm.options.NacAlarmOptionsDialog
 import com.nfcalarmclock.alarm.options.dismissoptions.NacDismissOptionsDialog
 import com.nfcalarmclock.alarm.options.name.NacNameDialog
@@ -87,6 +88,7 @@ class NacGeneralSettingFragment
 
 		// Setup the preferences
 		setupDefaultAlarmCard()
+		setupAlarmButtons()
 		setupAppLanguage()
 		setupResetSettings()
 		setupCleanup()
@@ -149,6 +151,81 @@ class NacGeneralSettingFragment
 						{
 							LocaleListCompat.forLanguageTags(code)
 						})
+
+				}
+				.setNegativeButton(R.string.action_cancel, null)
+				.show()
+
+			true
+		}
+	}
+
+	/**
+	 * Setup the two buttons that snooze and dismiss a ringing alarm (2.01).
+	 *
+	 * Which button does what is chosen here. Each alarm then says in its snooze and
+	 * dismiss options whether it uses its button. One press must not be read as both,
+	 * so a button that overlaps the other one is refused.
+	 */
+	private fun setupAlarmButtons()
+	{
+		setupAlarmButton(R.string.key_snooze_button, isSnooze = true)
+		setupAlarmButton(R.string.key_dismiss_button, isSnooze = false)
+	}
+
+	/**
+	 * Setup one of the two alarm buttons.
+	 */
+	private fun setupAlarmButton(keyId: Int, isSnooze: Boolean)
+	{
+		val pref = findPreference<Preference>(getString(keyId)) ?: return
+		val shared = sharedPreferences ?: return
+		val context = requireContext()
+		val buttons = NacAlarmButton.ALL
+		val names = buttons.map { NacAlarmButton.name(context, it) }.toTypedArray()
+
+		fun current(): String = if (isSnooze) shared.snoozeButton else shared.dismissButton
+		fun other(): String = if (isSnooze) shared.dismissButton else shared.snoozeButton
+
+		fun refreshSummary()
+		{
+			val button = current()
+			val note = if (NacAlarmButton.matchesPower(button)) getString(R.string.message_power_button_note) else ""
+
+			pref.summary = NacAlarmButton.name(context, button) + "\n" +
+				getString(R.string.description_alarm_buttons, note)
+		}
+
+		refreshSummary()
+
+		pref.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+
+			AlertDialog.Builder(context)
+				.setTitle(pref.title)
+				.setSingleChoiceItems(names, buttons.indexOf(current()).coerceAtLeast(0)) { d, which ->
+
+					val chosen = buttons[which]
+
+					d.dismiss()
+
+					// One press must not both snooze and dismiss
+					if (NacAlarmButton.overlap(chosen, other()))
+					{
+						quickToast(context, if (isSnooze) R.string.message_button_used_by_other
+							else R.string.message_button_used_by_other_snooze)
+						return@setSingleChoiceItems
+					}
+
+					if (isSnooze)
+					{
+						shared.snoozeButton = chosen
+					}
+					else
+					{
+						shared.dismissButton = chosen
+					}
+
+					refreshSummary()
 
 				}
 				.setNegativeButton(R.string.action_cancel, null)

@@ -6,6 +6,7 @@ import android.content.res.Resources
 import android.view.Gravity
 import androidx.preference.PreferenceManager
 import com.nfcalarmclock.R
+import com.nfcalarmclock.alarm.options.NacAlarmButton
 import com.nfcalarmclock.alarm.db.NacAlarm
 import com.nfcalarmclock.timer.db.NacTimer
 import com.nfcalarmclock.system.NacCalendar
@@ -17,6 +18,7 @@ import java.io.InputStreamReader
 import java.util.Calendar
 import androidx.core.content.edit
 import com.nfcalarmclock.system.daysToValue
+import com.nfcalarmclock.system.getPhoneFirstDayOfWeek
 
 /**
  * Index of the "Automatic" choice of the start of the week, which follows the
@@ -40,6 +42,12 @@ class NacSharedPreferences(context: Context)
 	 * Resources.
 	 */
 	val resources: Resources = context.resources
+
+	/**
+	 * Application context, for what the phone itself says (the country of the SIM
+	 * card for the start of the week).
+	 */
+	private val appContext: Context = context.applicationContext ?: context
 
 	/**
 	 * AM color.
@@ -2251,7 +2259,82 @@ class NacSharedPreferences(context: Context)
 		}
 
 	/**
+	 * Phone button that snoozes an alarm whose snooze options allow it
+	 * (NacAlarmButton). Chosen in Settings, General (2.01).
+	 */
+	var snoozeButton: String
+		get()
+		{
+			val key = resources.getString(R.string.key_snooze_button)
+
+			return instance.getString(key, NacAlarmButton.DEFAULT_SNOOZE) ?: NacAlarmButton.DEFAULT_SNOOZE
+		}
+		set(value)
+		{
+			saveString(resources.getString(R.string.key_snooze_button), value)
+		}
+
+	/**
+	 * Phone button that dismisses an alarm whose dismiss options allow it
+	 * (NacAlarmButton). Chosen in Settings, General (2.01).
+	 */
+	var dismissButton: String
+		get()
+		{
+			val key = resources.getString(R.string.key_dismiss_button)
+
+			return instance.getString(key, NacAlarmButton.DEFAULT_DISMISS) ?: NacAlarmButton.DEFAULT_DISMISS
+		}
+		set(value)
+		{
+			saveString(resources.getString(R.string.key_dismiss_button), value)
+		}
+
+	/**
+	 * Whether the old power button setting, a single switch for every alarm, has been
+	 * turned into the dismiss button of each alarm (2.01).
+	 */
+	var eventPowerDismissToAlarms: Boolean
+		get()
+		{
+			return instance.getBoolean(resources.getString(R.string.key_event_power_dismiss_to_alarms), false)
+		}
+		set(value)
+		{
+			saveBoolean(resources.getString(R.string.key_event_power_dismiss_to_alarms), value)
+		}
+
+	/**
+	 * Whether the buttons that snooze and dismiss, chosen for each alarm in 2.01, have
+	 * been carried over to Settings, General, which decides for every alarm (2.02).
+	 */
+	var eventButtonsToGeneral: Boolean
+		get()
+		{
+			return instance.getBoolean(resources.getString(R.string.key_event_buttons_to_general), false)
+		}
+		set(value)
+		{
+			saveBoolean(resources.getString(R.string.key_event_buttons_to_general), value)
+		}
+
+	/**
+	 * Whether a button that snoozes was ever chosen in Settings, General.
+	 */
+	val hasChosenSnoozeButton: Boolean
+		get() = instance.contains(resources.getString(R.string.key_snooze_button))
+
+	/**
+	 * Whether a button that dismisses was ever chosen in Settings, General.
+	 */
+	val hasChosenDismissButton: Boolean
+		get() = instance.contains(resources.getString(R.string.key_dismiss_button))
+
+	/**
 	 * Whether the power button, through the screen going out, dismisses the alarm.
+	 *
+	 * Only read once, to carry it over to the alarms (2.01). The power button is now
+	 * one of the buttons chosen in Settings, General.
 	 */
 	var shouldPowerDismiss: Boolean
 		get()
@@ -2420,7 +2503,33 @@ class NacSharedPreferences(context: Context)
 		set(value)
 		{
 			saveBoolean(resources.getString(R.string.key_say_time_enabled), value)
+
+			// Turning it on is asking for it now, so a stop from the notification ends
+			if (value)
+			{
+				sayTimePausedUntil = 0L
+			}
 		}
+
+	/**
+	 * Until when the spoken time was stopped from its notification, 0 when it was
+	 * not. [Units: ms since epoch]
+	 */
+	var sayTimePausedUntil: Long
+		get() = instance.getLong(resources.getString(R.string.key_say_time_paused_until), 0L)
+		set(value)
+		{
+			saveLong(resources.getString(R.string.key_say_time_paused_until), value)
+		}
+
+	/**
+	 * Whether the spoken time was stopped from its notification and the hours have not
+	 * started again since.
+	 */
+	fun isSayTimePaused(): Boolean
+	{
+		return sayTimePausedUntil > System.currentTimeMillis()
+	}
 
 	/**
 	 * Whether shaking the phone says the time out loud.
@@ -2472,7 +2581,20 @@ class NacSharedPreferences(context: Context)
 		}
 
 	/**
-	 * How many hands passing over say the time. 0 is one pass and 1 is two.
+	 * Volume of the spoken time, as a place in the list that is shown: 0 follows the
+	 * volume of the alarms, 1 to 10 are 10 % to 100 % of the loudest the phone can go
+	 * (2.06).
+	 */
+	var sayTimeVolume: Int
+		get() = instance.getInt(resources.getString(R.string.key_say_time_volume), DEFAULT_SAY_TIME_VOLUME)
+		set(value)
+		{
+			saveInt(resources.getString(R.string.key_say_time_volume), value)
+		}
+
+	/**
+	 * How many hands passing over make the gesture, as a place in the list that is
+	 * shown.
 	 */
 	var wavePasses: Int
 		get()
@@ -2915,7 +3037,7 @@ class NacSharedPreferences(context: Context)
 		get()
 		{
 			val key = resources.getString(R.string.key_default_alarm_dawn_duration)
-			val defaultValue = 10
+			val defaultValue = 8
 
 			return instance.getInt(key, defaultValue)
 		}
@@ -3011,7 +3133,41 @@ class NacSharedPreferences(context: Context)
 		}
 
 	/**
-	 * Whether to use the new alarm screen or not.
+	 * Wake-up phrases of one's own, one per line (2.07).
+	 */
+	var myPhrases: String
+		get() = instance.getString(resources.getString(R.string.key_my_phrases), "") ?: ""
+		set(value)
+		{
+			saveString(resources.getString(R.string.key_my_phrases), value)
+		}
+
+	/**
+	 * Whether only the phrases of one's own are shown, not the ones of the app (2.07).
+	 */
+	val shouldUseOnlyMyPhrases: Boolean
+		get() = instance.getBoolean(resources.getString(R.string.key_only_my_phrases), false)
+
+	/**
+	 * Whether to use the simple alarm screen, the original one: the name of the alarm
+	 * and two buttons (2.05).
+	 */
+	var shouldUseSimpleAlarmScreen: Boolean
+		get()
+		{
+			val key = resources.getString(R.string.key_use_simple_alarm_screen)
+			val defaultValue = resources.getBoolean(R.bool.default_use_simple_alarm_screen)
+
+			return instance.getBoolean(key, defaultValue)
+		}
+		set(value)
+		{
+			saveBoolean(resources.getString(R.string.key_use_simple_alarm_screen), value)
+		}
+
+	/**
+	 * Whether snooze and dismiss slide (true) or are tapped (false) on the full alarm
+	 * screen.
 	 */
 	var shouldUseNewAlarmScreen: Boolean
 		get()
@@ -3308,10 +3464,11 @@ class NacSharedPreferences(context: Context)
 			val defaultValue = resources.getInteger(R.integer.default_start_week_on_index)
 			val index = instance.getInt(key, defaultValue)
 
-			// Automatic. Follow the first day of the week of the locale of the phone
+			// Automatic. Follow the first day of the week of the phone, not of the
+			// language chosen for the app (2.01)
 			return if (index == START_WEEK_ON_AUTOMATIC)
 			{
-				if (Calendar.getInstance().firstDayOfWeek == Calendar.MONDAY) 1 else 0
+				if (getPhoneFirstDayOfWeek(appContext) == Calendar.MONDAY) 1 else 0
 			}
 			else
 			{
@@ -3635,7 +3792,7 @@ class NacSharedPreferences(context: Context)
 		get()
 		{
 			val key = resources.getString(R.string.key_default_alarm_volume)
-			val defaultValue = 40
+			val defaultValue = 30
 
 			return instance.getInt(key, defaultValue)
 		}
@@ -4292,6 +4449,12 @@ class NacSharedPreferences(context: Context)
 
 	companion object
 	{
+
+		/**
+		 * Default volume of the spoken time: 30 % of the loudest, quiet enough for the
+		 * night (2.06).
+		 */
+		const val DEFAULT_SAY_TIME_VOLUME = 3
 
 		/**
 		 * Moved the shared preference to device protected storage.

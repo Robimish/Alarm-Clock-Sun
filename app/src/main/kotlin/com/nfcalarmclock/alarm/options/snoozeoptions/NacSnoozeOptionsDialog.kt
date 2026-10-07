@@ -10,7 +10,6 @@ import com.nfcalarmclock.alarm.db.NacAlarm
 import com.nfcalarmclock.alarm.options.NacGenericAlarmOptionsDialog
 import com.nfcalarmclock.system.toBundle
 import com.nfcalarmclock.view.calcAlpha
-import com.nfcalarmclock.view.quickToast
 import com.nfcalarmclock.view.setTextFromIndex
 import com.nfcalarmclock.view.setupInputLayoutColor
 import com.nfcalarmclock.view.setupSwitchColor
@@ -241,6 +240,7 @@ class NacSnoozeOptionsDialog
 	/**
 	 * Setup volume snooze.
 	 */
+	@Suppress("UNUSED_PARAMETER")
 	private fun setupVolumeSnooze(defaultSnooze: Boolean, defaultDismiss: Boolean)
 	{
 		// Get the views
@@ -256,13 +256,8 @@ class NacSnoozeOptionsDialog
 			volumeSnoozeSwitch.toggle()
 		}
 
-		// Show toast if volume dismiss and snooze are both enabled
-		volumeSnoozeSwitch.setOnCheckedChangeListener { _, state ->
-			if (state && defaultDismiss)
-			{
-				quickToast(requireContext(), R.string.message_volume_dismiss_priority)
-			}
-		}
+		// Snoozing and dismissing with a button can both be on since 2.01: they use
+		// the two different buttons chosen in Settings, General
 	}
 
 	companion object

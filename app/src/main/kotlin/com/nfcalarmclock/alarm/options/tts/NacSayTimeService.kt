@@ -76,6 +76,12 @@ class NacSayTimeService
 	private var coverStartMillis: Long = 0
 
 	/**
+	 * Whether the hand in front of the sensor has already said the time, so that its
+	 * leaving is not taken for a new pass.
+	 */
+	private var ignoreNextLeave: Boolean = false
+
+	/**
 	 * How many hands have passed over so far.
 	 */
 	private var passCount: Int = 0
@@ -108,6 +114,34 @@ class NacSayTimeService
 		super.onStartCommand(intent, flags, startId)
 
 		val shared = NacSharedPreferences(this)
+		val action = intent?.action
+
+		// The stop button of the notification. Nothing is listened to until the hours
+		// start again, and the notification goes until then (2.01)
+		if (action == ACTION_PAUSE_UNTIL_NEXT)
+		{
+			// A tap on the button, not a swipe: the button shows nothing when pressed,
+			// so a short buzz says it was taken (2.06)
+			if (intent?.getBooleanExtra(EXTRA_FROM_BUTTON, false) == true)
+			{
+				buzz()
+			}
+
+			pauseUntilNextCycle(shared)
+
+			return START_NOT_STICKY
+		}
+
+		// The say the time button, while already listening: speak at once, without
+		// setting everything up again first (2.06)
+		if ((action == ACTION_SAY_TIME_NOW) && (sensorManager != null))
+		{
+			buzz()
+			sayTheTime("Notification button tapped")
+
+			return START_STICKY
+		}
+
 		val isOn = shared.shouldSayTime
 		val shouldShake = isOn && shared.shouldShakeToSayTime
 		val shouldWave = isOn && shared.shouldWaveToSayTime
@@ -132,6 +166,16 @@ class NacSayTimeService
 		if (!shared.isWithinSayTimeHours(hour))
 		{
 			NacLog.i("Outside the hours for the spoken time. Standing down")
+			scheduleBoundaryAlarm(this, shared, isInside = false)
+			stopThisService()
+
+			return START_NOT_STICKY
+		}
+
+		// Stopped from the notification, and the hours have not started again yet
+		if (shared.isSayTimePaused())
+		{
+			NacLog.i("The spoken time was stopped until the next hours. Standing down")
 			scheduleBoundaryAlarm(this, shared, isInside = false)
 			stopThisService()
 
@@ -165,6 +209,13 @@ class NacSayTimeService
 		// Stand down again when the hours run out
 		scheduleBoundaryAlarm(this, shared, isInside = true)
 
+		// The button of the notification that says the time
+		if (action == ACTION_SAY_TIME_NOW)
+		{
+			buzz()
+			sayTheTime("Notification button tapped")
+		}
+
 		return START_STICKY
 	}
 
@@ -176,6 +227,59 @@ class NacSayTimeService
 		stopListening()
 
 		super.onDestroy()
+	}
+
+	/**
+	 * A very short vibration, so that a tap on a button of the notification is felt.
+	 */
+	private fun buzz()
+	{
+		try
+		{
+			val vibrator = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S)
+			{
+				(getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as android.os.VibratorManager)
+					.defaultVibrator
+			}
+			else
+			{
+				@Suppress("DEPRECATION")
+				getSystemService(Context.VIBRATOR_SERVICE) as android.os.Vibrator
+			}
+
+			if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O)
+			{
+				vibrator.vibrate(android.os.VibrationEffect.createOneShot(BUZZ_MILLIS,
+					android.os.VibrationEffect.DEFAULT_AMPLITUDE))
+			}
+			else
+			{
+				@Suppress("DEPRECATION")
+				vibrator.vibrate(BUZZ_MILLIS)
+			}
+		}
+		catch (e: Exception)
+		{
+			NacLog.e("Unable to buzz", throwable = e)
+		}
+	}
+
+	/**
+	 * Stop listening until the hours for the spoken time start again, which is the
+	 * next time the clock reaches the hour they start at.
+	 */
+	private fun pauseUntilNextCycle(shared: NacSharedPreferences)
+	{
+		val resumeMillis = nextStartMillis(shared.sayTimeFromHour)
+
+		NacLog.i("Stopped from the notification until $resumeMillis")
+
+		shared.sayTimePausedUntil = resumeMillis
+
+		stopListening()
+		scheduleBoundaryAlarm(this, shared, isInside = false)
+
+		stopThisService()
 	}
 
 	/**
@@ -244,6 +348,7 @@ class NacSayTimeService
 		proximitySensor = null
 		isCovered = false
 		passCount = 0
+		ignoreNextLeave = false
 		shakeCount = 0
 	}
 
@@ -342,6 +447,28 @@ class NacSayTimeService
 		if (nowCovered)
 		{
 			coverStartMillis = now
+
+			// Two passes: the time is said as soon as the hand comes back the second
+			// time (far, near, far, near), without waiting for it to leave again. The
+			// sensor is slow, and a hand that stayed a little too long, or went by a
+			// little too fast on its way out, made the gesture fail (2.09)
+			if ((passesNeeded >= 2) && (passCount >= 1)
+				&& ((now - firstPassMillis) <= PASS_WINDOW_MILLIS))
+			{
+				passCount = 0
+				firstPassMillis = 0
+				ignoreNextLeave = true
+
+				sayTheTime("Hand came back over the phone")
+			}
+
+			return
+		}
+
+		// The hand that has just said the time is leaving: it is not a new pass
+		if (ignoreNextLeave)
+		{
+			ignoreNextLeave = false
 			return
 		}
 
@@ -438,12 +565,36 @@ class NacSayTimeService
 		 * within. [Units: ms]
 		 */
 		private const val PASS_MAX_COVER_MILLIS = 1500L
-		private const val PASS_WINDOW_MILLIS = 2000L
+		// 3.5 s rather than 2 (2.08): the proximity sensor of some phones takes a few
+		// tenths of a second to see a hand come and go, and two passes held long enough
+		// for it to see them did not fit in 2 s
+		private const val PASS_WINDOW_MILLIS = 3500L
 
 		/**
 		 * How long before the time can be said again. [Units: ms]
 		 */
 		private const val SPEAK_COOLDOWN_MILLIS = 5000L
+
+		/**
+		 * Action of the notification button that says the time.
+		 */
+		const val ACTION_SAY_TIME_NOW = "com.nfcalarmclock.ACTION_SAY_TIME_NOW"
+
+		/**
+		 * Action of the notification button that stops the listening until the hours
+		 * start again.
+		 */
+		const val ACTION_PAUSE_UNTIL_NEXT = "com.nfcalarmclock.ACTION_SAY_TIME_PAUSE"
+
+		/**
+		 * Extra saying that the stop came from the button, not from a swipe.
+		 */
+		const val EXTRA_FROM_BUTTON = "com.nfcalarmclock.EXTRA_SAY_TIME_FROM_BUTTON"
+
+		/**
+		 * How long a tap on a button of the notification buzzes. [Units: ms]
+		 */
+		private const val BUZZ_MILLIS = 40L
 
 		/**
 		 * Request code of the alarm that stands the service up and down at the hours.
@@ -478,6 +629,14 @@ class NacSayTimeService
 			val from = shared.sayTimeFromHour
 			val to = shared.sayTimeToHour
 
+			// Stopped from the notification: come back when the next hours start, even
+			// when the whole day counts
+			if (!isInside && shared.isSayTimePaused())
+			{
+				setBoundaryAlarm(context, shared.sayTimePausedUntil)
+				return
+			}
+
 			// The whole day counts, so there is no hour to wait for
 			if (from == to)
 			{
@@ -487,9 +646,18 @@ class NacSayTimeService
 
 			// Inside the hours, wait for them to run out. Outside, wait for them to start
 			val targetHour = if (isInside) to else from
+
+			setBoundaryAlarm(context, nextStartMillis(targetHour))
+		}
+
+		/**
+		 * The next time the clock reaches this hour, never now. [Units: ms]
+		 */
+		private fun nextStartMillis(hour: Int): Long
+		{
 			val calendar = Calendar.getInstance()
 
-			calendar[Calendar.HOUR_OF_DAY] = targetHour
+			calendar[Calendar.HOUR_OF_DAY] = hour
 			calendar[Calendar.MINUTE] = 0
 			calendar[Calendar.SECOND] = 0
 			calendar[Calendar.MILLISECOND] = 0
@@ -500,6 +668,14 @@ class NacSayTimeService
 				calendar.add(Calendar.DAY_OF_YEAR, 1)
 			}
 
+			return calendar.timeInMillis
+		}
+
+		/**
+		 * Set the alarm that stands the service up and down.
+		 */
+		private fun setBoundaryAlarm(context: Context, timeMillis: Long)
+		{
 			val manager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
 				?: return
 			val pendingIntent = boundaryPendingIntent(context)
@@ -507,14 +683,14 @@ class NacSayTimeService
 			try
 			{
 				manager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
-					calendar.timeInMillis, pendingIntent)
+					timeMillis, pendingIntent)
 			}
 			catch (e: Exception)
 			{
 				// Exact alarms were refused. An approximate one still does the job, only
 				// the notification lingers a little past the hour
 				NacLog.e("Unable to set an exact alarm for the spoken time hours", throwable = e)
-				manager.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+				manager.set(AlarmManager.RTC_WAKEUP, timeMillis, pendingIntent)
 			}
 		}
 
@@ -549,6 +725,7 @@ class NacSayTimeService
 			val isWanted = shared.shouldSayTime
 				&& (shared.shouldShakeToSayTime || shared.shouldWaveToSayTime)
 			val shouldListen = isWanted && shared.isWithinSayTimeHours(hour)
+				&& !shared.isSayTimePaused()
 
 			try
 			{

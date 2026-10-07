@@ -65,6 +65,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import com.nfcalarmclock.system.permission.readmediaaudio.NacReadMediaAudioPermission
 import java.io.File
 import java.util.TreeMap
 import javax.inject.Singleton
@@ -99,6 +100,16 @@ fun NacAlarm.updateMediaFromDb(
 		{
 			return 0
 		}
+	}
+	// The music of the phone cannot be read, so whether the file is there cannot be
+	// told. It is kept rather than taken off: it plays once the permission is given
+	// (2.02). Ringtones and folders are checked above and below without it
+	else if ((mediaType != NacMedia.TYPE_RINGTONE)
+		&& !allRingtones.values.contains(mediaPath)
+		&& !NacReadMediaAudioPermission.hasPermission(deviceContext))
+	{
+		NacLog.w("Unable to read the music of the phone, keeping the media of the alarm")
+		return 0
 	}
 	// Media file exists
 	else if (allMediaFiles.contains(uri))

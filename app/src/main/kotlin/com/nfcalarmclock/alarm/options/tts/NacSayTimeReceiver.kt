@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.media.AudioAttributes
+import android.media.AudioManager
 import android.os.Handler
 import android.os.Looper
 import com.nfcalarmclock.R
@@ -60,6 +62,7 @@ class NacSayTimeReceiver
 		val handler = Handler(Looper.getMainLooper())
 		val engine = arrayOfNulls<NacTextToSpeech>(1)
 		val isFinished = AtomicBoolean(false)
+		val restoreVolume = arrayOfNulls<() -> Unit>(1)
 
 		// Let go of the broadcast, whatever happened. Only the first call does anything
 		val finish = object : Runnable
@@ -72,6 +75,10 @@ class NacSayTimeReceiver
 				}
 
 				handler.removeCallbacks(this)
+
+				// Give the alarms their volume back
+				restoreVolume[0]?.invoke()
+				restoreVolume[0] = null
 
 				try
 				{
@@ -133,7 +140,76 @@ class NacSayTimeReceiver
 		val phrase = NacTranslate.getTtsPhrase(phraseContext,
 			shouldSayCurrentTime = true, shouldSayAlarmName = false, alarmName = "")
 
-		speech.speak(phrase, NacAudioAttributes(context))
+		// Speak as an alarm. Without a usage the voice went out as media, which "Do not
+		// disturb" and the bedtime mode silence; alarms get through both by default
+		// (2.01). It plays at the alarm volume
+		val attrs = NacAudioAttributes(context).apply {
+			audioUsage = AudioAttributes.USAGE_ALARM
+			contentType = AudioAttributes.CONTENT_TYPE_SPEECH
+		}
+
+		// The volume chosen for the voice, as a share of the loudest the phone can go.
+		// The voice plays on the alarm volume, so that volume is set for as long as it
+		// speaks and put back afterwards (2.06)
+		restoreVolume[0] = setVoiceVolume(context, shared.sayTimeVolume)
+
+		speech.speak(phrase, attrs)
+	}
+
+	/**
+	 * Set the alarm volume to the volume chosen for the voice.
+	 *
+	 * @return How to put the volume back, or null when nothing was changed.
+	 */
+	private fun setVoiceVolume(context: Context, choice: Int): (() -> Unit)?
+	{
+		// Same as the alarms: nothing to change
+		if (choice <= 0)
+		{
+			return null
+		}
+
+		return try
+		{
+			val audio = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+			val stream = AudioManager.STREAM_ALARM
+			val max = audio.getStreamMaxVolume(stream)
+			val min = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P)
+				audio.getStreamMinVolume(stream) else 0
+			val before = audio.getStreamVolume(stream)
+			val wanted = ((max * choice.coerceIn(1, 10) + 5) / 10).coerceIn(maxOf(min, 1), max)
+
+			if (wanted == before)
+			{
+				return null
+			}
+
+			audio.setStreamVolume(stream, wanted, 0)
+			NacLog.i("Voice volume: $wanted of $max (was $before)")
+
+			val restore: () -> Unit = {
+				try
+				{
+					// An alarm may have started meanwhile and set its own volume. It is
+					// left alone then
+					if (audio.getStreamVolume(stream) == wanted)
+					{
+						audio.setStreamVolume(stream, before, 0)
+					}
+				}
+				catch (e: Exception)
+				{
+					NacLog.e("Unable to put the alarm volume back", throwable = e)
+				}
+			}
+
+			restore
+		}
+		catch (e: Exception)
+		{
+			NacLog.e("Unable to set the voice volume", throwable = e)
+			null
+		}
 	}
 
 	companion object

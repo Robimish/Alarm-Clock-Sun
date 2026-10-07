@@ -18,12 +18,18 @@
 	<com.nfcalarmclock.settings.preference.NacPreferenceCategory
 		android:title="@string/title_while_ringing">
 
-		<com.nfcalarmclock.settings.preference.NacSwitchPreference
-			android:title="@string/title_power_dismiss"
-			android:key="@string/key_power_dismiss"
-			android:summaryOn="@string/description_power_dismiss_true"
-			android:summaryOff="@string/description_power_dismiss_false"
-			android:defaultValue="@bool/default_power_dismiss"
+		<Preference
+			android:title="@string/title_snooze_button"
+			android:key="@string/key_snooze_button"
+			android:layout="@layout/nac_preference"
+			app:allowDividerAbove="false"
+			app:allowDividerBelow="false"
+			/>
+
+		<Preference
+			android:title="@string/title_dismiss_button"
+			android:key="@string/key_dismiss_button"
+			android:layout="@layout/nac_preference"
 			app:allowDividerAbove="false"
 			app:allowDividerBelow="true"
 			/>

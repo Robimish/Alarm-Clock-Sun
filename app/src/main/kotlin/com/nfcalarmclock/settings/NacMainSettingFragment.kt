@@ -15,6 +15,7 @@ import com.nfcalarmclock.settings.importexport.NacImportExportDialog
 import com.nfcalarmclock.settings.importexport.NacImportService
 import com.nfcalarmclock.support.NacSupportSetting
 import com.nfcalarmclock.system.NacCalendar
+import com.nfcalarmclock.system.permission.readmediaaudio.NacReadMediaAudioPermission
 import com.nfcalarmclock.view.quickToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -33,6 +34,17 @@ class NacMainSettingFragment
 	private val importContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
 		val intent = Intent(Intent.ACTION_DEFAULT, uri, context, NacImportService::class.java)
 		requireContext().startService(intent)
+	}
+
+	/**
+	 * Ask to read the music before importing, then import whatever the answer.
+	 *
+	 * The import checks that the music of each alarm is on this phone, and it can only
+	 * see the music with this permission. Without it, after a new install, every
+	 * song was taken off the alarms (2.02).
+	 */
+	private val readMediaBeforeImport = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+		importContent.launch("application/zip")
 	}
 
 	/**
@@ -132,7 +144,15 @@ class NacMainSettingFragment
 
 					// Launch the file chooser
 					NacLog.i("Launching import")
-					importContent.launch("application/zip")
+
+					if (NacReadMediaAudioPermission.hasPermission(requireContext()))
+					{
+						importContent.launch("application/zip")
+					}
+					else
+					{
+						readMediaBeforeImport.launch(NacReadMediaAudioPermission.permissionName)
+					}
 
 				}
 

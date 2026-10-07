@@ -2,6 +2,47 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
 	<string-array name="whats_new_items" tools:ignore="InconsistentArrays">
+		<item>2.09</item>
+		<item>Avec &lt;b>deux passages de la main&lt;/b>, l\'heure est dite dès que la main revient la deuxième fois, sans attendre qu\'elle reparte.</item>
+		<item>2.08</item>
+		<item>Les &lt;b>deux passages de la main&lt;/b> peuvent maintenant prendre jusqu\'à 3,5 secondes au lieu de 2, pour les capteurs de proximité lents à voir la main.</item>
+		<item>2.07</item>
+		<item>Nouveau dans Paramètres, Apparence, Écran d\'alarme : &lt;b>Mes phrases de réveil&lt;/b>, pour écrire les vôtres, une par ligne, affichées avec celles de l\'app ou seules.</item>
+		<item>Le test du capteur de la main compte les &lt;b>passages&lt;/b> qu\'il voit.</item>
+		<item>2.06</item>
+		<item>&lt;b>Dire l\'heure&lt;/b> : balayer sa notification l\'arrête jusqu\'au prochain début de sa plage horaire, comme le bouton Arrêter.</item>
+		<item>Les boutons de la notification donnent une &lt;b>courte vibration&lt;/b> au toucher, et Dire l\'heure parle tout de suite.</item>
+		<item>Nouveau &lt;b>volume de la voix&lt;/b>, en pourcentage du volume maximal du téléphone (30 % au départ). Le volume des alarmes est remis juste après.</item>
+		<item>Nouveau &lt;b>Tester le capteur de la main&lt;/b> : montre ce que lit le capteur de proximité, et s\'il donne une distance ou seulement proche ou loin.</item>
+		<item>2.05</item>
+		<item>Avec &lt;b>Glisser pour reporter ou arrêter&lt;/b> éteint, les réglages de date, d\'heure et de musique de l\'écran d\'alarme ne sont plus grisés.</item>
+		<item>Une nouvelle alarme démarre à un &lt;b>volume de 30 %&lt;/b> au lieu de 40 %.</item>
+		<item>Nouveau dans Paramètres, Apparence, Écran d\'alarme : l\'&lt;b>écran simple&lt;/b>, l\'écran d\'origine avec seulement le nom de l\'alarme et deux boutons.</item>
+		<item>Paramètres, Général, Stockage : &lt;b>Vider le cache des sons&lt;/b> et &lt;b>Vider le cache des images d\'aube&lt;/b> sont les nouveaux noms des lignes qui libèrent de la place.</item>
+		<item>La &lt;b>phrase de réveil&lt;/b> change à chaque sonnerie, et plus une fois par jour : deux sonneries de la même alarme dans la journée montrent deux phrases.</item>
+		<item>2.04</item>
+		<item>Maintenir une carte sans bouger ouvre son menu (prochaine alarme, sauter la prochaine) ; la maintenir puis &lt;b>bouger&lt;/b> le doigt : le menu se ferme et la carte suit.</item>
+		<item>2.03</item>
+		<item>Les &lt;b>boutons qui reportent et arrêtent&lt;/b> se choisissent une fois, dans Paramètres, Général, pour toutes les alarmes : les interrupteurs dans les options de chaque alarme disparaissent. Nouveaux choix : &lt;b>Aucun&lt;/b> (par défaut) et &lt;b>N\'importe quel bouton&lt;/b> (volume ou marche). Un bouton qu\'une alarme utilisait est gardé.</item>
+		<item>L\'&lt;b>aube&lt;/b> d\'une nouvelle alarme dure &lt;b>8 minutes&lt;/b> par défaut au lieu de 10.</item>
+		<item>2.02</item>
+		<item>Une alarme &lt;b>sans aucun jour choisi&lt;/b> sonne une fois et se désactive une fois arrêtée. Elle revenait le lendemain : retirer le dernier jour passait la répétition à tous les jours, alors que la carte n\'affichait qu\'Aujourd\'hui ou Demain. Pour sonner tous les jours, choisissez tous les jours.</item>
+		<item>Une alarme ponctuelle désactivée affiche maintenant &lt;b>Une fois&lt;/b> au lieu de Demain.</item>
+		<item>L\'&lt;b>import&lt;/b> demande d\'abord l\'accès à la musique du téléphone. Sans lui, après une nouvelle installation, les musiques des alarmes étaient retirées.</item>
+		<item>En revenant aux alarmes avec une carte ouverte, la liste n\'affiche plus un instant le &lt;b>mauvais ordre&lt;/b> avant de se remettre en place.</item>
+		<item>2.01</item>
+		<item>Nouveau dans Paramètres, Général, Pendant la sonnerie : choisissez le &lt;b>bouton qui reporte&lt;/b> (au départ volume + ou −) et le &lt;b>bouton qui arrête&lt;/b> (au départ le bouton marche) : volume +, volume −, l\'un ou l\'autre, ou le bouton marche. Chaque alarme dit dans ses options de report et d\'arrêt si elle utilise son bouton. L\'ancien interrupteur du bouton marche disparaît : s\'il était activé, toutes les alarmes s\'arrêtent maintenant avec le bouton marche.</item>
+		<item>Dans l\'alarme par défaut, activer ou désactiver le report ou l\'arrêt par bouton demande si toutes les alarmes déjà créées doivent suivre.</item>
+		<item>&lt;b>Dire l\'heure&lt;/b> parle maintenant comme une alarme : on l\'entend en mode Ne pas déranger et en mode coucher. Le volume est celui des alarmes.</item>
+		<item>La &lt;b>notification de Dire l\'heure&lt;/b> a deux boutons : &lt;b>Dire l\'heure&lt;/b>, et &lt;b>Arrêter&lt;/b>, qui coupe l\'écoute jusqu\'au prochain début de sa plage horaire. Éteindre puis rallumer Dire l\'heure dans les paramètres la fait revenir plus tôt.</item>
+		<item>Repris de NFC Alarm Clock 12.7.3 : une &lt;b>vibration&lt;/b> refusée par le téléphone ne fait plus planter l\'app, et deux plantages rares (son haut-parleurs + Bluetooth, NFC) sont évités.</item>
+		<item>Le &lt;b>début de semaine automatique&lt;/b> suit maintenant le téléphone : son réglage « Premier jour de la semaine » à partir d\'Android 14, sinon le pays de sa carte SIM, et plus la langue choisie pour l\'app.</item>
+		<item>Corrigé : le &lt;b>report facile&lt;/b> (toucher l\'écran reporte l\'alarme) ne fonctionnait pas. Pendant l\'aube, un toucher montre toujours l\'écran normal.</item>
+		<item>L\'icône du &lt;b>volume&lt;/b> montre une onde de 1 à 49 % et deux à partir de 50 %, et le haut-parleur ne bouge plus.</item>
+		<item>« Revenir aux réglages d\'origine » s\'appelle maintenant &lt;b>Réinitialiser les réglages&lt;/b>.</item>
+		<item>Le &lt;b>curseur de report et d\'arrêt&lt;/b> agit dès 97 % du chemin : plus besoin d\'amener le bouton tout au bout.</item>
+		<item>L\'&lt;b>écran d\'alarme&lt;/b> montre la même chose avec ou sans aube, avec les boutons ou avec le curseur : horloge (à aiguilles si choisie), date, nom, phrase de réveil et musique. Le réglage « Nouvel écran » s\'appelle maintenant &lt;b>Glisser pour reporter ou arrêter&lt;/b> ; éteint, on touche simplement Reporter ou Arrêter.</item>
+		<item>Maintenez une carte d\'alarme fermée pour la &lt;b>monter ou la descendre&lt;/b> dans la liste. Seulement si « Réorganiser la liste toute seule » est éteint.</item>
 		<item>2.00</item>
 		<item>Première version &lt;b>finale&lt;/b> (release) : plus légère et plus rapide, signée avec sa propre clé. Elle ne s\'installe pas par-dessus les versions de test (debug) : exportez vos données (Paramètres, Importer | Exporter), désinstallez, installez, puis importez.</item>
 		<item>1.98</item>

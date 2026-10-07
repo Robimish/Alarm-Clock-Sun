@@ -16,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.util.UnstableApi
 import com.nfcalarmclock.BuildConfig
 import com.nfcalarmclock.R
+import com.nfcalarmclock.alarm.options.NacAlarmButton
 import com.nfcalarmclock.alarm.NacAlarmRepository
 import com.nfcalarmclock.alarm.db.NacAlarm
 import com.nfcalarmclock.alarm.options.flashlight.NacFlashlight
@@ -188,18 +189,19 @@ class NacActiveAlarmService
 	 * volume manager reads the volume once a second and remains for everything
 	 * else, such as the alarm ringing while another app is on screen.
 	 */
-	private fun handleVolumeKeyPress()
+	private fun handleVolumeKeyPress(isUp: Boolean): Boolean
 	{
-		if (alarm == null)
-		{
-			return
-		}
+		val currentAlarm = alarm ?: return false
 
-		// Volume dismiss
-		if (alarm!!.shouldVolumeDismiss)
+		// Which buttons do what is chosen in Settings, General, for every alarm (2.02)
+		val dismisses = NacAlarmButton.matchesVolume(sharedPreferences.dismissButton, isUp)
+		val snoozes = NacAlarmButton.matchesVolume(sharedPreferences.snoozeButton, isUp)
+
+		// Dismiss with a volume key
+		if (dismisses)
 		{
 			// Unable to dismiss NFC alarm with volume press
-			if (alarm!!.shouldUseNfc)
+			if (currentAlarm.shouldUseNfc)
 			{
 				NacLog.e("Unable to dismiss NFC alarm with a volume press")
 				quickToast(this, R.string.error_message_unable_to_volume_dismiss_nfc_alarm)
@@ -207,16 +209,23 @@ class NacActiveAlarmService
 			// Dismiss regular alarm with volume press
 			else
 			{
-				NacLog.i("Volume press to dismiss the alarm")
-				dismissAlarmService(this, alarm)
+				NacLog.i("Volume press to dismiss the alarm. up=$isUp")
+				dismissAlarmService(this, currentAlarm)
 			}
+
+			return true
 		}
-		// Volume snooze
-		else
+
+		// Snooze with a volume key
+		if (snoozes)
 		{
-			NacLog.i("Volume press to (attempt) snooze the alarm")
-			snoozeAlarmService(this, alarm)
+			NacLog.i("Volume press to (attempt) snooze the alarm. up=$isUp")
+			snoozeAlarmService(this, currentAlarm)
+			return true
 		}
+
+		// This key does nothing for this alarm
+		return false
 	}
 
 	/**
@@ -227,7 +236,7 @@ class NacActiveAlarmService
 	 *         alarm does not use the volume keys, and the key does what it always
 	 *         does.
 	 */
-	fun onVolumeKeyFromScreen(): Boolean
+	fun onVolumeKeyFromScreen(isUp: Boolean): Boolean
 	{
 		val currentAlarm = alarm ?: return false
 
@@ -237,14 +246,13 @@ class NacActiveAlarmService
 			return false
 		}
 
-		if (!currentAlarm.shouldVolumeDismiss && !currentAlarm.shouldVolumeSnooze)
+		if (!NacAlarmButton.usesVolume(sharedPreferences.dismissButton)
+			&& !NacAlarmButton.usesVolume(sharedPreferences.snoozeButton))
 		{
 			return false
 		}
 
-		handleVolumeKeyPress()
-
-		return true
+		return handleVolumeKeyPress(isUp)
 	}
 
 	/**
@@ -1046,10 +1054,11 @@ class NacActiveAlarmService
 		wakeupProcess = NacWakeupProcess(this, alarm!!)
 
 		// Add a volume key press listener so that the volume keys can dismiss/snooze the alarm
-		if (alarm!!.shouldVolumeDismiss || alarm!!.shouldVolumeSnooze)
+		if (NacAlarmButton.usesVolume(sharedPreferences.dismissButton)
+			|| NacAlarmButton.usesVolume(sharedPreferences.snoozeButton))
 		{
-			wakeupProcess!!.volumeManager.onVolumeKeyPressListener = NacVolumeManager.OnVolumeKeyPressListener {
-				handleVolumeKeyPress()
+			wakeupProcess!!.volumeManager.onVolumeKeyPressListener = NacVolumeManager.OnVolumeKeyPressListener { _, isUp ->
+				handleVolumeKeyPress(isUp)
 			}
 		}
 

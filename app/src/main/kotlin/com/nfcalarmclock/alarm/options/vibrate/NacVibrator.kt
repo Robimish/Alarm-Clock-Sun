@@ -79,7 +79,18 @@ class NacVibrator(context: Context)
 			}
 
 			// Create a vibration that will repeat indefinitely (that is what the 0 is for)
-			val effect = VibrationEffect.createWaveform(timings.toLongArray(), amplitudes.toIntArray(), 0)
+			//
+			// Some phones refuse the waveform. Log what was asked, then let the caller
+			// show a message instead of the app crashing (from NFC Alarm Clock 12.7.3)
+			val effect = try
+			{
+				VibrationEffect.createWaveform(timings.toLongArray(), amplitudes.toIntArray(), 0)
+			}
+			catch (e: IllegalArgumentException)
+			{
+				NacLog.e("Unable to create vibration effect. timings=$timings | amplitudes=$amplitudes", throwable = e)
+				throw e
+			}
 
 			// Vibrate (API 33+)
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)

@@ -198,8 +198,6 @@
 	<string name="message_text_to_speech_default_voice">Voz padrão</string>
 	<string name="message_text_to_speech_voice">Voz %1$d</string>
 	<string name="message_text_to_speech_network_required">Pode ser necessária uma conexão de rede para que a voz funcione</string>
-	<string name="message_volume_dismiss_priority">A rejeição em volume terá prioridade.</string>
-	<string name="message_volume_snooze_ignored">O modo soneca do volume será ignorado.</string>
 
 	<!-- Error messages -->
 	<string name="error_message_active_delete">Não é possível excluir um alarme ativo</string>

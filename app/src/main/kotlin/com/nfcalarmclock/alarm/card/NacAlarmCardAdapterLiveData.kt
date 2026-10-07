@@ -134,6 +134,18 @@ class NacAlarmCardAdapterLiveData
 		// Merge the current alarms with the new alarms
 		var mergedAlarms = calculateMerge(currentAlarms, alarms)
 
+		// The list is built from nothing, when coming back to the alarms. The alarms
+		// then arrive in the raw order of the database, so they are put in order now.
+		// Otherwise a list with an open card showed the wrong order for a moment, then
+		// jumped to the right one and was left scrolled down a little (2.02)
+		if (currentAlarms.isNullOrEmpty())
+		{
+			val sortedAlarms = mergedAlarms.toMutableList()
+
+			sortAlarms(sortedAlarms)
+			mergedAlarms = sortedAlarms
+		}
+
 		// Check if an alarm was copied
 		if (copiedIds != null)
 		{

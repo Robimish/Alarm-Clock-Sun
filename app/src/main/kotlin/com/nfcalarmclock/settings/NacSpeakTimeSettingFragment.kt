@@ -92,6 +92,105 @@ class NacSpeakTimeSettingFragment
 		setupShakeSensitivity(shared)
 		setupWaveToSayTime(shared)
 		setupWavePasses(shared)
+		setupSayTimeVolume(shared)
+		setupProximityTest()
+	}
+
+	/**
+	 * Setup the volume of the spoken time (2.06).
+	 */
+	private fun setupSayTimeVolume(shared: NacSharedPreferences)
+	{
+		setupChoicePreference(R.string.key_say_time_volume, R.string.title_say_time_volume,
+			R.array.say_time_volume_entries,
+			get = { shared.sayTimeVolume },
+			set = { shared.sayTimeVolume = it },
+			extra = { index ->
+				if (index == 0) null else getString(R.string.description_say_time_volume)
+			})
+	}
+
+	/**
+	 * Setup the test of the proximity sensor: a dialog that shows what it reads, live
+	 * (2.06). Some sensors give a distance, most only say near or far, and only the
+	 * first kind could ever have a distance to choose.
+	 */
+	private fun setupProximityTest()
+	{
+		val pref = findPreference<Preference>(getString(R.string.key_proximity_test)) ?: return
+
+		pref.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+
+			val context = requireContext()
+			val manager = context.getSystemService(android.content.Context.SENSOR_SERVICE)
+				as? android.hardware.SensorManager
+			val sensor = manager?.getDefaultSensor(android.hardware.Sensor.TYPE_PROXIMITY)
+
+			if ((manager == null) || (sensor == null))
+			{
+				AlertDialog.Builder(context)
+					.setTitle(R.string.title_proximity_test)
+					.setMessage(R.string.message_proximity_none)
+					.setPositiveButton(R.string.action_ok, null)
+					.show()
+
+				return@OnPreferenceClickListener true
+			}
+
+			// Every value read so far. A sensor that only knows near and far keeps
+			// coming back with the same two values
+			val seen = mutableSetOf<Float>()
+
+			// How many times something arrived in front of the sensor, to see which
+			// passes it catches and which ones are too quick for it (2.07)
+			var passes = 0
+			var wasNear = false
+			val dialog = AlertDialog.Builder(context)
+				.setTitle(R.string.title_proximity_test)
+				.setMessage(R.string.message_proximity_test_hint)
+				.setPositiveButton(R.string.action_ok, null)
+				.create()
+
+			val listener = object : android.hardware.SensorEventListener
+			{
+				override fun onSensorChanged(event: android.hardware.SensorEvent?)
+				{
+					val value = event?.values?.getOrNull(0) ?: return
+					val near = value < sensor.maximumRange
+
+					seen.add(value)
+
+					if (near && !wasNear)
+					{
+						passes++
+					}
+
+					wasNear = near
+
+					val kind = when
+					{
+						seen.size > 2 -> getString(R.string.message_proximity_distance)
+						seen.size == 2 -> getString(R.string.message_proximity_binary)
+						else -> getString(R.string.message_proximity_test_hint)
+					}
+
+					dialog.setMessage(getString(R.string.message_proximity_test_values,
+						sensor.name, "%.1f".format(sensor.maximumRange), "%.1f".format(value),
+						getString(if (near) R.string.word_proximity_near else R.string.word_proximity_far))
+						+ "\n" + getString(R.string.message_proximity_passes, passes)
+						+ "\n\n" + kind)
+				}
+
+				override fun onAccuracyChanged(s: android.hardware.Sensor?, accuracy: Int) {}
+			}
+
+			dialog.setOnDismissListener { manager.unregisterListener(listener) }
+			dialog.show()
+
+			manager.registerListener(listener, sensor, android.hardware.SensorManager.SENSOR_DELAY_UI)
+
+			true
+		}
 	}
 
 	/**

@@ -5,6 +5,47 @@
 	<!-- &lt;/b> -->
 
 	<string-array name="whats_new_items" tools:ignore="InconsistentArrays">
+		<item>2.09</item>
+		<item>With &lt;b>two hand passes&lt;/b>, the time is said as soon as the hand comes back the second time, without waiting for it to leave.</item>
+		<item>2.08</item>
+		<item>&lt;b>Two hand passes&lt;/b> may now take up to 3.5 seconds instead of 2, for proximity sensors that are slow to see a hand.</item>
+		<item>2.07</item>
+		<item>New in Settings, Appearance, Alarm screen: &lt;b>My wake-up phrases&lt;/b>, to write your own, one per line, shown with the ones of the app or alone.</item>
+		<item>The test of the hand sensor counts the &lt;b>passes&lt;/b> it sees.</item>
+		<item>2.06</item>
+		<item>&lt;b>Speak the time&lt;/b>: swiping its notification away stops it until the next start of its hours, like the Stop button.</item>
+		<item>The buttons of the notification give a &lt;b>short vibration&lt;/b> when tapped, and Say the time speaks at once.</item>
+		<item>New &lt;b>voice volume&lt;/b>, as a share of the loudest the phone can go (30 % at first). The volume of the alarms is put back right after.</item>
+		<item>New &lt;b>Test the hand sensor&lt;/b>: shows what the proximity sensor reads, and whether it gives a distance or only near and far.</item>
+		<item>2.05</item>
+		<item>With &lt;b>Swipe to snooze or dismiss&lt;/b> off, the date, time and music settings of the alarm screen are no longer greyed out.</item>
+		<item>A new alarm starts at a &lt;b>volume of 30 %&lt;/b> instead of 40 %.</item>
+		<item>New in Settings, Appearance, Alarm screen: &lt;b>Simple screen&lt;/b>, the original screen with only the name of the alarm and two buttons.</item>
+		<item>Settings, General, Storage: &lt;b>Clear sound cache&lt;/b> and &lt;b>Clear sunrise image cache&lt;/b> are the new names of the lines that free up space.</item>
+		<item>The &lt;b>wake-up phrase&lt;/b> changes with every ring, no longer once a day: two rings of the same alarm in one day show two phrases.</item>
+		<item>2.04</item>
+		<item>Hold a card still to open its menu (show or skip the next alarm); hold it and &lt;b>move&lt;/b> your finger: the menu closes and the card follows.</item>
+		<item>2.03</item>
+		<item>The &lt;b>buttons that snooze and dismiss&lt;/b> are chosen once, in Settings, General, for every alarm: the switches in the options of each alarm are gone. New choices: &lt;b>None&lt;/b> (the default) and &lt;b>Any button&lt;/b> (volume or power). A button that some alarm used is kept.</item>
+		<item>The &lt;b>sunrise&lt;/b> of a new alarm lasts &lt;b>8 minutes&lt;/b> by default instead of 10.</item>
+		<item>2.02</item>
+		<item>An alarm with &lt;b>no day selected&lt;/b> rings once and turns itself off once dismissed. It used to come back the next day: taking off the last day changed the repeat to every day, while the card only said Today or Tomorrow. To ring every day, select every day.</item>
+		<item>A one-time alarm that is turned off now says &lt;b>Once&lt;/b> instead of Tomorrow.</item>
+		<item>&lt;b>Import&lt;/b> first asks to read the music of the phone. Without it, after a new install, the songs of the alarms were taken off.</item>
+		<item>Coming back to the alarms with a card open, the list no longer shows the &lt;b>wrong order&lt;/b> for a moment before jumping back.</item>
+		<item>2.01</item>
+		<item>New in Settings, General, While the alarm rings: choose the &lt;b>button that snoozes&lt;/b> (volume up or down at first) and the &lt;b>button that dismisses&lt;/b> (the power button at first): volume up, volume down, either, or the power button. Each alarm says in its snooze and dismiss options whether it uses its button. The power button switch is gone: if it was on, every alarm now dismisses with the power button.</item>
+		<item>In the default alarm, turning snoozing or dismissing with a button on or off asks whether all the alarms already created should follow.</item>
+		<item>&lt;b>Say the time&lt;/b> now speaks as an alarm, so it is heard in Do not disturb and bedtime mode. It plays at the alarm volume.</item>
+		<item>The &lt;b>Say the time notification&lt;/b> has two buttons: &lt;b>Say the time&lt;/b>, and &lt;b>Stop&lt;/b>, which stops listening until the next start of its hours. Switching Speak the time off and on again in the settings brings it back sooner.</item>
+		<item>From NFC Alarm Clock 12.7.3: a &lt;b>vibration&lt;/b> the phone refuses no longer crashes the app, and two rare crashes (sound through speakers and Bluetooth, NFC) are avoided.</item>
+		<item>The &lt;b>automatic start of the week&lt;/b> now follows the phone: its "First day of week" preference on Android 14 and later, otherwise the country of its SIM card, no longer the language chosen for the app.</item>
+		<item>Fixed: &lt;b>easy snooze&lt;/b> (a tap on the screen snoozes the alarm) did not work. During the sunrise a tap still shows the normal screen.</item>
+		<item>The &lt;b>volume&lt;/b> icon shows one wave from 1 to 49 % and two from 50 %, and the speaker no longer moves.</item>
+		<item>\"Back to the settings out of the box\" is now called &lt;b>Reset settings&lt;/b>.</item>
+		<item>The &lt;b>snooze and dismiss slider&lt;/b> acts from 97 % of the way, so the button no longer has to reach the very end.</item>
+		<item>The &lt;b>alarm screen&lt;/b> shows the same things with or without a sunrise, and with buttons or with the slider: clock (analog if chosen), date, name, wake-up phrase and music. The \"New screen\" setting is now called &lt;b>Swipe to snooze or dismiss&lt;/b>; turned off, Snooze and Dismiss are simply tapped.</item>
+		<item>Hold a closed alarm card to &lt;b>move it up or down&lt;/b> the list. Only when \"Rearrange the list on its own\" is off.</item>
 		<item>2.00</item>
 		<item>First &lt;b>release&lt;/b> build: smaller and faster, signed with its own key. It cannot be installed over the test (debug) builds: export your data (Settings, Import | Export), uninstall, install, then import.</item>
 		<item>1.98</item>

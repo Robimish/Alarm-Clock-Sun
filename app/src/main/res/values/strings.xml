@@ -213,8 +213,6 @@
 	<string name="message_text_to_speech_default_voice">Default voice</string>
 	<string name="message_text_to_speech_voice">Voice %1$d</string>
 	<string name="message_text_to_speech_network_required">Network connection may be required for voice to work</string>
-	<string name="message_volume_dismiss_priority">Volume dismiss will have priority</string>
-	<string name="message_volume_snooze_ignored">Volume snooze will be ignored</string>
 
 	<!-- Error messages -->
 	<string name="error_message_active_delete">Unable to delete an active alarm</string>
@@ -228,6 +226,8 @@
 	<string name="error_message_nfc_id_exists">This NFC ID is already being used</string>
 	<string name="error_message_unable_to_scan_nfc">Unable to scan NFC tags</string>
 	<string name="error_message_snooze">Unable to snooze the alarm</string>
+	<string name="error_message_unable_to_vibrate">Unable to vibrate on this phone. The alarm rings without vibrating.</string>
+	<string name="error_message_out_of_memory">Not enough memory to vibrate. The alarm rings without vibrating.</string>
 	<string name="error_message_snoozed_delete">Unable to delete a snoozed alarm</string>
 	<string name="error_message_snoozed_modify">Unable to modify a snoozed alarm</string>
 	<string name="error_message_select_color">Invalid hex color</string>
@@ -323,12 +323,12 @@
 	<string name="title_dismiss_options_dismiss_early">Dismiss early</string>
 	<string name="title_dismiss_options_dismiss_early_notification">Dismiss early notification</string>
 	<string name="title_dismiss_options_delete_after_dismissed">Delete after dismissed</string>
-	<string name="title_dismiss_options_volume_dismiss">Volume dismiss</string>
+	<string name="title_dismiss_options_volume_dismiss">Dismiss with a button</string>
 	<string name="title_snooze_options_auto_snooze">Auto-snooze</string>
 	<string name="title_snooze_options_max_snooze">Max snoozes</string>
 	<string name="title_snooze_options_snooze_duration">Snooze duration</string>
 	<string name="title_snooze_options_easy_snooze">Easy snooze</string>
-	<string name="title_snooze_options_volume_snooze">Volume snooze</string>
+	<string name="title_snooze_options_volume_snooze">Snooze with a button</string>
 	<string name="title_upcoming_reminder_show_reminder">Show reminder</string>
 	<string name="title_upcoming_reminder_how_early">How early…</string>
 	<string name="title_upcoming_reminder_how_frequent">How frequent…</string>
@@ -355,7 +355,18 @@
 	<string name="title_style">Style</string>
 	<string name="title_tweaks">Tweaks</string>
 	<string name="title_misc">Miscellaneous</string>
-	<string name="title_new_screen">New screen</string>
+	<string name="title_my_phrases" tools:ignore="MissingTranslation">My wake-up phrases</string>
+	<string name="message_my_phrases_hint" tools:ignore="MissingTranslation">One phrase per line.</string>
+	<string name="description_my_phrases_none" tools:ignore="MissingTranslation">No phrase of your own yet. Tap to write some.</string>
+	<string name="description_my_phrases_count" tools:ignore="MissingTranslation">%1$d phrase(s) of your own</string>
+	<string name="title_only_my_phrases" tools:ignore="MissingTranslation">Only my phrases</string>
+	<string name="description_only_my_phrases_true" tools:ignore="MissingTranslation">Only your phrases are shown under the clock.</string>
+	<string name="description_only_my_phrases_false" tools:ignore="MissingTranslation">Your phrases are shown with the ones of the app.</string>
+	<string name="message_proximity_passes" tools:ignore="MissingTranslation">Passes seen: %1$d</string>
+	<string name="title_simple_screen" tools:ignore="MissingTranslation">Simple screen</string>
+	<string name="description_use_simple_screen_true" tools:ignore="MissingTranslation">The original alarm screen: the name of the alarm and two buttons, Snooze and Dismiss.</string>
+	<string name="description_use_simple_screen_false" tools:ignore="MissingTranslation">The full alarm screen: clock, date, name, phrase and music.</string>
+	<string name="title_new_screen">Swipe to snooze or dismiss</string>
 	<string name="title_show_alarm_name">Show alarm name</string>
 	<string name="title_show_current_date_and_time">Show current date and time</string>
 	<string name="title_show_music_info">Show music information</string>
@@ -436,13 +447,13 @@
 	<string name="description_dismiss_options_dismiss_early_notification">Show a notification when the alarm can be dismissed early.</string>
 	<string name="description_dismiss_options_delete_after_dismissed_alarm">The alarm will be deleted after it is dismissed.</string>
 	<string name="description_dismiss_options_delete_after_dismissed_timer">The timer will be deleted after it is dismissed.</string>
-	<string name="description_dismiss_options_volume_dismiss_alarm">Dismiss the alarm by pressing the volume up or down button.</string>
+	<string name="description_dismiss_options_volume_dismiss_alarm">Dismiss the alarm with the button chosen in Settings, General (the power button at first).</string>
 	<string name="description_dismiss_options_volume_dismiss_timer">Dismiss the timer by pressing the volume up or down button.</string>
 	<string name="description_snooze_options_auto_snooze">Snooze the alarm automatically after a set duration.</string>
 	<string name="description_snooze_options_max_snooze">Maximum number of times the alarm can be snoozed.</string>
 	<string name="description_snooze_options_snooze_duration">Amount of time to snooze the alarm for.</string>
 	<string name="description_snooze_options_easy_snooze">Snooze the alarm by touching anywhere on the alarm screen.</string>
-	<string name="description_snooze_options_volume_snooze">Snooze the alarm by pressing the volume up or down button.</string>
+	<string name="description_snooze_options_volume_snooze">Snooze the alarm with the button chosen in Settings, General (volume up or down at first).</string>
 	<string name="description_upcoming_reminder_show_reminder">Show a reminder notification before the alarm goes off.</string>
 	<string name="description_upcoming_reminder_how_early">How early should the reminder notification should be shown?</string>
 	<string name="description_upcoming_reminder_how_frequent">How frequent should the reminder notification should be shown?</string>
@@ -459,8 +470,8 @@
 	<string name="description_setting_import_export">Import or export all your saved data</string>
 	<string name="description_toggle_alarms_with_airplane_mode_on">Disabling all alarms due to airplane mode change.</string>
 	<string name="description_toggle_alarms_with_airplane_mode_off">Enabling all alarms due to airplane mode change.</string>
-	<string name="description_use_new_screen_true">Use the new alarm screen, where you swipe to snooze or dismiss the alarm.</string>
-	<string name="description_use_new_screen_false">Do not use the new alarm screen. Use the original screen with simple buttons to snooze or dismiss the alarm.</string>
+	<string name="description_use_new_screen_true">Slide the Snooze or Dismiss button to the other end.</string>
+	<string name="description_use_new_screen_false">Tap the Snooze or Dismiss button, no need to slide.</string>
 	<string name="description_alarm_screen_show_alarm_name_true">Show the alarm name in the alarm screen.</string>
 	<string name="description_alarm_screen_show_alarm_name_false">Do not show the alarm name.</string>
 	<string name="description_alarm_screen_show_current_date_and_time_true">Show the current date and time in the alarm screen.</string>
@@ -504,6 +515,16 @@
 	<string name="title_dawn_reveal_duration" tools:ignore="MissingTranslation">Tap to see the screen</string>
 	<string name="message_dawn_preview_over" tools:ignore="MissingTranslation">Tap to close</string>
 	<string name="title_dawn_preview_duration" tools:ignore="MissingTranslation">Preview length</string>
+	<string name="title_say_time_volume" tools:ignore="MissingTranslation">Voice volume</string>
+	<string name="description_say_time_volume" tools:ignore="MissingTranslation">Percent of the loudest the phone can go, whatever the volume of the alarms. The volume of the alarms is put back right after.</string>
+	<string name="title_proximity_test" tools:ignore="MissingTranslation">Test the hand sensor</string>
+	<string name="message_proximity_test_hint" tools:ignore="MissingTranslation">Hold your hand over the top of the screen, then take it away.</string>
+	<string name="message_proximity_test_values" tools:ignore="MissingTranslation">Sensor: %1$s\nCan see up to: %2$s cm\nReading now: %3$s cm\n%4$s</string>
+	<string name="word_proximity_near" tools:ignore="MissingTranslation">Something in front</string>
+	<string name="word_proximity_far" tools:ignore="MissingTranslation">Nothing in front</string>
+	<string name="message_proximity_binary" tools:ignore="MissingTranslation">This sensor only says near or far: the distance cannot be chosen.</string>
+	<string name="message_proximity_distance" tools:ignore="MissingTranslation">This sensor gives real distances.</string>
+	<string name="message_proximity_none" tools:ignore="MissingTranslation">No proximity sensor on this phone.</string>
 	<string name="title_say_time" tools:ignore="MissingTranslation">Speak the time</string>
 	<string name="title_say_time_hours" tools:ignore="MissingTranslation">Only between</string>
 	<string name="description_say_time_hours" tools:ignore="MissingTranslation">The time is only spoken between %1$02d:00 and %2$02d:00.</string>
@@ -521,6 +542,9 @@
 	<string name="title_shake_to_say_time_switch" tools:ignore="MissingTranslation">Shaking says the time</string>
 	<string name="description_say_time_listening_between" tools:ignore="MissingTranslation">Listening, from %1$s to %2$s</string>
 	<string name="description_say_time_listening_always" tools:ignore="MissingTranslation">Listening, at any hour</string>
+	<string name="word_once" tools:ignore="MissingTranslation">Once</string>
+	<string name="action_say_time_now" tools:ignore="MissingTranslation">Say the time</string>
+	<string name="action_say_time_pause" tools:ignore="MissingTranslation">Stop</string>
 	<string name="description_shake_to_say_time_true" tools:ignore="MissingTranslation">Shaking the phone says the time out loud, within the hours below. Outside those hours nothing listens and the notification is gone. Android asks for a notification while it listens, and the movement sensor costs a little battery.</string>
 	<string name="description_shake_to_say_time_false" tools:ignore="MissingTranslation">Shaking the phone does nothing.</string>
 	<string name="title_shake_sensitivity" tools:ignore="MissingTranslation">How hard to shake</string>
@@ -529,16 +553,16 @@
 	<string name="title_app_language" tools:ignore="MissingTranslation">Language of the app</string>
 	<string name="title_language_system" tools:ignore="MissingTranslation">Language of the phone</string>
 	<string name="description_app_language" tools:ignore="MissingTranslation">The same setting as the one Android keeps for each app.</string>
-	<string name="title_reset_settings" tools:ignore="MissingTranslation">Back to the settings out of the box</string>
+	<string name="title_reset_settings" tools:ignore="MissingTranslation">Reset settings</string>
 	<string name="description_reset_settings" tools:ignore="MissingTranslation">Puts every setting back to what it was after the install. Your alarms are not touched.</string>
 	<string name="message_reset_settings_confirm" tools:ignore="MissingTranslation">Every setting goes back to what it was after the install. Your alarms are kept.</string>
-	<string name="message_reset_settings_done" tools:ignore="MissingTranslation">The settings are back to the ones out of the box.</string>
+	<string name="message_reset_settings_done" tools:ignore="MissingTranslation">Settings reset.</string>
 	<string name="title_storage" tools:ignore="MissingTranslation">Storage</string>
-	<string name="title_clean_sounds" tools:ignore="MissingTranslation">Free up sound copies</string>
-	<string name="description_clean_sounds" tools:ignore="MissingTranslation">The app keeps a copy of every sound it has been given, so an alarm still rings when the original is moved or the phone has not been unlocked yet. This throws away the copies no alarm plays.</string>
-	<string name="title_clean_images" tools:ignore="MissingTranslation">Free up sunrise images</string>
+	<string name="title_clean_sounds" tools:ignore="MissingTranslation">Clear sound cache</string>
+	<string name="description_clean_sounds" tools:ignore="MissingTranslation">The app keeps a copy of every sound it has been given, so an alarm still rings when the original is moved or the phone has not been unlocked yet. This throws away the copies no alarm plays. Your music files are not touched.</string>
+	<string name="title_clean_images" tools:ignore="MissingTranslation">Clear sunrise image cache</string>
 	<string name="description_clean_images" tools:ignore="MissingTranslation">An image stays in the app after you switch back to a color, so you can switch back without picking the file again. This throws away the images no sunrise is showing.</string>
-	<string name="title_clean_all" tools:ignore="MissingTranslation">Free up both</string>
+	<string name="title_clean_all" tools:ignore="MissingTranslation">Clear both caches</string>
 	<string name="description_clean_all" tools:ignore="MissingTranslation">Sounds and images in one go.</string>
 	<string name="message_clean_confirm" tools:ignore="MissingTranslation">Only copies that no alarm needs are deleted. Alarms themselves are left alone.</string>
 	<string name="message_clean_done" tools:ignore="MissingTranslation">Freed %1$s over %2$d file(s)</string>
@@ -751,9 +775,6 @@
 
 	<!-- The power button during the alarm -->
 	<string name="title_while_ringing" tools:ignore="MissingTranslation">While the alarm rings</string>
-	<string name="title_power_dismiss" tools:ignore="MissingTranslation">The power button dismisses</string>
-	<string name="description_power_dismiss_true" tools:ignore="MissingTranslation">Turning the screen off dismisses the alarm. Android never tells an app about the power button, so what is read is the screen going out: anything else that turns it off dismisses the alarm too.</string>
-	<string name="description_power_dismiss_false" tools:ignore="MissingTranslation">The power button only turns the screen off while the alarm rings.</string>
 
 	<!-- Passing a hand over the phone to hear the time -->
 	<string name="title_wave_to_say_time" tools:ignore="MissingTranslation">Pass a hand over the phone to hear the time</string>
@@ -766,6 +787,23 @@
 	<!-- Whether the alarm list rearranges itself -->
 	<string name="title_auto_sort_alarms" tools:ignore="MissingTranslation">Rearrange the list on its own</string>
 	<string name="description_auto_sort_alarms_true" tools:ignore="MissingTranslation">Whatever rings next comes to the top, and the alarms that are turned off go below. The list moves whenever an alarm is turned on or off.</string>
-	<string name="description_auto_sort_alarms_false" tools:ignore="MissingTranslation">Every alarm stays where it is. A new one is added at the bottom, and a copy right under the alarm it came from.</string>
+	<string name="description_auto_sort_alarms_false" tools:ignore="MissingTranslation">Every alarm stays where it is: hold a closed card to move it up or down. A new one is added at the bottom, and a copy right under the alarm it came from.</string>
 
+	<string name="title_snooze_button" tools:ignore="MissingTranslation">Button that snoozes</string>
+	<string name="title_dismiss_button" tools:ignore="MissingTranslation">Button that dismisses</string>
+	<string name="description_alarm_buttons" tools:ignore="MissingTranslation">For every alarm, while it rings. %1$s</string>
+	<string name="word_button_none" tools:ignore="MissingTranslation">None</string>
+	<string name="word_button_any" tools:ignore="MissingTranslation">Any button (volume or power)</string>
+	<string name="word_button_volume_up" tools:ignore="MissingTranslation">Volume up</string>
+	<string name="word_button_volume_down" tools:ignore="MissingTranslation">Volume down</string>
+	<string name="word_button_volume_any" tools:ignore="MissingTranslation">Volume up or down</string>
+	<string name="word_button_power" tools:ignore="MissingTranslation">Power button</string>
+	<string name="message_button_used_by_other" tools:ignore="MissingTranslation">This button already dismisses the alarm. Choose another one, or change the dismiss button first.</string>
+	<string name="message_button_used_by_other_snooze" tools:ignore="MissingTranslation">This button already snoozes the alarm. Choose another one, or change the snooze button first.</string>
+	<string name="message_power_button_note" tools:ignore="MissingTranslation">The power button is read as the screen going out: anything else that turns the screen off counts too.</string>
+	<string name="title_apply_to_all_alarms" tools:ignore="MissingTranslation">Apply to all alarms?</string>
+	<string name="message_apply_snooze_button_to_all" tools:ignore="MissingTranslation">Turn snoozing with the button %1$s for all the alarms already created as well?</string>
+	<string name="message_apply_dismiss_button_to_all" tools:ignore="MissingTranslation">Turn dismissing with the button %1$s for all the alarms already created as well?</string>
+	<string name="word_on" tools:ignore="MissingTranslation">on</string>
+	<string name="word_off" tools:ignore="MissingTranslation">off</string>
 </resources>

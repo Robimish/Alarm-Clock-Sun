@@ -172,6 +172,9 @@
 
 	<!-- Alarm screen -->
 	<string name="key_use_new_alarm_screen">pref_use_new_alarm_screen</string>
+	<string name="key_use_simple_alarm_screen">pref_use_simple_alarm_screen</string>
+	<string name="key_my_phrases">pref_my_phrases</string>
+	<string name="key_only_my_phrases">pref_only_my_phrases</string>
 	<string name="key_alarm_screen_show_alarm_name">pref_alarm_info</string>
 	<string name="key_alarm_screen_show_current_date_and_time">pref_alarm_current_date_and_time</string>
 	<string name="key_alarm_screen_show_music_info">pref_alarm_music_info</string>
@@ -199,6 +202,10 @@
 	<string name="key_dawn_reveal_duration">pref_dawn_reveal_duration</string>
 	<string name="key_dawn_reveal_return">pref_dawn_reveal_return</string>
 	<string name="key_power_dismiss">pref_power_dismiss</string>
+	<string name="key_snooze_button">pref_snooze_button</string>
+	<string name="key_dismiss_button">pref_dismiss_button</string>
+	<string name="key_event_power_dismiss_to_alarms">event_power_dismiss_to_alarms</string>
+	<string name="key_event_buttons_to_general">event_buttons_to_general</string>
 	<string name="key_record_statistics">pref_record_statistics</string>
 	<string name="key_clean_sounds">pref_clean_sounds</string>
 	<string name="key_clean_images">pref_clean_images</string>
@@ -209,11 +216,14 @@
 	<string name="key_tts_delay">pref_tts_delay</string>
 	<string name="key_analog_clock">pref_analog_clock</string>
 	<string name="key_say_time_enabled">pref_say_time_enabled</string>
+	<string name="key_say_time_paused_until">pref_say_time_paused_until</string>
 	<string name="key_shake_to_say_time">pref_shake_to_say_time</string>
 	<string name="key_shake_sensitivity">pref_shake_sensitivity</string>
 	<string name="key_wave_to_say_time">pref_wave_to_say_time</string>
 	<string name="key_wave_passes">pref_wave_passes</string>
 	<string name="key_say_time_format">pref_say_time_format</string>
+	<string name="key_say_time_volume">pref_say_time_volume</string>
+	<string name="key_proximity_test">pref_proximity_test</string>
 	<string name="key_app_language">pref_app_language</string>
 	<string name="key_reset_settings">pref_reset_settings</string>
 	<string name="key_dawn_preview_duration">pref_dawn_preview_duration</string>

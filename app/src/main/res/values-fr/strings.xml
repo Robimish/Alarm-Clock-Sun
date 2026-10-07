@@ -195,8 +195,6 @@
 	<string name="message_text_to_speech_default_voice">Voix par défaut</string>
 	<string name="message_text_to_speech_voice">Voix %1$d</string>
 	<string name="message_text_to_speech_network_required">Une connexion réseau peut être nécessaire pour cette voix</string>
-	<string name="message_volume_dismiss_priority">L\'arrêt par le volume aura la priorité</string>
-	<string name="message_volume_snooze_ignored">Le report par le volume sera ignoré</string>
 	<string name="error_message_active_delete">Impossible de supprimer une alarme en cours</string>
 	<string name="error_message_active_modify">Impossible de modifier une alarme en cours</string>
 	<string name="error_message_max_alarms">Nombre maximal d\'alarmes atteint</string>
@@ -208,6 +206,8 @@
 	<string name="error_message_nfc_id_exists">Cet identifiant NFC est déjà utilisé</string>
 	<string name="error_message_unable_to_scan_nfc">Impossible de scanner les tags NFC</string>
 	<string name="error_message_snooze">Impossible de reporter l\'alarme</string>
+	<string name="error_message_unable_to_vibrate">Impossible de vibrer sur ce téléphone. L\'alarme sonne sans vibrer.</string>
+	<string name="error_message_out_of_memory">Pas assez de mémoire pour vibrer. L\'alarme sonne sans vibrer.</string>
 	<string name="error_message_snoozed_delete">Impossible de supprimer une alarme reportée</string>
 	<string name="error_message_snoozed_modify">Impossible de modifier une alarme reportée</string>
 	<string name="error_message_select_color">Code couleur hexadécimal invalide</string>
@@ -301,12 +301,12 @@
 	<string name="title_dismiss_options_dismiss_early">Annuler à l\'avance</string>
 	<string name="title_dismiss_options_dismiss_early_notification">Notification d\'annulation à l\'avance</string>
 	<string name="title_dismiss_options_delete_after_dismissed">Supprimer après l\'arrêt</string>
-	<string name="title_dismiss_options_volume_dismiss">Arrêt par le volume</string>
+	<string name="title_dismiss_options_volume_dismiss">Arrêter avec un bouton</string>
 	<string name="title_snooze_options_auto_snooze">Report automatique</string>
 	<string name="title_snooze_options_max_snooze">Nombre de reports</string>
 	<string name="title_snooze_options_snooze_duration">Durée du report</string>
 	<string name="title_snooze_options_easy_snooze">Report facile</string>
-	<string name="title_snooze_options_volume_snooze">Report par le volume</string>
+	<string name="title_snooze_options_volume_snooze">Reporter avec un bouton</string>
 	<string name="title_upcoming_reminder_show_reminder">Afficher un rappel</string>
 	<string name="title_upcoming_reminder_how_early">Combien de temps avant…</string>
 	<string name="title_upcoming_reminder_how_frequent">À quelle fréquence…</string>
@@ -333,7 +333,18 @@
 	<string name="title_style">Style</string>
 	<string name="title_tweaks">Ajustements</string>
 	<string name="title_misc">Divers</string>
-	<string name="title_new_screen">Nouvel écran</string>
+	<string name="title_my_phrases">Mes phrases de réveil</string>
+	<string name="message_my_phrases_hint">Une phrase par ligne.</string>
+	<string name="description_my_phrases_none">Pas encore de phrase à vous. Touchez pour en écrire.</string>
+	<string name="description_my_phrases_count">%1$d phrase(s) à vous</string>
+	<string name="title_only_my_phrases">Seulement mes phrases</string>
+	<string name="description_only_my_phrases_true">Seules vos phrases s\'affichent sous l\'horloge.</string>
+	<string name="description_only_my_phrases_false">Vos phrases s\'affichent avec celles de l\'app.</string>
+	<string name="message_proximity_passes">Passages vus : %1$d</string>
+	<string name="title_simple_screen">Écran simple</string>
+	<string name="description_use_simple_screen_true">L\'écran d\'alarme d\'origine : le nom de l\'alarme et deux boutons, Reporter et Arrêter.</string>
+	<string name="description_use_simple_screen_false">L\'écran d\'alarme complet : horloge, date, nom, phrase et musique.</string>
+	<string name="title_new_screen">Glisser pour reporter ou arrêter</string>
 	<string name="title_show_alarm_name">Afficher le nom de l\'alarme</string>
 	<string name="title_show_current_date_and_time">Afficher la date et l\'heure</string>
 	<string name="title_show_music_info">Afficher les infos de la musique</string>
@@ -412,13 +423,13 @@
 	<string name="description_dismiss_options_dismiss_early_notification">Afficher une notification quand l\'alarme peut être annulée à l\'avance.</string>
 	<string name="description_dismiss_options_delete_after_dismissed_alarm">L\'alarme sera supprimée après avoir été arrêtée.</string>
 	<string name="description_dismiss_options_delete_after_dismissed_timer">Le minuteur sera supprimé après avoir été arrêté.</string>
-	<string name="description_dismiss_options_volume_dismiss_alarm">Arrêter l\'alarme en appuyant sur une touche de volume.</string>
+	<string name="description_dismiss_options_volume_dismiss_alarm">Arrêter l\'alarme avec le bouton choisi dans Paramètres, Général (au départ : le bouton marche).</string>
 	<string name="description_dismiss_options_volume_dismiss_timer">Arrêter le minuteur en appuyant sur une touche de volume.</string>
 	<string name="description_snooze_options_auto_snooze">Reporter l\'alarme automatiquement après une durée donnée.</string>
 	<string name="description_snooze_options_max_snooze">Nombre maximal de reports de l\'alarme.</string>
 	<string name="description_snooze_options_snooze_duration">Durée du report de l\'alarme.</string>
 	<string name="description_snooze_options_easy_snooze">Reporter l\'alarme en touchant n\'importe où sur l\'écran d\'alarme.</string>
-	<string name="description_snooze_options_volume_snooze">Reporter l\'alarme en appuyant sur une touche de volume.</string>
+	<string name="description_snooze_options_volume_snooze">Reporter l\'alarme avec le bouton choisi dans Paramètres, Général (au départ : volume + ou −).</string>
 	<string name="description_upcoming_reminder_show_reminder">Afficher une notification de rappel avant que l\'alarme ne sonne.</string>
 	<string name="description_upcoming_reminder_how_early">Combien de temps avant l\'alarme faut-il afficher le rappel ?</string>
 	<string name="description_upcoming_reminder_how_frequent">À quelle fréquence faut-il afficher le rappel ?</string>
@@ -435,8 +446,8 @@
 	<string name="description_setting_import_export">Importer ou exporter toutes vos données</string>
 	<string name="description_toggle_alarms_with_airplane_mode_on">Désactivation de toutes les alarmes suite au passage en mode avion.</string>
 	<string name="description_toggle_alarms_with_airplane_mode_off">Activation de toutes les alarmes suite à la sortie du mode avion.</string>
-	<string name="description_use_new_screen_true">Utiliser le nouvel écran d\'alarme, où l\'on glisse pour reporter ou arrêter l\'alarme.</string>
-	<string name="description_use_new_screen_false">Ne pas utiliser le nouvel écran d\'alarme. Utiliser l\'écran d\'origine, avec de simples boutons pour reporter ou arrêter l\'alarme.</string>
+	<string name="description_use_new_screen_true">Faire glisser le bouton Reporter ou Arrêter jusqu\'à l\'autre bout.</string>
+	<string name="description_use_new_screen_false">Toucher le bouton Reporter ou Arrêter, sans glisser.</string>
 	<string name="description_alarm_screen_show_alarm_name_true">Afficher le nom de l\'alarme sur l\'écran d\'alarme.</string>
 	<string name="description_alarm_screen_show_alarm_name_false">Ne pas afficher le nom de l\'alarme.</string>
 	<string name="description_alarm_screen_show_current_date_and_time_true">Afficher la date et l\'heure sur l\'écran d\'alarme.</string>
@@ -478,6 +489,16 @@
 	<string name="title_dawn_reveal_duration">Appui pour voir l\'écran</string>
 	<string name="message_dawn_preview_over">Appuyez pour fermer</string>
 	<string name="title_dawn_preview_duration">Durée de l\'aperçu</string>
+	<string name="title_say_time_volume">Volume de la voix</string>
+	<string name="description_say_time_volume">Pourcentage du volume maximal du téléphone, quel que soit le volume des alarmes. Le volume des alarmes est remis juste après.</string>
+	<string name="title_proximity_test">Tester le capteur de la main</string>
+	<string name="message_proximity_test_hint">Placez la main au-dessus du haut de l\'écran, puis retirez-la.</string>
+	<string name="message_proximity_test_values">Capteur : %1$s\nVoit jusqu\'à : %2$s cm\nValeur actuelle : %3$s cm\n%4$s</string>
+	<string name="word_proximity_near">Quelque chose devant</string>
+	<string name="word_proximity_far">Rien devant</string>
+	<string name="message_proximity_binary">Ce capteur dit seulement proche ou loin : la distance ne peut pas être choisie.</string>
+	<string name="message_proximity_distance">Ce capteur donne de vraies distances.</string>
+	<string name="message_proximity_none">Pas de capteur de proximité sur ce téléphone.</string>
 	<string name="title_say_time">Dire l\'heure</string>
 	<string name="title_say_time_hours">Uniquement entre</string>
 	<string name="description_say_time_hours">L\'heure n\'est dite qu\'entre %1$02d:00 et %2$02d:00.</string>
@@ -495,6 +516,9 @@
 	<string name="title_shake_to_say_time_switch">Secouer dit l\'heure</string>
 	<string name="description_say_time_listening_between">À l\'écoute, de %1$s à %2$s</string>
 	<string name="description_say_time_listening_always">À l\'écoute, à toute heure</string>
+	<string name="word_once">Une fois</string>
+	<string name="action_say_time_now">Dire l\'heure</string>
+	<string name="action_say_time_pause">Arrêter</string>
 	<string name="description_shake_to_say_time_true">Secouer le téléphone dit l\'heure à voix haute, dans la plage d\'heures ci-dessous. En dehors, rien n\'écoute et la notification disparaît. Android exige une notification tant que ça écoute, et le capteur de mouvement coûte un peu de batterie.</string>
 	<string name="description_shake_to_say_time_false">Secouer le téléphone ne fait rien.</string>
 	<string name="title_shake_sensitivity">Force de la secousse</string>
@@ -503,16 +527,16 @@
 	<string name="title_app_language">Langue de l\'application</string>
 	<string name="title_language_system">Langue du téléphone</string>
 	<string name="description_app_language">Le même réglage que celui qu\'Android garde pour chaque application.</string>
-	<string name="title_reset_settings">Revenir aux réglages d\'origine</string>
+	<string name="title_reset_settings">Réinitialiser les réglages</string>
 	<string name="description_reset_settings">Remet tous les réglages tels qu\'ils étaient après l\'installation. Tes alarmes ne sont pas touchées.</string>
 	<string name="message_reset_settings_confirm">Tous les réglages reviennent à ce qu\'ils étaient après l\'installation. Tes alarmes sont gardées.</string>
-	<string name="message_reset_settings_done">Les réglages sont revenus à ceux d\'origine.</string>
+	<string name="message_reset_settings_done">Réglages réinitialisés.</string>
 	<string name="title_storage">Stockage</string>
-	<string name="title_clean_sounds">Libérer les copies de sons</string>
-	<string name="description_clean_sounds">L\'app garde une copie de chaque son choisi, pour qu\'une alarme sonne même si l\'original a été déplacé ou si le téléphone n\'a pas encore été déverrouillé. Ceci efface les copies qu\'aucune alarme ne joue.</string>
-	<string name="title_clean_images">Libérer les images d\'aube</string>
+	<string name="title_clean_sounds">Vider le cache des sons</string>
+	<string name="description_clean_sounds">L\'app garde une copie de chaque son choisi, pour qu\'une alarme sonne même si l\'original a été déplacé ou si le téléphone n\'a pas encore été déverrouillé. Ceci efface les copies qu\'aucune alarme ne joue. Vos fichiers de musique ne sont pas touchés.</string>
+	<string name="title_clean_images">Vider le cache des images d\'aube</string>
 	<string name="description_clean_images">Une image reste dans l\'app même après être revenu à une couleur, pour pouvoir la remettre sans rechoisir le fichier. Ceci efface les images qu\'aucune aube n\'affiche.</string>
-	<string name="title_clean_all">Libérer les deux</string>
+	<string name="title_clean_all">Vider les deux caches</string>
 	<string name="description_clean_all">Sons et images d\'un coup.</string>
 	<string name="message_clean_confirm">Seules les copies dont aucune alarme n\'a besoin sont supprimées. Les alarmes elles-mêmes ne sont pas touchées.</string>
 	<string name="message_clean_done">%1$s libérés sur %2$d fichier(s)</string>
@@ -701,9 +725,6 @@
 
 	<!-- Le bouton marche pendant la sonnerie -->
 	<string name="title_while_ringing">Pendant la sonnerie</string>
-	<string name="title_power_dismiss">Le bouton marche arrête l\'alarme</string>
-	<string name="description_power_dismiss_true">Éteindre l\'écran arrête l\'alarme. Android ne signale jamais le bouton marche à une application : ce qui est lu, c\'est l\'écran qui s\'éteint, donc tout ce qui l\'éteint arrête aussi l\'alarme.</string>
-	<string name="description_power_dismiss_false">Le bouton marche ne fait qu\'éteindre l\'écran pendant la sonnerie.</string>
 
 	<!-- Passer la main au-dessus du telephone pour entendre l'heure -->
 	<string name="title_wave_to_say_time">Passer la main pour entendre l\'heure</string>
@@ -716,7 +737,24 @@
 	<!-- Si la liste des alarmes se reorganise toute seule -->
 	<string name="title_auto_sort_alarms">Réorganiser la liste toute seule</string>
 	<string name="description_auto_sort_alarms_true">Ce qui sonne en premier remonte en haut, et les alarmes éteintes passent en dessous. La liste bouge dès qu\'une alarme est allumée ou éteinte.</string>
-	<string name="description_auto_sort_alarms_false">Chaque alarme reste à sa place. Une nouvelle s\'ajoute en bas, et une copie juste sous l\'alarme dont elle vient.</string>
+	<string name="description_auto_sort_alarms_false">Chaque alarme reste à sa place : maintenez une carte fermée pour la monter ou la descendre. Une nouvelle s\'ajoute en bas, et une copie juste sous l\'alarme dont elle vient.</string>
 
 	<string name="name_ready_made_timer">Œufs</string>
+	<string name="title_snooze_button">Bouton qui reporte</string>
+	<string name="title_dismiss_button">Bouton qui arrête</string>
+	<string name="description_alarm_buttons">Pour toutes les alarmes, pendant la sonnerie. %1$s</string>
+	<string name="word_button_none">Aucun</string>
+	<string name="word_button_any">N\'importe quel bouton (volume ou marche)</string>
+	<string name="word_button_volume_up">Volume +</string>
+	<string name="word_button_volume_down">Volume −</string>
+	<string name="word_button_volume_any">Volume + ou −</string>
+	<string name="word_button_power">Bouton marche</string>
+	<string name="message_button_used_by_other">Ce bouton arrête déjà l\'alarme. Choisissez-en un autre, ou changez d\'abord le bouton qui arrête.</string>
+	<string name="message_button_used_by_other_snooze">Ce bouton reporte déjà l\'alarme. Choisissez-en un autre, ou changez d\'abord le bouton qui reporte.</string>
+	<string name="message_power_button_note">Le bouton marche est lu comme l\'écran qui s\'éteint : tout ce qui éteint l\'écran compte aussi.</string>
+	<string name="title_apply_to_all_alarms">Appliquer à toutes les alarmes ?</string>
+	<string name="message_apply_snooze_button_to_all">%1$s aussi le report par bouton pour toutes les alarmes déjà créées ?</string>
+	<string name="message_apply_dismiss_button_to_all">%1$s aussi l\'arrêt par bouton pour toutes les alarmes déjà créées ?</string>
+	<string name="word_on">Activer</string>
+	<string name="word_off">Désactiver</string>
 </resources>

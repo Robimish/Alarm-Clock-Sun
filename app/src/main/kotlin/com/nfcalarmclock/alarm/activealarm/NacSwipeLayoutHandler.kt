@@ -53,7 +53,14 @@ import kotlin.math.absoluteValue
 class NacSwipeLayoutHandler(
 	activity: AppCompatActivity,
 	alarm: NacAlarm?,
-	onAlarmActionListener: OnAlarmActionListener
+	onAlarmActionListener: OnAlarmActionListener,
+
+	/**
+	 * Snooze and dismiss are buttons to tap rather than a slider. Both screens show the
+	 * same thing (clock, date, name, phrase, music...), only the way to stop the alarm
+	 * differs (2.01). The original screen had none of it.
+	 */
+	private val useButtons: Boolean = false
 ) : NacActiveAlarmLayoutHandler(activity, alarm, onAlarmActionListener)
 {
 
@@ -610,6 +617,28 @@ class NacSwipeLayoutHandler(
 	@SuppressLint("ClickableViewAccessibility")
 	private fun setupAlarmActionButton(button: View, origX: Float = -1f)
 	{
+		// Buttons to tap: no slider at all
+		if (useButtons)
+		{
+			button.setOnTouchListener(null)
+			button.setOnClickListener {
+
+				val currentAlarm = alarm ?: return@setOnClickListener
+
+				if (button.id == snoozeButton.id)
+				{
+					onAlarmActionListener.onSnooze(currentAlarm)
+				}
+				else
+				{
+					onAlarmActionListener.onDismiss(currentAlarm)
+				}
+
+			}
+
+			return
+		}
+
 		// Change in X position
 		var dx = 0f
 
@@ -1096,13 +1125,26 @@ class NacSwipeLayoutHandler(
 			// Dismiss button
 			dismissButton.id ->
 			{
-				// Check if the view position is at the start of the alarm action row
-				(view.x == startAlarmActionX)
+				// Check if the view position is at the start of the alarm action row,
+				// or close enough to it (2.01)
+				(view.x <= startAlarmActionX + actionTolerance())
 			}
 
 			// Snooze button or some other view which should never happen
 			else -> false
 		}
+	}
+
+	/**
+	 * How far from the end of the slider a button may be let go and still act. The
+	 * finger lifted at 97 % of the way counts as 100 %: the exact end was hard to hit,
+	 * a button lifted a hair short of it came back (2.01). [Units: px]
+	 */
+	private fun actionTolerance(): Float
+	{
+		val travel = endAlarmActionX - startAlarmActionX
+
+		return if (travel > 0f) travel * (1f - ACTION_THRESHOLD) else 0f
 	}
 
 	/**
@@ -1133,8 +1175,9 @@ class NacSwipeLayoutHandler(
 			// Snooze button
 			snoozeButton.id ->
 			{
-				// Check if the view position is at the end of the alarm action row
-				(view.x == endAlarmActionX)
+				// Check if the view position is at the end of the alarm action row,
+				// or close enough to it (2.01)
+				(view.x >= endAlarmActionX - actionTolerance())
 			}
 
 			// Dismiss button or some other view which should never happen
@@ -1211,6 +1254,11 @@ class NacSwipeLayoutHandler(
 		 * Minimum fling value.
 		 */
 		const val FLING_MIN_VALUE = 0f
+
+		/**
+		 * Share of the slider a button has to travel for its action to fire.
+		 */
+		const val ACTION_THRESHOLD = 0.97f
 
 		/**
 		 * Maximum fling value.

@@ -492,14 +492,11 @@ abstract class NacBaseAddEditTimer
 				R.drawable.volume_off
 			}
 
-			in 1..33 ->
+			// One wave up to 49 %, two from 50 %. The speaker stays at the same place
+			// in the three images (2.01)
+			in 1..49 ->
 			{
 				R.drawable.volume_low
-			}
-
-			in 34..66 ->
-			{
-				R.drawable.volume_med
 			}
 
 			else ->

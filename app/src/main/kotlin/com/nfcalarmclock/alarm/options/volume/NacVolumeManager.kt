@@ -4,6 +4,8 @@ import android.content.Context
 import android.media.AudioManager
 import android.os.Handler
 import com.nfcalarmclock.alarm.db.NacAlarm
+import com.nfcalarmclock.alarm.options.NacAlarmButton
+import com.nfcalarmclock.shared.NacSharedPreferences
 import com.nfcalarmclock.system.media.NacAudioAttributes
 import com.nfcalarmclock.system.media.getSafeStreamVolume
 import com.nfcalarmclock.system.media.setStreamVolume
@@ -24,11 +26,16 @@ class NacVolumeManager(
 {
 
 	/**
+	 * Shared preferences, for the buttons that snooze and dismiss (2.02).
+	 */
+	private val shared: NacSharedPreferences = NacSharedPreferences(context)
+
+	/**
 	 * Listener if a volume key press occurred.
 	 */
 	fun interface OnVolumeKeyPressListener
 	{
-		fun onVolumeKeyPress(alarm: NacAlarm)
+		fun onVolumeKeyPress(alarm: NacAlarm, isUp: Boolean)
 	}
 
 	/**
@@ -157,8 +164,9 @@ class NacVolumeManager(
 			// Change the volume
 			audioManager.setStreamVolume(audioAttributes.stream, volumeToRestrictChangeTo)
 
-			// Call the volume key press listener
-			onVolumeKeyPressListener?.onVolumeKeyPress(alarm)
+			// Call the volume key press listener. The volume went below what it is held
+			// at, so it was turned down
+			onVolumeKeyPressListener?.onVolumeKeyPress(alarm, isUp = false)
 		}
 
 		// Run the handler
@@ -201,7 +209,8 @@ class NacVolumeManager(
 		initialVolume = audioManager.getSafeStreamVolume(audioAttributes.stream)
 
 		// Watch for volume key press
-		if (alarm.shouldVolumeDismiss || alarm.shouldVolumeSnooze)
+		if (NacAlarmButton.usesVolume(shared.dismissButton)
+			|| NacAlarmButton.usesVolume(shared.snoozeButton))
 		{
 			volumeKeyPressWatchdog()
 		}
@@ -257,8 +266,8 @@ class NacVolumeManager(
 			// Volume was changed
 			if (initialVolume != currentVolume)
 			{
-				// Call the volume key press listener
-				onVolumeKeyPressListener?.onVolumeKeyPress(alarm)
+				// Call the volume key press listener, with the way the volume went
+				onVolumeKeyPressListener?.onVolumeKeyPress(alarm, isUp = (currentVolume > initialVolume))
 
 				// Change the initial volume if alarm does NOT restrict or gradually increase volume
 				if (!alarm.shouldRestrictVolume && !alarm.shouldGraduallyIncreaseVolume)

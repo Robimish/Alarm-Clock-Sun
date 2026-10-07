@@ -240,6 +240,13 @@ fun NacAlarm.toDayString(
 	// No days
 	else if (this.days.isEmpty())
 	{
+		// An alarm that rings once and is turned off has no today or tomorrow to show:
+		// it says that it rings once, until it is turned back on (2.02)
+		if (!this.isEnabled && !this.isRepeating)
+		{
+			return context.getString(R.string.word_once)
+		}
+
 		// Today or tomorrow
 		val oneTime = this.toOneTimeString(context)
 

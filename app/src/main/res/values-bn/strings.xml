@@ -198,8 +198,6 @@
 	<string name="message_text_to_speech_default_voice">ডিফল্ট ভয়েস</string>
 	<string name="message_text_to_speech_voice">ভয়েস %1$d</string>
 	<string name="message_text_to_speech_network_required">ভয়েস কাজ করার জন্য নেটওয়ার্ক সংযোগের প্রয়োজন হতে পারে</string>
-	<string name="message_volume_dismiss_priority">ভলিউম খারিজ অগ্রাধিকার পাবে</string>
-	<string name="message_volume_snooze_ignored">ভলিউম স্নুজ উপেক্ষা করা হবে</string>
 
 	<!-- Error messages -->
 	<string name="error_message_active_delete">একটি সক্রিয় অ্যালার্ম মুছতে অক্ষম৷</string>

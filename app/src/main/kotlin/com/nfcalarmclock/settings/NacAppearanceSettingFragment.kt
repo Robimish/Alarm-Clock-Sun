@@ -12,7 +12,6 @@ import com.nfcalarmclock.shared.NacSharedPreferences
 import com.nfcalarmclock.settings.startweekon.NacStartWeekOnPreference
 import com.nfcalarmclock.system.getDeviceProtectedStorageContext
 import com.nfcalarmclock.settings.colorpicker.NacColorPickerPreference
-import com.nfcalarmclock.settings.preference.NacSwitchPreference
 
 /**
  * Appearance fragment.
@@ -124,30 +123,71 @@ class NacAppearanceSettingFragment
 
 		// Initialize the color settings
 		init()
-		setupAlarmScreen()
+
+		// The date, the time and the music used to be greyed out when the switch to
+		// swipe was off: the original screen did not show them. Both ways of stopping
+		// the alarm show the same full screen since 2.01. Only the simple screen, which
+		// has none of it, greys them out now, with the switch to swipe (2.05)
+		setupSimpleAlarmScreen()
+		setupMyPhrases()
 	}
 
 	/**
-	 * Setup the preferences for the alarm screen.
+	 * Setup the wake-up phrases of one's own: a box to write them, one per line (2.07).
 	 */
-	private fun setupAlarmScreen()
+	private fun setupMyPhrases()
 	{
-		// Get the new alarm screen preference
-		val newScreenKey = getString(R.string.key_use_new_alarm_screen)
-		val newScreenPref = findPreference<NacSwitchPreference>(newScreenKey)!!
+		val pref = findPreference<Preference>(getString(R.string.key_my_phrases)) ?: return
+		val shared = sharedPreferences ?: return
 
-		// Setup the dependent alarm screen preferences
-		setupDependentNewAlarmScreenPreferences(newScreenPref.isChecked)
+		fun refresh()
+		{
+			val count = shared.myPhrases.lines().count { it.isNotBlank() }
 
-		// Set the listener for when the new screen preference is changed
-		newScreenPref.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, status ->
+			pref.summary = if (count == 0) getString(R.string.description_my_phrases_none)
+				else getString(R.string.description_my_phrases_count, count)
+		}
 
-			// Set the usability of the dependent preferences
-			setupDependentNewAlarmScreenPreferences(status as Boolean)
+		refresh()
 
-			// Return
+		pref.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+
+			val context = requireContext()
+			val padding = (20 * resources.displayMetrics.density).toInt()
+			val edit = android.widget.EditText(context).apply {
+				setText(shared.myPhrases)
+				hint = getString(R.string.message_my_phrases_hint)
+				minLines = 4
+				maxLines = 12
+				gravity = android.view.Gravity.TOP or android.view.Gravity.START
+				inputType = android.text.InputType.TYPE_CLASS_TEXT or
+					android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE or
+					android.text.InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
+			}
+			val frame = android.widget.FrameLayout(context).apply {
+				setPadding(padding, padding / 2, padding, 0)
+				addView(edit)
+			}
+
+			AlertDialog.Builder(context)
+				.setTitle(R.string.title_my_phrases)
+				.setMessage(R.string.message_my_phrases_hint)
+				.setView(frame)
+				.setPositiveButton(R.string.action_ok) { _, _ ->
+
+					// Empty lines and spaces around a phrase are left out
+					shared.myPhrases = edit.text.toString().lines()
+						.map { it.trim() }
+						.filter { it.isNotEmpty() }
+						.joinToString("\n")
+
+					refresh()
+
+				}
+				.setNegativeButton(R.string.action_cancel, null)
+				.show()
+
 			true
-
 		}
 	}
 
@@ -292,21 +332,27 @@ class NacAppearanceSettingFragment
 	}
 
 	/**
-	 * Setup the preferences that are dependent on the new alarm screen.
+	 * Grey out what the simple alarm screen does not show, and follow the switch.
 	 */
-	private fun setupDependentNewAlarmScreenPreferences(enabled: Boolean)
+	private fun setupSimpleAlarmScreen()
 	{
-		// Get the keys
-		val currentDateAndTimeKey = getString(R.string.key_alarm_screen_show_current_date_and_time)
-		val musicInfoKey = getString(R.string.key_alarm_screen_show_music_info)
+		val simplePref = findPreference<Preference>(getString(R.string.key_use_simple_alarm_screen))
+			?: return
+		val keys = listOf(R.string.key_use_new_alarm_screen,
+			R.string.key_alarm_screen_show_current_date_and_time,
+			R.string.key_alarm_screen_show_music_info)
 
-		// Get the dependent preferences
-		val currentDateAndTimePref = findPreference<NacSwitchPreference>(currentDateAndTimeKey)!!
-		val musicInfoPref = findPreference<NacSwitchPreference>(musicInfoKey)!!
+		fun apply(isSimple: Boolean)
+		{
+			keys.forEach { findPreference<Preference>(getString(it))?.isEnabled = !isSimple }
+		}
 
-		// Set the usability of those preferences
-		currentDateAndTimePref.isEnabled = enabled
-		musicInfoPref.isEnabled = enabled
+		apply(sharedPreferences?.shouldUseSimpleAlarmScreen == true)
+
+		simplePref.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, value ->
+			apply(value as Boolean)
+			true
+		}
 	}
 
 	/**

@@ -42,6 +42,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.nfcalarmclock.BuildConfig
 import com.nfcalarmclock.R
+import com.nfcalarmclock.alarm.options.NacAlarmButton
 import com.nfcalarmclock.alarm.NacAlarmViewModel
 import com.nfcalarmclock.alarm.activealarm.NacActiveAlarmActivity
 import com.nfcalarmclock.alarm.activealarm.NacActiveAlarmService
@@ -1045,6 +1046,58 @@ class NacMainActivity
 				}
 
 			sharedPreferences.eventEggTimer = true
+		}
+
+		// The power button used to be one switch for every alarm. It is now one of the
+		// buttons chosen in Settings, General, and each alarm says whether it dismisses
+		// with its button. Someone who had it on keeps it on, for every alarm (2.01)
+		if (!sharedPreferences.eventPowerDismissToAlarms)
+		{
+			if (sharedPreferences.shouldPowerDismiss)
+			{
+				NacLog.i("Carrying the power button setting over to every alarm")
+
+				sharedPreferences.dismissButton = NacAlarmButton.POWER
+				sharedPreferences.shouldVolumeDismiss = true
+
+				alarmViewModel.getAllAlarms()
+					.filter { !it.shouldVolumeDismiss }
+					.forEach { a ->
+						a.shouldVolumeDismiss = true
+						alarmViewModel.update(a)
+					}
+			}
+
+			sharedPreferences.eventPowerDismissToAlarms = true
+		}
+
+		// The buttons that snooze and dismiss are no longer switched on alarm by alarm,
+		// but for every alarm in Settings, General (2.02). A button that no alarm used
+		// becomes "None", so that nothing starts snoozing or dismissing on its own. One
+		// that some alarm used stays, and now holds for all of them
+		if (!sharedPreferences.eventButtonsToGeneral)
+		{
+			val alarms = alarmViewModel.getAllAlarms()
+			val anySnooze = alarms.any { it.shouldVolumeSnooze }
+			val anyDismiss = alarms.any { it.shouldVolumeDismiss }
+
+			sharedPreferences.snoozeButton = when
+			{
+				!anySnooze -> NacAlarmButton.NONE
+				sharedPreferences.hasChosenSnoozeButton -> sharedPreferences.snoozeButton
+				else -> NacAlarmButton.VOLUME_ANY
+			}
+
+			sharedPreferences.dismissButton = when
+			{
+				!anyDismiss -> NacAlarmButton.NONE
+				sharedPreferences.hasChosenDismissButton -> sharedPreferences.dismissButton
+				else -> NacAlarmButton.POWER
+			}
+
+			NacLog.i("Buttons carried over to the settings. snooze=${sharedPreferences.snoozeButton} | dismiss=${sharedPreferences.dismissButton}")
+
+			sharedPreferences.eventButtonsToGeneral = true
 		}
 
 		// Check if should fix any auto dismiss, auto snooze, or snooze duration values

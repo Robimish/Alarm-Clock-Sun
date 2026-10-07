@@ -138,6 +138,22 @@ open class NacAlarm()
 	var shouldRepeat: Boolean = false
 
 	/**
+	 * Whether the alarm really comes back after it is dismissed.
+	 *
+	 * The repeat button is on by default. When the last day is taken off an alarm, the
+	 * card changes its frequency to every day (and a new alarm starts as every week).
+	 * The card then only says "Today" or "Tomorrow", like an alarm that rings once, but
+	 * the alarm was never turned off and rang again the next day. With no day and a
+	 * frequency of every day or every week, the alarm now rings once and is turned
+	 * off after it is dismissed (2.02). Another frequency (every 2 hours, every 3
+	 * days...) still repeats without any day. To ring every day, select every day.
+	 */
+	val isRepeating: Boolean
+		get() = shouldRepeat
+			&& !(days.isEmpty() && (repeatFrequency == 1)
+				&& ((repeatFrequencyUnits == 3) || (repeatFrequencyUnits == 4)))
+
+	/**
 	 * Frequency at which to repeat the alarm.
 	 */
 	@ColumnInfo(name = "repeat_frequency", defaultValue = "1")
@@ -1273,7 +1289,7 @@ open class NacAlarm()
 		}
 
 		// Alarm will repeat
-		if (shouldRepeat)
+		if (isRepeating)
 		{
 			// Repeat frequency starting days needs to be cleaned up
 			if ((repeatFrequencyUnits == 4) && (repeatFrequency > 1) && repeatFrequencyDaysToRunBeforeStarting.isNotEmpty())
@@ -1305,7 +1321,7 @@ open class NacAlarm()
 		}
 
 		// Alarm will repeat
-		val time = if (shouldRepeat)
+		val time = if (isRepeating)
 		{
 			// Get the next alarm time
 			val cal = NacCalendar.getNextAlarmDay(this)!!
@@ -1895,7 +1911,7 @@ open class NacAlarm()
 	private fun toggleAlarm()
 	{
 		// Check if the alarm should be repeated
-		if (shouldRepeat)
+		if (isRepeating)
 		{
 			return
 		}

@@ -3,7 +3,6 @@ package com.nfcalarmclock.alarm.activealarm
 import android.content.Context
 import android.view.View
 import android.widget.Button
-import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.nfcalarmclock.R
@@ -32,11 +31,6 @@ class NacOriginalLayoutHandler(
 	// Constructor
 ) : NacActiveAlarmLayoutHandler(activity, alarm, onAlarmActionListener)
 {
-
-	/**
-	 * Entire alarm activity layout.
-	 */
-	private val layout = activity.findViewById<RelativeLayout>(R.id.act_alarm)
 
 	/**
 	 * Snooze button.
@@ -91,16 +85,8 @@ class NacOriginalLayoutHandler(
 		snoozeButton.setTextColor(sharedPreferences.themeColor)
 		dismissButton.setTextColor(sharedPreferences.themeColor)
 
-		// Setup the layout listener
-		layout.setOnClickListener {
-
-			// Check if easy snooze is allowed
-			if (sharedPreferences.shouldEasySnooze)
-			{
-				onAlarmActionListener.onSnooze(alarm!!)
-			}
-
-		}
+		// A tap on the screen (easy snooze) is handled by the alarm screen itself,
+		// which knows whether the sunrise is running (2.01)
 
 		// Setup the snooze button listener
 		snoozeButton.setOnClickListener {

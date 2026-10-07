@@ -180,6 +180,21 @@
 		<item>A normal shake</item>
 	</string-array>
 
+	<!-- Volume of the spoken time, in tens of the loudest the phone can go (2.06) -->
+	<string-array name="say_time_volume_entries">
+		<item>Same as the alarms</item>
+		<item>10 %</item>
+		<item>20 %</item>
+		<item>30 %</item>
+		<item>40 %</item>
+		<item>50 %</item>
+		<item>60 %</item>
+		<item>70 %</item>
+		<item>80 %</item>
+		<item>90 %</item>
+		<item>100 %</item>
+	</string-array>
+
 	<string-array name="wave_passes_entries">
 		<item>One pass</item>
 		<item>Two passes</item>

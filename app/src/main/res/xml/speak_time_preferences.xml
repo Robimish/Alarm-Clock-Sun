@@ -50,6 +50,17 @@
 			android:dependency="@string/key_wave_to_say_time"
 			android:layout="@layout/nac_preference"
 			app:allowDividerAbove="false"
+			app:allowDividerBelow="false"
+			/>
+
+		<!-- Shows what the proximity sensor reads, to see whether it gives a distance
+			or only near and far (2.06) -->
+		<com.nfcalarmclock.settings.preference.NacPreference
+			android:title="@string/title_proximity_test"
+			android:key="@string/key_proximity_test"
+			android:summary="@string/message_proximity_test_hint"
+			android:layout="@layout/nac_preference"
+			app:allowDividerAbove="false"
 			app:allowDividerBelow="true"
 			/>
 	</com.nfcalarmclock.settings.preference.NacPreferenceCategory>
@@ -84,6 +95,14 @@
 		<Preference
 			android:title="@string/title_say_time_format"
 			android:key="@string/key_say_time_format"
+			android:layout="@layout/nac_preference"
+			app:allowDividerAbove="false"
+			app:allowDividerBelow="false"
+			/>
+
+		<Preference
+			android:title="@string/title_say_time_volume"
+			android:key="@string/key_say_time_volume"
 			android:layout="@layout/nac_preference"
 			app:allowDividerAbove="false"
 			app:allowDividerBelow="true"

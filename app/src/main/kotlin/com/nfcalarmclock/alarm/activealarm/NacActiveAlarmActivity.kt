@@ -32,6 +32,7 @@ import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.util.UnstableApi
 import com.nfcalarmclock.R
+import com.nfcalarmclock.alarm.options.NacAlarmButton
 import com.nfcalarmclock.alarm.NacAlarmViewModel
 import com.nfcalarmclock.alarm.db.NacAlarm
 import com.nfcalarmclock.log.NacLog
@@ -276,8 +277,12 @@ class NacActiveAlarmActivity
 	private val deviceUnlockedBroadcastReceiver: BroadcastReceiver = object: BroadcastReceiver() {
 		override fun onReceive(context: Context, intent: Intent)
 		{
-			// Setup NFC for the layout handler
-			setupLayoutHandlerNfc()
+			// Setup NFC for the layout handler, only when the alarm has NFC tags to
+			// scan (NFC Alarm Clock 12.7.3)
+			if (nfcTagsNeededToDismissList != null)
+			{
+				setupLayoutHandlerNfc()
+			}
 		}
 	}
 
@@ -289,7 +294,11 @@ class NacActiveAlarmActivity
 		{
 			// Setup NFC
 			startNfc()
-			setupLayoutHandlerNfc()
+
+			if (nfcTagsNeededToDismissList != null)
+			{
+				setupLayoutHandlerNfc()
+			}
 		}
 	}
 
@@ -299,24 +308,52 @@ class NacActiveAlarmActivity
 	 * Android never hands the power button to an application: only the system sees
 	 * it. What can be seen is the screen going out, which is what that button does,
 	 * so that is what is read here. Anything else that turns the screen off is read
-	 * the same way, which is why this is a setting and it starts off.
+	 * the same way, which is why it starts off.
+	 *
+	 * Since 2.01 the power button is one of the buttons chosen in Settings, General,
+	 * to dismiss or to snooze, and each alarm says whether it uses it.
 	 */
 	private val screenOffBroadcastReceiver: BroadcastReceiver = object: BroadcastReceiver() {
 		override fun onReceive(context: Context, intent: Intent)
 		{
-			// The setting is off, or the sunrise is still running and the alarm has not
-			// gone off yet
-			if (!sharedPreferences.shouldPowerDismiss || !isAlarmRinging)
+			val currentAlarm = alarm ?: return
+
+			// The sunrise is still running and the alarm has not gone off yet
+			if (!isAlarmRinging)
 			{
 				return
 			}
 
-			NacLog.i("Screen turned off while the alarm was ringing, dismissing it")
+			val dismisses = NacAlarmButton.matchesPower(sharedPreferences.dismissButton)
+				&& !currentAlarm.shouldUseNfc
+			val snoozes = NacAlarmButton.matchesPower(sharedPreferences.snoozeButton)
 
-			// Dismiss the alarm. The service is asked through an intent rather than
-			// through the binding, because the screen going out stops the activity and
-			// the binding goes with it
-			NacActiveAlarmService.dismissAlarmService(context, alarm)
+			// The service is asked through an intent rather than through the binding,
+			// because the screen going out stops the activity and the binding goes with it
+			if (dismisses)
+			{
+				NacLog.i("Screen turned off while the alarm was ringing, dismissing it")
+				NacActiveAlarmService.dismissAlarmService(context, currentAlarm)
+			}
+			else if (snoozes)
+			{
+				// The service checks the snooze limit and says so when no snooze is left
+				NacActiveAlarmService.snoozeAlarmService(context, currentAlarm)
+
+				// No snooze left: the alarm keeps ringing, so this screen stays
+				if (!currentAlarm.canSnooze)
+				{
+					NacLog.i("Screen turned off while the alarm was ringing, but no snooze is left")
+					return
+				}
+
+				NacLog.i("Screen turned off while the alarm was ringing, snoozing it")
+			}
+			// The power button does nothing for this alarm
+			else
+			{
+				return
+			}
 
 			// And go. The service lets the screen know it is done through the binding,
 			// which the screen going out has just cut, so otherwise this screen stayed
@@ -582,6 +619,10 @@ class NacActiveAlarmActivity
 			layoutHandler.setup(this@NacActiveAlarmActivity)
 			setupNfcTags()
 
+			// One listener for a tap on the screen, set after the layout handler so
+			// that it is the one that stays (2.01)
+			setupScreenTap()
+
 			// NFC tag was scanned. This checks if multiple NFC tags needed to be scanned in
 			// sequence as well
 			if (wasNfcTagScanned())
@@ -712,10 +753,10 @@ class NacActiveAlarmActivity
 			// and the ones after it are swallowed with it
 			if ((event?.repeatCount ?: 0) > 0)
 			{
-				return (service != null) && hasVolumeKeyAction()
+				return (service != null) && hasVolumeKeyAction(keyCode)
 			}
 
-			if (service?.onVolumeKeyFromScreen() == true)
+			if (service?.onVolumeKeyFromScreen(keyCode == KeyEvent.KEYCODE_VOLUME_UP) == true)
 			{
 				return true
 			}
@@ -731,7 +772,7 @@ class NacActiveAlarmActivity
 	@OptIn(UnstableApi::class)
 	override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean
 	{
-		if (isVolumeKey(keyCode) && isAlarmRinging && (service != null) && hasVolumeKeyAction())
+		if (isVolumeKey(keyCode) && isAlarmRinging && (service != null) && hasVolumeKeyAction(keyCode))
 		{
 			return true
 		}
@@ -740,13 +781,19 @@ class NacActiveAlarmActivity
 	}
 
 	/**
-	 * Whether this alarm dismisses or snoozes with the volume keys.
+	 * Whether this key dismisses or snoozes this alarm, with the buttons chosen in
+	 * Settings, General (2.01). A volume key that does neither changes the volume as
+	 * usual.
 	 */
-	private fun hasVolumeKeyAction(): Boolean
+	private fun hasVolumeKeyAction(keyCode: Int): Boolean
 	{
-		val currentAlarm = alarm ?: return false
+		if (alarm == null)
+		{
+			return false
+		}
 
-		return currentAlarm.shouldVolumeDismiss || currentAlarm.shouldVolumeSnooze
+		return NacAlarmButton.matchesKey(sharedPreferences.dismissButton, keyCode)
+			|| NacAlarmButton.matchesKey(sharedPreferences.snoozeButton, keyCode)
 	}
 
 	/**
@@ -788,24 +835,21 @@ class NacActiveAlarmActivity
 	 */
 	private fun setupAlarmScreen()
 	{
-		// New alarm screen
-		if (sharedPreferences.shouldUseNewAlarmScreen)
+		// The simple screen, the original one of NFC Alarm Clock: the name of the alarm
+		// and two buttons, nothing else (2.05)
+		if (sharedPreferences.shouldUseSimpleAlarmScreen)
 		{
-			// Set the screen view
-			setContentView(R.layout.act_alarm_new)
-
-			// Set the layout handler
-			layoutHandler = NacSwipeLayoutHandler(this, alarm, onAlarmActionListener)
-		}
-		// Original alarm screen
-		else
-		{
-			// Set the screen view
 			setContentView(R.layout.act_alarm)
-
-			// Set the layout handler
 			layoutHandler = NacOriginalLayoutHandler(this, alarm, onAlarmActionListener)
+			return
 		}
+
+		// The full screen, the same for both choices. The choice only says whether
+		// snooze and dismiss slide or are tapped (2.01)
+		setContentView(R.layout.act_alarm_new)
+
+		layoutHandler = NacSwipeLayoutHandler(this, alarm, onAlarmActionListener,
+			useButtons = !sharedPreferences.shouldUseNewAlarmScreen)
 	}
 
 	/**
@@ -828,6 +872,35 @@ class NacActiveAlarmActivity
 		// and the ringing that follows it. An alarm with no sunrise at all still shows
 		// what it was told to show, which is why this comes before the way out below
 		dawnHiddenViews = dawnAlarm.dawnHiddenViews
+
+		// Show one of the dawn phrases under the clock. With or without a sunrise: the
+		// alarm screen shows the same things either way (2.01)
+		dawnPhraseTextView = findViewById(R.id.dawn_phrase)
+
+		// The phrases of the app and the ones of one's own, or only one's own when that
+		// is asked and there is at least one (2.07)
+		val mine = sharedPreferences.myPhrases.lines().map { it.trim() }.filter { it.isNotEmpty() }
+		val phrases = if (sharedPreferences.shouldUseOnlyMyPhrases && mine.isNotEmpty())
+		{
+			mine.toTypedArray()
+		}
+		else
+		{
+			resources.getStringArray(R.array.dawn_phrases) + mine
+		}
+
+		if (phrases.isNotEmpty())
+		{
+			// Note: the phrase is not drawn at random, otherwise it would change when
+			// the screen is started again for the alarm itself. It is tied to the
+			// moment the alarm rings (2.05: it was tied to the day, so every ring of
+			// the same alarm that day showed the same phrase). It holds from the dawn
+			// through to the ringing and its snoozes, and changes with the next ring
+			val index = phraseIndex(dawnAlarm, phrases.size)
+
+			dawnPhraseTextView?.text = phrases[index]
+			dawnPhraseTextView?.visibility = View.VISIBLE
+		}
 
 		setDawnViewsHidden()
 
@@ -861,24 +934,6 @@ class NacActiveAlarmActivity
 			setupDawnImage(dawnAlarm.dawnImagePath)
 		}
 
-		// Show one of the dawn phrases, picked at random, under the clock
-		dawnPhraseTextView = findViewById(R.id.dawn_phrase)
-
-		val phrases = resources.getStringArray(R.array.dawn_phrases)
-
-		if (phrases.isNotEmpty())
-		{
-			// Note: the phrase is not drawn at random, otherwise it would change when
-			// the screen is started again for the alarm itself. It is tied to the
-			// alarm and to the day, so it holds from the dawn through to the ringing,
-			// and is different tomorrow
-			val day = System.currentTimeMillis() / 86400000L
-			val index = ((dawnAlarm.id + day) % phrases.size).toInt()
-
-			dawnPhraseTextView?.text = phrases[index]
-			dawnPhraseTextView?.visibility = View.VISIBLE
-		}
-
 		// Wake the speech engine, so that the first press of the volume key does not
 		// have to wait for it
 
@@ -892,7 +947,7 @@ class NacActiveAlarmActivity
 		// yet, and once it rings, because the screen keeps the light the sunrise left
 		// behind and a tap is the way back to an ordinary, dark alarm screen. It is set
 		// before the way out below so that the ringing keeps it
-		dawnRoot?.setOnClickListener { revealDawn() }
+		dawnRoot?.setOnClickListener { onScreenTapped() }
 
 		// There are no times, which means the dawn is over and the alarm is now
 		// ringing. Keep the light that the dawn left behind, so that the screen does
@@ -912,6 +967,47 @@ class NacActiveAlarmActivity
 	}
 
 	/**
+	 * Which phrase goes with this ring of the alarm.
+	 *
+	 * The ring is the hour and minute of the alarm, on the day nearest to now: the
+	 * sunrise starts before the alarm and can start the evening before, and the
+	 * screen is shown again later for the ringing and the snoozes. Taking the nearest
+	 * day keeps them all on the same ring.
+	 */
+	private fun phraseIndex(alarm: NacAlarm, size: Int): Int
+	{
+		val now = System.currentTimeMillis()
+		val ring = Calendar.getInstance()
+
+		ring[Calendar.HOUR_OF_DAY] = alarm.hour
+		ring[Calendar.MINUTE] = alarm.minute
+		ring[Calendar.SECOND] = 0
+		ring[Calendar.MILLISECOND] = 0
+
+		val halfDay = 12 * 60 * 60 * 1000L
+
+		if (ring.timeInMillis - now > halfDay)
+		{
+			ring.add(Calendar.DAY_OF_YEAR, -1)
+		}
+		else if (now - ring.timeInMillis > halfDay)
+		{
+			ring.add(Calendar.DAY_OF_YEAR, 1)
+		}
+
+		// Minutes since 1970 of that ring, mixed with the alarm so that two alarms at
+		// the same minute do not show the same phrase. The mix spreads rings that are
+		// exactly a day apart, which a plain sum would keep in step with the list
+		val ringMinute = ring.timeInMillis / 60000L
+		var seed = ringMinute xor (alarm.id shl 32)
+
+		seed *= -7046029254386353131L
+		seed = seed xor (seed ushr 29)
+
+		return ((seed and Long.MAX_VALUE) % size).toInt()
+	}
+
+	/**
 	 * Tell the service that the alarm screen is on display.
 	 */
 	private fun tellServiceTheScreenIsShown()
@@ -928,6 +1024,47 @@ class NacActiveAlarmActivity
 			// The service is not running, which is fine: there is no notification then
 			NacLog.i("Unable to tell the service that the screen is shown")
 		}
+	}
+
+	/**
+	 * Listen for a tap on the screen, anywhere that is not a button.
+	 */
+	private fun setupScreenTap()
+	{
+		val root: View = findViewById(R.id.act_alarm) ?: return
+
+		// Nothing to do with a tap: no easy snooze and no sunrise to reveal
+		if ((alarm?.shouldEasySnooze != true) && (dawnRoot == null))
+		{
+			return
+		}
+
+		root.setOnClickListener { onScreenTapped() }
+	}
+
+	/**
+	 * The screen was tapped, anywhere that is not a button.
+	 *
+	 * Once the alarm rings, a tap snoozes it when the alarm allows it (easy snooze,
+	 * in its snooze options). Otherwise, and during the sunrise, a tap shows the
+	 * normal screen for a moment.
+	 *
+	 * Easy snooze did not work before 2.01: the classic screen read the setting of
+	 * the default alarm instead of the one of the alarm, and the swipe screen had no
+	 * tap at all (fixed in NFC Alarm Clock 12.7.3 as well).
+	 */
+	private fun onScreenTapped()
+	{
+		val currentAlarm = alarm
+
+		if (isAlarmRinging && (currentAlarm != null) && currentAlarm.shouldEasySnooze)
+		{
+			NacLog.i("Screen tapped while the alarm rings: easy snooze")
+			onAlarmActionListener.onSnooze(currentAlarm)
+			return
+		}
+
+		revealDawn()
 	}
 
 	/**
@@ -1249,9 +1386,16 @@ class NacActiveAlarmActivity
 		// Put the background back
 		dawnRoot?.background = dawnOriginalBackground
 
-		// Stop listening for taps
-		dawnRoot?.setOnClickListener(null)
-		dawnRoot?.isClickable = false
+		// Stop listening for taps, unless a tap snoozes this alarm (easy snooze)
+		if (alarm?.shouldEasySnooze == true)
+		{
+			dawnRoot?.setOnClickListener { onScreenTapped() }
+		}
+		else
+		{
+			dawnRoot?.setOnClickListener(null)
+			dawnRoot?.isClickable = false
+		}
 
 		// Give the brightness back to the system
 		setDawnBrightness(WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE)

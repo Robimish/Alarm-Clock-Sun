@@ -198,8 +198,6 @@
 	<string name="message_text_to_speech_default_voice">Giọng nói mặc định</string>
 	<string name="message_text_to_speech_voice">Giọng nói %1$d</string>
 	<string name="message_text_to_speech_network_required">Có thể cần kết nối mạng để giọng nói hoạt động</string>
-	<string name="message_volume_dismiss_priority">Việc loại bỏ theo số lượng lớn sẽ được ưu tiên.</string>
-	<string name="message_volume_snooze_ignored">Chức năng tạm dừng âm lượng sẽ bị bỏ qua.</string>
 
 	<!-- Error messages -->
 	<string name="error_message_active_delete">Không thể xóa báo thức đang hoạt động</string>

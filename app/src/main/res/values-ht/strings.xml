@@ -198,8 +198,6 @@
 	<string name="message_text_to_speech_default_voice">Default vwa</string>
 	<string name="message_text_to_speech_voice">Vwa %1$d</string>
 	<string name="message_text_to_speech_network_required">Koneksyon rezo ka nesesè pou vwa a travay</string>
-	<string name="message_volume_dismiss_priority">Volim ki rejte a ap gen priyorite</string>
-	<string name="message_volume_snooze_ignored">Yo p ap pran an konsiderasyon si volim nan ap repete ankò</string>
 
 	<!-- Error messages -->
 	<string name="error_message_active_delete">Pa kapab efase yon alam aktif</string>

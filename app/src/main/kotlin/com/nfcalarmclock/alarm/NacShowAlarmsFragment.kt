@@ -59,6 +59,7 @@ import com.nfcalarmclock.alarm.card.NacAlarmCardHolder.OnCardUseRepeatChangedLis
 import com.nfcalarmclock.alarm.card.NacAlarmCardHolder.OnCardUseVibrateChangedListener
 import com.nfcalarmclock.alarm.card.NacAlarmCardHolder.OnCardVolumeChangedListener
 import com.nfcalarmclock.alarm.card.NacAlarmCardTouchHelper
+import com.nfcalarmclock.alarm.card.NacAlarmCardTouchHelperCallback
 import com.nfcalarmclock.alarm.db.NacAlarm
 import com.nfcalarmclock.alarm.db.NacNextAlarm
 import com.nfcalarmclock.alarm.card.NacVolumePreview
@@ -771,6 +772,55 @@ class NacShowAlarmsFragment
 
 				// Delete the alarm
 				deleteAlarm(item)
+			}
+
+		},
+		// Hold a closed card to drag it up or down the list (2.01)
+		object: NacAlarmCardTouchHelperCallback.OnCardDragListener {
+
+			override fun canDrag(): Boolean
+			{
+				// A list that rearranges itself would undo the new order at once
+				return !sharedPreferences.shouldAutoSortAlarms
+			}
+
+			override fun onCardMoved(fromIndex: Int, toIndex: Int)
+			{
+				val alarms = alarmCardAdapter.currentList.toMutableList()
+
+				if ((fromIndex !in alarms.indices) || (toIndex !in alarms.indices))
+				{
+					return
+				}
+
+				alarms.add(toIndex, alarms.removeAt(fromIndex))
+				alarmCardAdapter.submitList(alarms)
+			}
+
+			override fun onDragMoved()
+			{
+				// The same long press opens the menu of the card. Held still, the menu
+				// stays; moved, the card is being dragged, so the menu goes (2.03)
+				activity?.closeContextMenu()
+			}
+
+			override fun onDragEnded()
+			{
+				// The list the database changes are merged into takes the new order,
+				// otherwise an open card elsewhere would bring the old one back
+				alarmCardAdapterLiveData.value = alarmCardAdapter.currentList
+
+				// Each alarm gets its place in the list as its rank, and only the ones
+				// that moved are written down
+				alarmCardAdapter.currentList.forEachIndexed { index, alarm ->
+
+					if (alarm.sortOrder != index)
+					{
+						alarm.sortOrder = index
+						alarmViewModel.update(alarm)
+					}
+
+				}
 			}
 
 		})

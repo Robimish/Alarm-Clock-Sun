@@ -11,6 +11,7 @@ import android.os.Handler
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
+import com.nfcalarmclock.R
 import com.nfcalarmclock.alarm.db.NacAlarm
 import com.nfcalarmclock.alarm.options.flashlight.NacFlashlight
 import com.nfcalarmclock.alarm.options.tts.NacTextToSpeech
@@ -28,6 +29,7 @@ import com.nfcalarmclock.system.media.saveCurrentVolume
 import com.nfcalarmclock.system.media.setStreamVolume
 import com.nfcalarmclock.system.media.toPlayerGain
 import com.nfcalarmclock.system.mediaplayer.NacMediaPlayer
+import com.nfcalarmclock.view.quickToast
 
 /**
  * Actions to take upon waking up, such as enabling NFC, playing music, etc.
@@ -264,7 +266,7 @@ class NacWakeupProcess(
 	init
 	{
 		// Audio should be played through speakers and bluetooth
-		if (alarm.shouldPlayAudioThroughSpeakersAndBluetooth)
+		if (alarm.shouldPlayAudioThroughSpeakersAndBluetooth && (mediaPlayer != null))
 		{
 			NacLog.i("Normal audio attr usage    : ${audioAttributes.audioUsage}")
 			NacLog.i("Bluetooth audio attr usage : ${bluetoothAudioAttributes?.audioUsage}")
@@ -396,14 +398,14 @@ class NacWakeupProcess(
 				if (builtinSpeakerDevice != null)
 				{
 					NacLog.i("Setting builtin speaker preferred device. name=${builtinSpeakerDevice.productName} | type=${builtinSpeakerDevice.type}")
-					mediaPlayer!!.exoPlayer.setPreferredAudioDevice(builtinSpeakerDevice)
+					mediaPlayer?.exoPlayer?.setPreferredAudioDevice(builtinSpeakerDevice)
 				}
 
 				// Bluetooth device for the bluetooth media player
 				if (bluetoothDevice != null)
 				{
 					NacLog.i("Setting bluetooth preferred device. name=${bluetoothDevice.productName} | type=${bluetoothDevice.type}")
-					bluetoothMediaPlayer!!.exoPlayer.setPreferredAudioDevice(bluetoothDevice)
+					bluetoothMediaPlayer?.exoPlayer?.setPreferredAudioDevice(bluetoothDevice)
 				}
 				// No bluetooth device found. Null all bluetooth objects so they cannot be used
 				else
@@ -631,7 +633,19 @@ class NacWakeupProcess(
 		// Vibrate
 		if (shouldVibrate)
 		{
-			vibrator?.vibrateAlarm(alarm)
+			// A vibration the phone refuses no longer crashes the app (NFC Alarm Clock 12.7.3)
+			try
+			{
+				vibrator?.vibrateAlarm(alarm)
+			}
+			catch (_: IllegalArgumentException)
+			{
+				quickToast(context, R.string.error_message_unable_to_vibrate)
+			}
+			catch (_: OutOfMemoryError)
+			{
+				quickToast(context, R.string.error_message_out_of_memory)
+			}
 		}
 
 		// Flashlight

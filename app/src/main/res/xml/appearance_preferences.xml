@@ -209,6 +209,17 @@
 	<com.nfcalarmclock.settings.preference.NacPreferenceCategory
 		android:title="@string/title_alarm_screen">
 
+		<!-- The original screen of NFC Alarm Clock: the name and two buttons (2.05) -->
+		<com.nfcalarmclock.settings.preference.NacSwitchPreference
+			android:title="@string/title_simple_screen"
+			android:key="@string/key_use_simple_alarm_screen"
+			android:summaryOn="@string/description_use_simple_screen_true"
+			android:summaryOff="@string/description_use_simple_screen_false"
+			android:defaultValue="@bool/default_use_simple_alarm_screen"
+			app:allowDividerAbove="false"
+			app:allowDividerBelow="false"
+			/>
+
 		<com.nfcalarmclock.settings.preference.NacSwitchPreference
 			android:title="@string/title_new_screen"
 			android:key="@string/key_use_new_alarm_screen"
@@ -243,6 +254,25 @@
 			android:summaryOn="@string/description_alarm_screen_show_music_info_true"
 			android:summaryOff="@string/description_alarm_screen_show_music_info_false"
 			android:defaultValue="@bool/default_alarm_screen_show_music_info"
+			app:allowDividerAbove="false"
+			app:allowDividerBelow="false"
+			/>
+
+		<!-- Wake-up phrases of one's own, one per line (2.07) -->
+		<Preference
+			android:title="@string/title_my_phrases"
+			android:key="@string/key_my_phrases"
+			android:layout="@layout/nac_preference"
+			app:allowDividerAbove="false"
+			app:allowDividerBelow="false"
+			/>
+
+		<com.nfcalarmclock.settings.preference.NacSwitchPreference
+			android:title="@string/title_only_my_phrases"
+			android:key="@string/key_only_my_phrases"
+			android:summaryOn="@string/description_only_my_phrases_true"
+			android:summaryOff="@string/description_only_my_phrases_false"
+			android:defaultValue="false"
 			app:allowDividerAbove="false"
 			app:allowDividerBelow="false"
 			/>
