@@ -79,11 +79,13 @@ class NacSayTimeNotification(
 		get()
 		{
 			val shared = NacSharedPreferences(context)
-			val from = shared.sayTimeFromHour
-			val to = shared.sayTimeToHour
+			val fromHour = shared.sayTimeFromHour
+			val fromMinute = shared.sayTimeFromMinute
+			val toHour = shared.sayTimeToHour
+			val toMinute = shared.sayTimeToMinute
 
 			// The whole day, so there is no hour to name
-			if (from == to)
+			if ((fromHour == toHour) && (fromMinute == toMinute))
 			{
 				return context.getString(R.string.description_say_time_listening_always)
 			}
@@ -91,8 +93,8 @@ class NacSayTimeNotification(
 			// Both ends, not only the far one. The near one is what says whether the
 			// span has already begun, which is the question a look at the shade asks
 			return context.getString(R.string.description_say_time_listening_between,
-				NacCalendar.getClockTime(context, from, 0),
-				NacCalendar.getClockTime(context, to, 0))
+				NacCalendar.getClockTime(context, fromHour, fromMinute),
+				NacCalendar.getClockTime(context, toHour, toMinute))
 		}
 
 	/**

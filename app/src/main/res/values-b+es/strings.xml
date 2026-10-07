@@ -669,6 +669,15 @@
 
 	<string name="tts_say_time">Son las %1$s y %2$s %3$s.</string>
 	<string name="tts_say_time_one_oclock">Es la %1$s y %2$s %3$s.</string>
+	<string name="tts_say_time_on_the_hour">Son las %1$s %3$s.</string>
+	<string name="tts_say_time_one_on_the_hour">Es la %1$s %3$s.</string>
+	<string name="tts_say_time_midnight">Son las doce y %2$s de la noche.</string>
+	<string name="tts_say_time_midnight_on_the_hour">Es medianoche.</string>
+	<string name="tts_say_time_noon">Son las doce y %2$s del mediodía.</string>
+	<string name="tts_say_time_noon_on_the_hour">Es mediodía.</string>
+	<string name="tts_morning">de la mañana</string>
+	<string name="tts_afternoon">de la tarde</string>
+	<string name="tts_evening">de la noche</string>
 
 	<string name="action_alarm_option_dawn">Amanecer</string>
 	<string name="message_dawn_disabled">No usar la simulación de amanecer</string>
@@ -743,7 +752,7 @@
 	<string name="description_next_alarm_format_both">Próxima alarma el lun 7:00\nTiempo restante 7 horas 30 minutos</string>
 	<string name="description_onboarding_permission_full_screen_intent">Es la que hace aparecer la pantalla de alarma, y el amanecer, en un teléfono bloqueado. Sin ella la alarma suena sin nada más que una notificación.\n\nEl botón abre la página de ajustes correcta.</string>
 	<string name="description_reset_settings">Devuelve todos los ajustes a como estaban tras la instalación. Tus alarmas no se tocan.</string>
-	<string name="description_say_time_hours">La hora solo se dice entre las %1$02d:00 y las %2$02d:00.</string>
+	<string name="description_say_time_hours">La hora solo se dice entre las %1$s y las %2$s.</string>
 	<string name="description_say_time_listening_always">A la escucha, a cualquier hora</string>
 	<string name="word_once">Una vez</string>
 	<string name="action_say_time_now">Decir la hora</string>

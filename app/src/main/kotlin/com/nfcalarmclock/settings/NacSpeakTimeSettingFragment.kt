@@ -374,24 +374,28 @@ class NacSpeakTimeSettingFragment
 		fun refresh()
 		{
 			pref.summary = getString(R.string.description_say_time_hours,
-				shared.sayTimeFromHour, shared.sayTimeToHour)
+				"%02d:%02d".format(shared.sayTimeFromHour, shared.sayTimeFromMinute),
+				"%02d:%02d".format(shared.sayTimeToHour, shared.sayTimeToMinute))
 		}
 
 		refresh()
 
 		pref.onPreferenceClickListener = Preference.OnPreferenceClickListener {
 
-			// Two wheels side by side, one for each end of the span
-			val hours = Array(24) { "%02d:00".format(it) }
-			val row = LinearLayout(requireContext())
-			val fromPicker = NumberPicker(requireContext())
-			val toPicker = NumberPicker(requireContext())
+			// Two wheels side by side, one for each end of the span, going by half an
+			// hour: 00:00, 00:30, 01:00 ... 23:30
+			val context = requireContext()
+			val slots = Array(48) { "%02d:%02d".format(it / 2, (it % 2) * 30) }
+			val row = LinearLayout(context)
+			val fromPicker = NumberPicker(context)
+			val toPicker = NumberPicker(context)
+			val pickers = listOf(fromPicker, toPicker)
 
-			listOf(fromPicker, toPicker).forEach {
+			pickers.forEach {
 
 				it.minValue = 0
-				it.maxValue = 23
-				it.displayedValues = hours
+				it.maxValue = 47
+				it.displayedValues = slots
 				it.wrapSelectorWheel = true
 
 				row.addView(it, LinearLayout.LayoutParams(0,
@@ -400,19 +404,22 @@ class NacSpeakTimeSettingFragment
 			}
 
 			row.orientation = LinearLayout.HORIZONTAL
-			fromPicker.value = shared.sayTimeFromHour.coerceIn(0, 23)
-			toPicker.value = shared.sayTimeToHour.coerceIn(0, 23)
+			fromPicker.value = (shared.sayTimeFromHour * 2 + shared.sayTimeFromMinute / 30)
+				.coerceIn(0, 47)
+			toPicker.value = (shared.sayTimeToHour * 2 + shared.sayTimeToMinute / 30)
+				.coerceIn(0, 47)
 
 			AlertDialog.Builder(requireContext())
 				.setTitle(R.string.title_say_time_hours)
 				.setView(row)
 				.setPositiveButton(R.string.action_ok) { _, _ ->
 
-					fromPicker.clearFocus()
-					toPicker.clearFocus()
+					pickers.forEach { it.clearFocus() }
 
-					shared.sayTimeFromHour = fromPicker.value
-					shared.sayTimeToHour = toPicker.value
+					shared.sayTimeFromHour = fromPicker.value / 2
+					shared.sayTimeFromMinute = (fromPicker.value % 2) * 30
+					shared.sayTimeToHour = toPicker.value / 2
+					shared.sayTimeToMinute = (toPicker.value % 2) * 30
 
 					// The shake service stands up or down on those very hours
 					NacSayTimeService.refresh(requireContext())

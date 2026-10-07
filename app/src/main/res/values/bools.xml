@@ -48,4 +48,7 @@
 	<bool name="default_record_statistics">false</bool>
 
 	<bool name="tts_should_pad_minutes">true</bool>
+	<!-- Say "in the morning / afternoon / evening" after a 12 hour clock instead of
+		AM or PM, which only English says -->
+	<bool name="tts_use_day_parts">false</bool>
 </resources>

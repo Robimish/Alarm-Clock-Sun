@@ -212,6 +212,8 @@
 	<string name="key_clean_all">pref_clean_all</string>
 	<string name="key_say_time_from_hour">pref_say_time_from_hour</string>
 	<string name="key_say_time_to_hour">pref_say_time_to_hour</string>
+	<string name="key_say_time_from_minute">pref_say_time_from_minute</string>
+	<string name="key_say_time_to_minute">pref_say_time_to_minute</string>
 	<string name="key_say_time_language">pref_say_time_language</string>
 	<string name="key_tts_delay">pref_tts_delay</string>
 	<string name="key_analog_clock">pref_analog_clock</string>

@@ -62,6 +62,16 @@ object NacTranslate
 		{
 			""
 		}
+		// French and Spanish say the part of the day: "du matin", "de la tarde"
+		else if (context.resources.getBoolean(R.bool.tts_use_day_parts))
+		{
+			context.resources.getString(when
+			{
+				hour < 12 -> R.string.tts_morning
+				hour < 18 -> R.string.tts_afternoon
+				else      -> R.string.tts_evening
+			})
+		}
 		else
 		{
 			context.resources.getString(if (hour < 12) R.string.am else R.string.pm)
@@ -97,17 +107,34 @@ object NacTranslate
 		// One o'clock is said apart in several languages: "Es la una" and never
 		// "Son las una", "Il est 1 heure" and not "heures". Where a language draws no
 		// such distinction, the two strings hold the same sentence
-		val formatId = if (showHour == "1")
+		// On the hour, the languages that say nothing for the minutes have a sentence
+		// of their own, so that "Son las siete y" does not hang on a lonely "y"
+		val isOnTheHour = showMinute.isEmpty()
+
+		// Midnight and noon are said by their names where the part of the day is said:
+		// "minuit", "medianoche", "midi", "mediodía", and never "12 heures du matin"
+		val isNamedHour = !is24Hour
+			&& context.resources.getBoolean(R.bool.tts_use_day_parts)
+		val isMidnight = isNamedHour && (hour == 0)
+		val isNoon = isNamedHour && (hour == 12)
+
+		val formatId = when
 		{
-			R.string.tts_say_time_one_oclock
-		}
-		else
-		{
-			R.string.tts_say_time
+			isMidnight && isOnTheHour        -> R.string.tts_say_time_midnight_on_the_hour
+			isMidnight                       -> R.string.tts_say_time_midnight
+			isNoon && isOnTheHour            -> R.string.tts_say_time_noon_on_the_hour
+			isNoon                           -> R.string.tts_say_time_noon
+			isOnTheHour && (showHour == "1") -> R.string.tts_say_time_one_on_the_hour
+			isOnTheHour                      -> R.string.tts_say_time_on_the_hour
+			showHour == "1"                  -> R.string.tts_say_time_one_oclock
+			else                             -> R.string.tts_say_time
 		}
 
-		// Return the TTS phrase
+		// Return the TTS phrase, without the space left before the full stop when
+		// there is no meridian
 		return context.resources.getString(formatId, showHour, showMinute, meridian)
+			.replace(Regex("\\s+"), " ")
+			.replace(" .", ".")
 	}
 
 	/**

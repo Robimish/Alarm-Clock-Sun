@@ -161,9 +161,7 @@ class NacSayTimeService
 		// service stands down and its notification goes with it. Android does not let a
 		// foreground service run without a notification, so stopping is the only way to
 		// take it off the screen. An exact alarm brings it back at the hour
-		val hour = Calendar.getInstance()[Calendar.HOUR_OF_DAY]
-
-		if (!shared.isWithinSayTimeHours(hour))
+		if (!shared.isWithinSayTimeHours())
 		{
 			NacLog.i("Outside the hours for the spoken time. Standing down")
 			scheduleBoundaryAlarm(this, shared, isInside = false)
@@ -270,7 +268,7 @@ class NacSayTimeService
 	 */
 	private fun pauseUntilNextCycle(shared: NacSharedPreferences)
 	{
-		val resumeMillis = nextStartMillis(shared.sayTimeFromHour)
+		val resumeMillis = nextStartMillis(shared.sayTimeFromHour, shared.sayTimeFromMinute)
 
 		NacLog.i("Stopped from the notification until $resumeMillis")
 
@@ -518,9 +516,8 @@ class NacSayTimeService
 		// It is kept for the minutes around the boundary, where the alarm that stands
 		// the service down may not have fired yet
 		val shared = NacSharedPreferences(this)
-		val hour = Calendar.getInstance()[Calendar.HOUR_OF_DAY]
 
-		if (!shared.isWithinSayTimeHours(hour))
+		if (!shared.isWithinSayTimeHours())
 		{
 			return
 		}
@@ -626,8 +623,8 @@ class NacSayTimeService
 			isInside: Boolean
 		)
 		{
-			val from = shared.sayTimeFromHour
-			val to = shared.sayTimeToHour
+			val from = shared.sayTimeFromHour * 60 + shared.sayTimeFromMinute
+			val to = shared.sayTimeToHour * 60 + shared.sayTimeToMinute
 
 			// Stopped from the notification: come back when the next hours start, even
 			// when the whole day counts
@@ -645,20 +642,20 @@ class NacSayTimeService
 			}
 
 			// Inside the hours, wait for them to run out. Outside, wait for them to start
-			val targetHour = if (isInside) to else from
+			val target = if (isInside) to else from
 
-			setBoundaryAlarm(context, nextStartMillis(targetHour))
+			setBoundaryAlarm(context, nextStartMillis(target / 60, target % 60))
 		}
 
 		/**
 		 * The next time the clock reaches this hour, never now. [Units: ms]
 		 */
-		private fun nextStartMillis(hour: Int): Long
+		private fun nextStartMillis(hour: Int, minute: Int): Long
 		{
 			val calendar = Calendar.getInstance()
 
 			calendar[Calendar.HOUR_OF_DAY] = hour
-			calendar[Calendar.MINUTE] = 0
+			calendar[Calendar.MINUTE] = minute
 			calendar[Calendar.SECOND] = 0
 			calendar[Calendar.MILLISECOND] = 0
 
@@ -721,10 +718,9 @@ class NacSayTimeService
 			// itself: Android expects a service started this way to go into the
 			// foreground within a few seconds, and starting one only to stand it down is
 			// asking for trouble
-			val hour = Calendar.getInstance()[Calendar.HOUR_OF_DAY]
 			val isWanted = shared.shouldSayTime
 				&& (shared.shouldShakeToSayTime || shared.shouldWaveToSayTime)
-			val shouldListen = isWanted && shared.isWithinSayTimeHours(hour)
+			val shouldListen = isWanted && shared.isWithinSayTimeHours()
 				&& !shared.isSayTimePaused()
 
 			try

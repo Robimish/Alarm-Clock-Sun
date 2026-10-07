@@ -3,5 +3,6 @@
 
 	<!-- Le français dit les minutes comme un nombre : « 05 » serait lu « zéro cinq » -->
 	<bool name="tts_should_pad_minutes">false</bool>
+	<bool name="tts_use_day_parts">true</bool>
 
 </resources>

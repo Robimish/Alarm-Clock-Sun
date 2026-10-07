@@ -527,7 +527,7 @@
 	<string name="message_proximity_none" tools:ignore="MissingTranslation">No proximity sensor on this phone.</string>
 	<string name="title_say_time" tools:ignore="MissingTranslation">Speak the time</string>
 	<string name="title_say_time_hours" tools:ignore="MissingTranslation">Only between</string>
-	<string name="description_say_time_hours" tools:ignore="MissingTranslation">The time is only spoken between %1$02d:00 and %2$02d:00.</string>
+	<string name="description_say_time_hours" tools:ignore="MissingTranslation">The time is only spoken between %1$s and %2$s.</string>
 	<string name="title_say_time_voice" tools:ignore="MissingTranslation">The voice itself, alarms included</string>
 	<string name="title_say_time_language" tools:ignore="MissingTranslation">Spoken language</string>
 	<string name="title_say_time_from" tools:ignore="MissingTranslation">From</string>
@@ -770,8 +770,22 @@
 		<item quantity="other">Reminder. %1$s, will run in, %2$d, minutes.</item>
 	</plurals>
 
-	<string name="tts_say_time">The time is %1$s:%2$s %3$s.</string>
-	<string name="tts_say_time_one_oclock">The time is %1$s:%2$s %3$s.</string>
+	<string name="tts_say_time">It\'s %1$s:%2$s %3$s.</string>
+	<string name="tts_say_time_one_oclock">It\'s %1$s:%2$s %3$s.</string>
+	<!-- On the hour, for the languages that say the minutes as a number and so have
+		none to say: no "and" or "y" left hanging -->
+	<string name="tts_say_time_on_the_hour" tools:ignore="MissingTranslation">The time is %1$s %3$s.</string>
+	<string name="tts_say_time_one_on_the_hour" tools:ignore="MissingTranslation">The time is %1$s %3$s.</string>
+	<!-- Midnight on a 12 hour clock, where tts_use_day_parts is true: "minuit",
+		"medianoche" rather than "12 in the morning" -->
+	<string name="tts_say_time_midnight" tools:ignore="MissingTranslation">It\'s 12:%2$s AM.</string>
+	<string name="tts_say_time_midnight_on_the_hour" tools:ignore="MissingTranslation">It\'s midnight.</string>
+	<string name="tts_say_time_noon" tools:ignore="MissingTranslation">It\'s 12:%2$s PM.</string>
+	<string name="tts_say_time_noon_on_the_hour" tools:ignore="MissingTranslation">It\'s noon.</string>
+	<!-- Parts of the day said after a 12 hour clock, where tts_use_day_parts is true -->
+	<string name="tts_morning" tools:ignore="MissingTranslation">AM</string>
+	<string name="tts_afternoon" tools:ignore="MissingTranslation">PM</string>
+	<string name="tts_evening" tools:ignore="MissingTranslation">PM</string>
 
 	<!-- The power button during the alarm -->
 	<string name="title_while_ringing" tools:ignore="MissingTranslation">While the alarm rings</string>

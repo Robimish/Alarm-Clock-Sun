@@ -36,8 +36,8 @@ android {
 		// version doit rester superieur a 638, sinon Android refuse la mise a jour
 		// par-dessus les builds deja installes. A incrementer a CHAQUE lot de
 		// modifications
-		versionCode = 748
-		versionName = "2.09"
+		versionCode = 750
+		versionName = "2.11"
 	}
 
 	// Configuration for signing the app on release builds. The keystore.properties file must exist

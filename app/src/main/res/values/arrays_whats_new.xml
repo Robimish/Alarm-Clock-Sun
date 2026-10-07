@@ -5,6 +5,12 @@
 	<!-- &lt;/b> -->
 
 	<string-array name="whats_new_items" tools:ignore="InconsistentArrays">
+		<item>2.11</item>
+		<item>&lt;b>Speak the time&lt;/b> in Spanish no longer leaves a lonely \"y\" on the hour. In French and Spanish, a 12-hour clock says the part of the day (\"du matin\", \"de la tarde\") instead of AM or PM, and midnight and noon by their names (\"minuit\", \"midi\", \"medianoche\", \"mediodía\").</item>
+		<item>In English, the time is now said the everyday way: \"It\'s 7:05\" instead of \"The time is 7:05\".</item>
+		<item>2.10</item>
+		<item>&lt;b>Speak the time&lt;/b>: its hours can now start and end on the half hour, such as 06:30 to 07:30.</item>
+		<item>&lt;b>Export&lt;/b> of the settings keeps the line breaks and commas of a text, so that &lt;b>My wake-up phrases&lt;/b> come back one per line after an import.</item>
 		<item>2.09</item>
 		<item>With &lt;b>two hand passes&lt;/b>, the time is said as soon as the hand comes back the second time, without waiting for it to leave.</item>
 		<item>2.08</item>

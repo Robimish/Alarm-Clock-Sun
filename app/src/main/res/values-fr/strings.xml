@@ -501,7 +501,7 @@
 	<string name="message_proximity_none">Pas de capteur de proximité sur ce téléphone.</string>
 	<string name="title_say_time">Dire l\'heure</string>
 	<string name="title_say_time_hours">Uniquement entre</string>
-	<string name="description_say_time_hours">L\'heure n\'est dite qu\'entre %1$02d:00 et %2$02d:00.</string>
+	<string name="description_say_time_hours">L\'heure n\'est dite qu\'entre %1$s et %2$s.</string>
 	<string name="title_say_time_voice">La voix elle-même, alarmes comprises</string>
 	<string name="title_say_time_language">Langue parlée</string>
 	<string name="title_say_time_from">De</string>
@@ -637,6 +637,15 @@
 	<string name="cd_preference_icon">Icône de réglage</string>
 	<string name="tts_say_time">Il est %1$s heures %2$s %3$s.</string>
 	<string name="tts_say_time_one_oclock">Il est %1$s heure %2$s %3$s.</string>
+	<string name="tts_say_time_on_the_hour">Il est %1$s heures %3$s.</string>
+	<string name="tts_say_time_one_on_the_hour">Il est %1$s heure %3$s.</string>
+	<string name="tts_say_time_midnight">Il est minuit %2$s.</string>
+	<string name="tts_say_time_midnight_on_the_hour">Il est minuit.</string>
+	<string name="tts_say_time_noon">Il est midi %2$s.</string>
+	<string name="tts_say_time_noon_on_the_hour">Il est midi.</string>
+	<string name="tts_morning">du matin</string>
+	<string name="tts_afternoon">de l\'après-midi</string>
+	<string name="tts_evening">du soir</string>
 
 	<plurals name="alarm">
 		<item quantity="one">%d alarme</item>

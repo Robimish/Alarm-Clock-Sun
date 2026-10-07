@@ -4,5 +4,6 @@
 	<!-- L'espagnol dit les minutes comme un nombre, "y cinco", et non comme un
 		cadran : le zero de tete ferait dire "cero cinco" -->
 	<bool name="tts_should_pad_minutes">false</bool>
+	<bool name="tts_use_day_parts">true</bool>
 
 </resources>

@@ -2446,6 +2446,26 @@ class NacSharedPreferences(context: Context)
 		}
 
 	/**
+	 * Minute of [sayTimeFromHour] at which the time can start being spoken. [Units: min]
+	 */
+	var sayTimeFromMinute: Int
+		get() = instance.getInt(resources.getString(R.string.key_say_time_from_minute), 0)
+		set(value)
+		{
+			saveInt(resources.getString(R.string.key_say_time_from_minute), value)
+		}
+
+	/**
+	 * Minute of [sayTimeToHour] after which the time is no longer spoken. [Units: min]
+	 */
+	var sayTimeToMinute: Int
+		get() = instance.getInt(resources.getString(R.string.key_say_time_to_minute), 0)
+		set(value)
+		{
+			saveInt(resources.getString(R.string.key_say_time_to_minute), value)
+		}
+
+	/**
 	 * Language the time is spoken in. Empty means the language of the phone.
 	 */
 	var sayTimeLanguage: String
@@ -2629,10 +2649,16 @@ class NacSharedPreferences(context: Context)
 	/**
 	 * Whether the clock is inside the hours during which the time can be spoken.
 	 */
-	fun isWithinSayTimeHours(hour: Int): Boolean
+	fun isWithinSayTimeHours(
+		calendar: java.util.Calendar = java.util.Calendar.getInstance()
+	): Boolean
 	{
-		val from = sayTimeFromHour
-		val to = sayTimeToHour
+		// Everything is counted in minutes of the day, so that a span can start or
+		// end at any minute and not only on the hour
+		val from = sayTimeFromHour * 60 + sayTimeFromMinute
+		val to = sayTimeToHour * 60 + sayTimeToMinute
+		val hour = calendar[java.util.Calendar.HOUR_OF_DAY] * 60 +
+			calendar[java.util.Calendar.MINUTE]
 
 		// The whole day
 		if (from == to)
@@ -4005,12 +4031,32 @@ class NacSharedPreferences(context: Context)
 			// byte stream
 			BufferedReader(InputStreamReader(input)).use { reader ->
 
+				// Files written since 2.10 start with a line that says their text values
+				// are escaped. Older files are read the way they always were
+				var isEscaped = false
+
 				// Read each line in the file
 				while (true)
 				{
-					// Read the key, type, and value from the line
+					// Read the key, type, and value from the line. The value is whatever
+					// comes after the second comma, commas included
 					val line = reader.readLine() ?: break
-					val (key, type, value) = line.split(",")
+					val parts = line.split(",", limit = 3)
+
+					if (parts.size < 3)
+					{
+						continue
+					}
+
+					val (key, type, rawValue) = parts
+
+					if (key == CSV_FORMAT_KEY)
+					{
+						isEscaped = true
+						continue
+					}
+
+					val value = if (isEscaped) unescapeCsv(rawValue) else rawValue
 
 					// Check if key is in the ignore list
 					if (key in ignoreList)
@@ -4399,6 +4445,49 @@ class NacSharedPreferences(context: Context)
 	/**
 	 * Write the all the shared preferences to a CSV file.
 	 */
+	/**
+	 * Escape a text so that it fits on one line: a backslash is doubled and a line
+	 * break becomes a backslash followed by "n".
+	 */
+	private fun escapeCsv(text: String): String
+	{
+		return text.replace("\\", "\\\\")
+			.replace("\r", "")
+			.replace("\n", "\\n")
+	}
+
+	/**
+	 * Undo [escapeCsv].
+	 */
+	private fun unescapeCsv(text: String): String
+	{
+		val builder = StringBuilder()
+		var i = 0
+
+		while (i < text.length)
+		{
+			val c = text[i]
+
+			if ((c == '\\') && (i + 1 < text.length))
+			{
+				when (text[i + 1])
+				{
+					'n'  -> builder.append('\n')
+					else -> builder.append(text[i + 1])
+				}
+
+				i += 2
+			}
+			else
+			{
+				builder.append(c)
+				i++
+			}
+		}
+
+		return builder.toString()
+	}
+
 	fun writeToCsv(context: Context, file: File)
 	{
 		// List of keys to ignore
@@ -4406,6 +4495,10 @@ class NacSharedPreferences(context: Context)
 
 		// Save shared preferences
 		context.openFileOutput(file.name, Context.MODE_PRIVATE).use { output ->
+
+			// Say that the text values below are escaped. An older version of the app
+			// reads this line as a setting of an unknown type and skips it
+			output.write("${CSV_FORMAT_KEY},Format,2\n".toByteArray())
 
 			// Get all shared preferences
 			instance.all.forEach {
@@ -4431,10 +4524,11 @@ class NacSharedPreferences(context: Context)
 					else       -> return@forEach
 				}
 
-				// Check if the value has any newlines and convert them to spaces
-				if ((value is String) && value.contains("\n"))
+				// Keep the line breaks of a text, such as the list of my phrases, without
+				// breaking the one line per setting of the file
+				if (value is String)
 				{
-					value = value.replace("\n", " ")
+					value = escapeCsv(value)
 				}
 
 				// Build the line that will be written to the file
@@ -4455,6 +4549,12 @@ class NacSharedPreferences(context: Context)
 		 * night (2.06).
 		 */
 		const val DEFAULT_SAY_TIME_VOLUME = 3
+
+		/**
+		 * First line of an exported settings file, saying that its text values are
+		 * escaped (2.10).
+		 */
+		const val CSV_FORMAT_KEY = "#csv_format"
 
 		/**
 		 * Moved the shared preference to device protected storage.
