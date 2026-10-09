@@ -841,10 +841,18 @@ class NacActiveAlarmService
 	@UnstableApi
 	private fun snooze()
 	{
+		// A snooze during the dawn comes before the alarm has rung. It moves the alarm
+		// later than the time it was set for, counted from that time and not from now:
+		// counted from now, a 5 minute snooze taken 8 minutes ahead brought the alarm
+		// forward, and its dawn, already late, started again a few seconds later (2.13)
+		val now = System.currentTimeMillis()
+		val isDuringDawn = isInDawnPhase && (dawnAlarmAtMillis > now)
+		val fromMillis = if (isDuringDawn) dawnAlarmAtMillis else now
+
 		lifecycleScope.launch {
 
 			// Snooze the alarm and get the next time to run the alarm again
-			val cal = alarm!!.snooze()
+			val cal = alarm!!.snooze(fromMillis)
 
 			// Update the time the alarm was active
 			alarm!!.timeActive += System.currentTimeMillis() - startTime
@@ -854,7 +862,8 @@ class NacActiveAlarmService
 			// Update the alarm, write to the stats table, and reschedule the alarm
 			alarmRepository.update(alarm!!)
 			statisticRepository.insertSnoozed(alarm, alarm!!.snoozeDuration.toLong())
-			NacScheduler.update(this@NacActiveAlarmService, alarm!!, cal)
+			NacScheduler.update(this@NacActiveAlarmService, alarm!!, cal,
+				isSnoozedDuringDawn = isDuringDawn)
 
 			// Save the next alarm
 			saveNextAlarm(snoozeCal = cal)

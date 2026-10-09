@@ -1715,15 +1715,21 @@ open class NacAlarm()
 	/**
 	 * Snooze the alarm.
 	 *
+	 * @param fromMillis Time the snooze is counted from. Now, unless the alarm has not
+	 *                   rung yet (a snooze during the dawn), in which case it is the
+	 *                   time it was going to ring at, so that the alarm moves later
+	 *                   and never earlier (2.13).
+	 *
 	 * @return Calendar instance of when the snoozed alarm will go off.
 	 */
-	fun snooze(): Calendar
+	fun snooze(fromMillis: Long = System.currentTimeMillis()): Calendar
 	{
 		// Reset the active flag
 		isActive = false
 
-		// Add the snooze duration value to the current time
+		// Add the snooze duration value to the time it is counted from
 		val cal = Calendar.getInstance()
+		cal.timeInMillis = fromMillis
 		cal.add(Calendar.SECOND, snoozeDuration)
 
 		// Increment the snooze count

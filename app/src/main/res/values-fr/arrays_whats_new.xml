@@ -2,6 +2,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
 	<string-array name="whats_new_items" tools:ignore="InconsistentArrays">
+		<item>2.13</item>
+		<item>&lt;b>Snooze pendant l\'aube&lt;/b> : l\'alarme est maintenant reportée après l\'heure prévue, et non à partir de maintenant. L\'écran s\'éteint, puis l\'aube reprend sur la seconde moitié du temps restant, au lieu de recommencer quelques secondes plus tard.</item>
+		<item>&lt;b>Dire l\'heure&lt;/b> : le volume de la voix se règle maintenant au pourcent près, sur une roue, au lieu de 10 % en 10 %.</item>
 		<item>2.12</item>
 		<item>Nouveau dans Paramètres généraux : &lt;b>Distance à glisser&lt;/b>, de 80 à 100 % de la course (97 % au départ), pour reporter ou arrêter avec le curseur.</item>
 		<item>&lt;b>Dire l\'heure&lt;/b> : la plage horaire est maintenant en haut de sa page.</item>

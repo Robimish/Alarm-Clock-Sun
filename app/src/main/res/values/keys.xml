@@ -226,6 +226,7 @@
 	<string name="key_wave_passes">pref_wave_passes</string>
 	<string name="key_say_time_format">pref_say_time_format</string>
 	<string name="key_say_time_volume">pref_say_time_volume</string>
+	<string name="key_say_time_volume_percent">pref_say_time_volume_percent</string>
 	<string name="key_proximity_test">pref_proximity_test</string>
 	<string name="key_app_language">pref_app_language</string>
 	<string name="key_reset_settings">pref_reset_settings</string>

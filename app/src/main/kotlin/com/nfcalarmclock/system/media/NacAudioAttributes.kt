@@ -65,6 +65,12 @@ class NacAudioAttributes(
 	var voice: String = ""
 
 	/**
+	 * Volume of the voice inside its stream, from 0 to 1. Lets the spoken time be set
+	 * finer than the steps of the alarm volume (2.13).
+	 */
+	var ttsVolume: Float = 1f
+
+	/**
 	 * Whether audio was ducking or not.
 	 */
 	var wasDucking = false

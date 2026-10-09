@@ -5,6 +5,9 @@
 	<!-- &lt;/b> -->
 
 	<string-array name="whats_new_items" tools:ignore="InconsistentArrays">
+		<item>2.13</item>
+		<item>&lt;b>Snooze during the dawn&lt;/b> now moves the alarm later than the time it was set for, instead of counting from now. The screen goes dark, then the dawn lights up again over the second half of the time left, rather than starting again a few seconds later.</item>
+		<item>&lt;b>Speak the time&lt;/b>: the voice volume now goes by 1 %, on a wheel, instead of by 10 %.</item>
 		<item>2.12</item>
 		<item>New in General settings: &lt;b>How far to swipe&lt;/b>, from 80 to 100 % of the way (97 % at first), to snooze or dismiss with the slider.</item>
 		<item>&lt;b>Speak the time&lt;/b>: the hours during which it listens come first on its page.</item>

@@ -2618,15 +2618,36 @@ class NacSharedPreferences(context: Context)
 		}
 
 	/**
-	 * Volume of the spoken time, as a place in the list that is shown: 0 follows the
-	 * volume of the alarms, 1 to 10 are 10 % to 100 % of the loudest the phone can go
-	 * (2.06).
+	 * Volume of the spoken time, in percent of the loudest the phone can go, 1 to 100.
+	 * 0 follows the volume of the alarms (2.13, by 1 %).
+	 *
+	 * Until 2.12 it went by 10 %, under another key, as 0 to 10. A value saved then is
+	 * read once and carried over, times 10.
 	 */
 	var sayTimeVolume: Int
-		get() = instance.getInt(resources.getString(R.string.key_say_time_volume), DEFAULT_SAY_TIME_VOLUME)
+		get()
+		{
+			val key = resources.getString(R.string.key_say_time_volume_percent)
+
+			if (instance.contains(key))
+			{
+				return instance.getInt(key, DEFAULT_SAY_TIME_VOLUME).coerceIn(0, 100)
+			}
+
+			val oldKey = resources.getString(R.string.key_say_time_volume)
+
+			return if (instance.contains(oldKey))
+			{
+				(instance.getInt(oldKey, 3) * 10).coerceIn(0, 100)
+			}
+			else
+			{
+				DEFAULT_SAY_TIME_VOLUME
+			}
+		}
 		set(value)
 		{
-			saveInt(resources.getString(R.string.key_say_time_volume), value)
+			saveInt(resources.getString(R.string.key_say_time_volume_percent), value.coerceIn(0, 100))
 		}
 
 	/**
@@ -4565,7 +4586,7 @@ class NacSharedPreferences(context: Context)
 		 * Default volume of the spoken time: 30 % of the loudest, quiet enough for the
 		 * night (2.06).
 		 */
-		const val DEFAULT_SAY_TIME_VOLUME = 3
+		const val DEFAULT_SAY_TIME_VOLUME = 30
 
 		/**
 		 * First line of an exported settings file, saying that its text values are

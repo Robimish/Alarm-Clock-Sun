@@ -101,13 +101,47 @@ class NacSpeakTimeSettingFragment
 	 */
 	private fun setupSayTimeVolume(shared: NacSharedPreferences)
 	{
-		setupChoicePreference(R.string.key_say_time_volume, R.string.title_say_time_volume,
-			R.array.say_time_volume_entries,
-			get = { shared.sayTimeVolume },
-			set = { shared.sayTimeVolume = it },
-			extra = { index ->
-				if (index == 0) null else getString(R.string.description_say_time_volume)
-			})
+		val pref = findPreference<Preference>(getString(R.string.key_say_time_volume)) ?: return
+		val sameAsAlarms = resources.getStringArray(R.array.say_time_volume_entries).first()
+
+		fun name(percent: Int): String = if (percent <= 0) sameAsAlarms else "$percent %"
+
+		fun refresh()
+		{
+			val value = shared.sayTimeVolume
+
+			pref.summary = if (value <= 0) name(value)
+				else "${name(value)} (${getString(R.string.description_say_time_volume)})"
+		}
+
+		refresh()
+
+		// One wheel, by 1 %: "Same as the alarms", then 1 % to 100 % (2.13)
+		pref.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+
+			val picker = NumberPicker(requireContext())
+
+			picker.minValue = 0
+			picker.maxValue = 100
+			picker.displayedValues = Array(101) { name(it) }
+			picker.wrapSelectorWheel = false
+			picker.value = shared.sayTimeVolume
+
+			AlertDialog.Builder(requireContext())
+				.setTitle(R.string.title_say_time_volume)
+				.setView(picker)
+				.setPositiveButton(R.string.action_ok) { _, _ ->
+
+					picker.clearFocus()
+					shared.sayTimeVolume = picker.value
+					refresh()
+
+				}
+				.setNegativeButton(R.string.action_cancel, null)
+				.show()
+
+			true
+		}
 	}
 
 	/**

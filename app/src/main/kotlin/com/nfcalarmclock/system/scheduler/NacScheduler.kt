@@ -71,7 +71,12 @@ object NacScheduler
 	 *
 	 * The dawn starts the given number of minutes before the alarm goes off.
 	 */
-	fun addDawn(context: Context, alarm: NacAlarm, atCal: Calendar? = null)
+	fun addDawn(
+		context: Context,
+		alarm: NacAlarm,
+		atCal: Calendar? = null,
+		isSnoozedDuringDawn: Boolean = false
+	)
 	{
 		// Get the calendar for when the next alarm will run. It is given when the
 		// alarm has been snoozed, since the snooze time is not the usual next time
@@ -97,8 +102,19 @@ object NacScheduler
 					return
 				}
 
+				// Snoozed during the dawn: the screen stays dark for the first half of
+				// the time left, then the dawn lights up over the second half. Starting
+				// it at once would undo the snooze that was just asked for (2.13)
+				startMillis = if (isSnoozedDuringDawn)
+				{
+					now.timeInMillis + (nextMillis - now.timeInMillis) / 2
+				}
+				else
+				{
+					now.timeInMillis
+				}
+
 				NacLog.i("Alarm was snoozed, running a shortened dawn")
-				startMillis = now.timeInMillis
 			}
 			// The alarm was just set or changed. Do not light the screen up out of
 			// the blue: the next occurrence gets its full dawn
@@ -570,7 +586,12 @@ object NacScheduler
 	/**
 	 * Update a single calendar in a given alarm.
 	 */
-	fun update(context: Context, alarm: NacAlarm, cal: Calendar)
+	fun update(
+		context: Context,
+		alarm: NacAlarm,
+		cal: Calendar,
+		isSnoozedDuringDawn: Boolean = false
+	)
 	{
 		// Cancel the alarm
 		cancel(context, alarm)
@@ -583,7 +604,7 @@ object NacScheduler
 		// asked for
 		if (alarm.shouldUseDawn && !alarm.shouldSkipNextAlarm)
 		{
-			addDawn(context, alarm, cal)
+			addDawn(context, alarm, cal, isSnoozedDuringDawn)
 		}
 	}
 

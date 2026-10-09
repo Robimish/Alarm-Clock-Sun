@@ -151,7 +151,7 @@ class NacSayTimeReceiver
 		// The volume chosen for the voice, as a share of the loudest the phone can go.
 		// The voice plays on the alarm volume, so that volume is set for as long as it
 		// speaks and put back afterwards (2.06)
-		restoreVolume[0] = setVoiceVolume(context, shared.sayTimeVolume)
+		restoreVolume[0] = setVoiceVolume(context, shared.sayTimeVolume, attrs)
 
 		speech.speak(phrase, attrs)
 	}
@@ -161,10 +161,14 @@ class NacSayTimeReceiver
 	 *
 	 * @return How to put the volume back, or null when nothing was changed.
 	 */
-	private fun setVoiceVolume(context: Context, choice: Int): (() -> Unit)?
+	private fun setVoiceVolume(
+		context: Context,
+		percent: Int,
+		attrs: NacAudioAttributes
+	): (() -> Unit)?
 	{
 		// Same as the alarms: nothing to change
-		if (choice <= 0)
+		if (percent <= 0)
 		{
 			return null
 		}
@@ -177,7 +181,14 @@ class NacSayTimeReceiver
 			val min = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P)
 				audio.getStreamMinVolume(stream) else 0
 			val before = audio.getStreamVolume(stream)
-			val wanted = ((max * choice.coerceIn(1, 10) + 5) / 10).coerceIn(maxOf(min, 1), max)
+			// The alarm volume only has a few steps (often around 15). The step just
+			// above the chosen share is used, and the voice itself is turned down inside
+			// it for the rest, which is what lets the volume go by 1 % (2.13)
+			val share = percent.coerceIn(1, 100) / 100f
+			val exact = max * share
+			val wanted = kotlin.math.ceil(exact).toInt().coerceIn(maxOf(min, 1), max)
+
+			attrs.ttsVolume = (exact / wanted).coerceIn(0.05f, 1f)
 
 			if (wanted == before)
 			{
