@@ -2,6 +2,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
 	<string-array name="whats_new_items" tools:ignore="InconsistentArrays">
+		<item>2.14</item>
+		<item>Ménage interne : 16 textes qui ne s\'affichaient plus nulle part et une valeur de réglage inutilisée ont été retirés. Rien ne change à l\'usage.</item>
 		<item>2.13</item>
 		<item>&lt;b>Snooze pendant l\'aube&lt;/b> : l\'alarme est maintenant reportée après l\'heure prévue, et non à partir de maintenant. L\'écran s\'éteint, puis l\'aube reprend sur la seconde moitié du temps restant, au lieu de recommencer quelques secondes plus tard.</item>
 		<item>&lt;b>Dire l\'heure&lt;/b> : le volume de la voix se règle maintenant au pourcent près, sur une roue, au lieu de 10 % en 10 %.</item>

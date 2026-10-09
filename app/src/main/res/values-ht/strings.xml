@@ -646,7 +646,6 @@
 	<string name="title_dawn_use_image">Sèvi ak yon imaj</string>
 	<string name="description_dawn_use_image">Montre yon foto tikal olye yon koulè plat.</string>
 	<string name="action_dawn_choose_image">Chwazi imaj</string>
-	<string name="message_dawn_preview_over">Tape pou fèmen</string>
 	<string name="title_dawn_preview_duration">Dire apèsi a</string>
 	<string name="description_dawn_preview_duration">Apèsi douvanjou a dire %1$d segonn, epi li tann yon tap pou fèmen. Si w tape pandan l ap mache, ekran an parèt jan l ye nòmalman, menm jan ak yon vre douvanjou.</string>
 	<string name="title_storage">Espas depo</string>
@@ -671,11 +670,8 @@
 	<string name="title_dawn_show_media">Tit mizik la</string>
 	<string name="message_dawn_no_image">Pa gen imaj chwazi</string>
 	<string name="message_dawn_unable_to_read_image">Pa ka li imaj ou chwazi a</string>
-	<string name="action_dawn_stop">Kanpe</string>
-	<string name="message_dawn_snoozed">Revèy la ranvwaye pou 5 minit</string>
 	<string name="message_dawn_not_ringing_yet">Douvanjou ap mache. Revèy la poko sonnen.</string>
 	<string name="message_dawn_too_close">Revèy la twò pre: pa gen douvanjou fwa sa a. L ap mache pou pwochen an.</string>
-	<string name="message_dawn_no_more_snoozes">Pa ka ranvwaye ankò. Peze Kanpe pou etenn revèy la</string>
 	<string name="title_dawn_notification">Douvanjou</string>
 	<string name="description_dawn_notification">Parèt pandan ekran an ap limen tikal anvan yon revèy.</string>
 	<string name="dawn_color_amber">Limyè solèy</string>

@@ -625,7 +625,6 @@
 	<string name="title_dawn_use_image">Dùng ảnh</string>
 	<string name="description_dawn_use_image">Hiện dần một ảnh thay vì một màu đơn sắc.</string>
 	<string name="action_dawn_choose_image">Chọn ảnh</string>
-	<string name="message_dawn_preview_over">Chạm để đóng</string>
 	<string name="title_dawn_preview_duration">Thời lượng xem thử</string>
 	<string name="description_dawn_preview_duration">Bản xem thử bình minh chạy %1$d giây, rồi chờ một lần chạm để đóng. Chạm trong lúc chạy sẽ hiện màn hình như bình thường, giống bình minh thật.</string>
 	<string name="title_storage">Bộ nhớ</string>
@@ -650,11 +649,8 @@
 	<string name="title_dawn_show_media">Tên bài hát</string>
 	<string name="message_dawn_no_image">Chưa chọn ảnh</string>
 	<string name="message_dawn_unable_to_read_image">Không đọc được ảnh đã chọn</string>
-	<string name="action_dawn_stop">Dừng</string>
-	<string name="message_dawn_snoozed">Đã hoãn báo thức 5 phút</string>
 	<string name="message_dawn_not_ringing_yet">Bình minh đang chạy. Báo thức chưa kêu.</string>
 	<string name="message_dawn_too_close">Báo thức quá gần: lần này không có bình minh. Lần sau sẽ chạy.</string>
-	<string name="message_dawn_no_more_snoozes">Không hoãn được nữa. Nhấn Dừng để tắt báo thức</string>
 	<string name="title_dawn_notification">Bình minh</string>
 	<string name="description_dawn_notification">Hiện trong lúc màn hình sáng dần trước một báo thức.</string>
 	<string name="dawn_color_amber">Ánh nắng</string>

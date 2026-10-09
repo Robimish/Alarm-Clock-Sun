@@ -5,6 +5,8 @@
 	<!-- &lt;/b> -->
 
 	<string-array name="whats_new_items" tools:ignore="InconsistentArrays">
+		<item>2.14</item>
+		<item>Internal tidying: 16 texts no longer shown anywhere and an unused setting value removed. Nothing changes in use.</item>
 		<item>2.13</item>
 		<item>&lt;b>Snooze during the dawn&lt;/b> now moves the alarm later than the time it was set for, instead of counting from now. The screen goes dark, then the dawn lights up again over the second half of the time left, rather than starting again a few seconds later.</item>
 		<item>&lt;b>Speak the time&lt;/b>: the voice volume now goes by 1 %, on a wheel, instead of by 10 %.</item>

@@ -646,7 +646,6 @@
 	<string name="title_dawn_use_image">ছবি ব্যবহার করুন</string>
 	<string name="description_dawn_use_image">একরঙা পটভূমির বদলে একটি ছবি ফুটিয়ে তুলুন।</string>
 	<string name="action_dawn_choose_image">ছবি বাছুন</string>
-	<string name="message_dawn_preview_over">বন্ধ করতে চাপুন</string>
 	<string name="title_dawn_preview_duration">পূর্বরূপের দৈর্ঘ্য</string>
 	<string name="description_dawn_preview_duration">ভোরের পূর্বরূপ %1$d সেকেন্ড চলে, তারপর বন্ধ করার জন্য চাপের অপেক্ষা করে। চলাকালীন চাপলে পর্দা স্বাভাবিকভাবে দেখায়, ঠিক সত্যিকারের ভোরের মতো।</string>
 	<string name="title_storage">সঞ্চয়স্থান</string>
@@ -671,11 +670,8 @@
 	<string name="title_dawn_show_media">গানের শিরোনাম</string>
 	<string name="message_dawn_no_image">কোনো ছবি বাছা হয়নি</string>
 	<string name="message_dawn_unable_to_read_image">বাছাই করা ছবিটি পড়া যায়নি</string>
-	<string name="action_dawn_stop">থামান</string>
-	<string name="message_dawn_snoozed">অ্যালার্ম ৫ মিনিট পিছিয়ে দেওয়া হয়েছে</string>
 	<string name="message_dawn_not_ringing_yet">ভোর চলছে। অ্যালার্ম এখনো বাজেনি।</string>
 	<string name="message_dawn_too_close">অ্যালার্ম খুব কাছে: এবার ভোর হবে না। পরেরবার চলবে।</string>
-	<string name="message_dawn_no_more_snoozes">আর পেছানো যাবে না। অ্যালার্ম বন্ধ করতে থামান চাপুন</string>
 	<string name="title_dawn_notification">ভোর</string>
 	<string name="description_dawn_notification">অ্যালার্মের আগে পর্দা ধীরে ধীরে আলোকিত হওয়ার সময় দেখানো হয়।</string>
 	<string name="dawn_color_amber">সূর্যালোক</string>

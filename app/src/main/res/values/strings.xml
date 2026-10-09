@@ -514,8 +514,6 @@
 	<string name="title_dawn_use_image" tools:ignore="MissingTranslation">Use an image</string>
 	<string name="description_dawn_use_image" tools:ignore="MissingTranslation">Fade in a photo instead of a solid color.</string>
 	<string name="action_dawn_choose_image" tools:ignore="MissingTranslation">Choose image</string>
-	<string name="title_dawn_reveal_duration" tools:ignore="MissingTranslation">Tap to see the screen</string>
-	<string name="message_dawn_preview_over" tools:ignore="MissingTranslation">Tap to close</string>
 	<string name="title_dawn_preview_duration" tools:ignore="MissingTranslation">Preview length</string>
 	<string name="title_say_time_volume" tools:ignore="MissingTranslation">Voice volume</string>
 	<string name="description_say_time_volume" tools:ignore="MissingTranslation">Percent of the loudest the phone can go, whatever the volume of the alarms. The volume of the alarms is put back right after.</string>
@@ -532,8 +530,6 @@
 	<string name="description_say_time_hours" tools:ignore="MissingTranslation">The time is only spoken between %1$s and %2$s.</string>
 	<string name="title_say_time_voice" tools:ignore="MissingTranslation">The voice itself, alarms included</string>
 	<string name="title_say_time_language" tools:ignore="MissingTranslation">Spoken language</string>
-	<string name="title_say_time_from" tools:ignore="MissingTranslation">From</string>
-	<string name="title_say_time_to" tools:ignore="MissingTranslation">To</string>
 	<string name="title_clock_style" tools:ignore="MissingTranslation">Kind of clock</string>
 	<string name="title_analog_clock" tools:ignore="MissingTranslation">Analogue clock</string>
 	<string name="description_analog_clock" tools:ignore="MissingTranslation">A dial with hands rather than the digits, on the screen of this alarm.</string>
@@ -551,10 +547,8 @@
 	<string name="description_shake_to_say_time_false" tools:ignore="MissingTranslation">Shaking the phone does nothing.</string>
 	<string name="title_shake_sensitivity" tools:ignore="MissingTranslation">How hard to shake</string>
 	<string name="description_say_time_notification_channel" tools:ignore="MissingTranslation">A notification with a button that says the time out loud.</string>
-	<string name="action_say_time" tools:ignore="MissingTranslation">Say the time</string>
 	<string name="title_app_language" tools:ignore="MissingTranslation">Language of the app</string>
 	<string name="title_language_system" tools:ignore="MissingTranslation">Language of the phone</string>
-	<string name="description_app_language" tools:ignore="MissingTranslation">The same setting as the one Android keeps for each app.</string>
 	<string name="title_reset_settings" tools:ignore="MissingTranslation">Reset settings</string>
 	<string name="description_reset_settings" tools:ignore="MissingTranslation">Puts every setting back to what it was after the install. Your alarms are not touched.</string>
 	<string name="message_reset_settings_confirm" tools:ignore="MissingTranslation">Every setting goes back to what it was after the install. Your alarms are kept.</string>
@@ -582,17 +576,12 @@
 	<string name="title_dawn_show_clock" tools:ignore="MissingTranslation">Clock</string>
 	<string name="title_dawn_show_media" tools:ignore="MissingTranslation">Music title (once the alarm rings)</string>
 	<string name="description_dawn_preview_duration" tools:ignore="MissingTranslation">A sunrise preview holds still for a second, runs for %1$d seconds, then stays at full light for four seconds and closes on its own. Tapping it while it runs shows the screen as normal, as it does during a real sunrise.</string>
-	<string name="description_dawn_reveal_duration" tools:ignore="MissingTranslation">Tapping the screen during a sunrise shows it as normal for %1$d seconds, so that it is plain the alarm has not gone off yet.</string>
 	<string name="message_dawn_no_image" tools:ignore="MissingTranslation">No image selected</string>
 	<string name="message_volume_value" tools:ignore="MissingTranslation">%1$d%%</string>
 	<string name="message_dawn_in_progress" tools:ignore="MissingTranslation">The day is breaking\u2026</string>
 	<string name="message_dawn_unable_to_read_image" tools:ignore="MissingTranslation">Unable to read the selected image</string>
-	<string name="action_dawn_stop" tools:ignore="MissingTranslation">Stop</string>
-	<string name="action_dawn_snooze" tools:ignore="MissingTranslation">+5 min</string>
-	<string name="message_dawn_snoozed" tools:ignore="MissingTranslation">Alarm postponed by 5 minutes</string>
 	<string name="message_dawn_not_ringing_yet" tools:ignore="MissingTranslation">Sunrise in progress. The alarm has not gone off yet.</string>
 	<string name="message_dawn_too_close" tools:ignore="MissingTranslation">Alarm too close: no sunrise this time. It will run for the next one.</string>
-	<string name="message_dawn_no_more_snoozes" tools:ignore="MissingTranslation">No more postponing. Press Stop to turn the alarm off</string>
 	<string name="cd_alarm_name_color" tools:ignore="MissingTranslation">Color of the alarm name</string>
 	<string name="title_dawn_notification" tools:ignore="MissingTranslation">Dawn</string>
 	<string name="description_dawn_notification" tools:ignore="MissingTranslation">Shown while the screen is gradually lighting up before an alarm.</string>
@@ -819,9 +808,4 @@
 	<string name="message_button_used_by_other" tools:ignore="MissingTranslation">This button already dismisses the alarm. Choose another one, or change the dismiss button first.</string>
 	<string name="message_button_used_by_other_snooze" tools:ignore="MissingTranslation">This button already snoozes the alarm. Choose another one, or change the snooze button first.</string>
 	<string name="message_power_button_note" tools:ignore="MissingTranslation">The power button is read as the screen going out: anything else that turns the screen off counts too.</string>
-	<string name="title_apply_to_all_alarms" tools:ignore="MissingTranslation">Apply to all alarms?</string>
-	<string name="message_apply_snooze_button_to_all" tools:ignore="MissingTranslation">Turn snoozing with the button %1$s for all the alarms already created as well?</string>
-	<string name="message_apply_dismiss_button_to_all" tools:ignore="MissingTranslation">Turn dismissing with the button %1$s for all the alarms already created as well?</string>
-	<string name="word_on" tools:ignore="MissingTranslation">on</string>
-	<string name="word_off" tools:ignore="MissingTranslation">off</string>
 </resources>

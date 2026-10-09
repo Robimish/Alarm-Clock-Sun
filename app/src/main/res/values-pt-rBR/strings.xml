@@ -666,7 +666,6 @@
 	<string name="title_dawn_use_image">Usar uma imagem</string>
 	<string name="description_dawn_use_image">Mostrar uma foto em vez de uma cor lisa.</string>
 	<string name="action_dawn_choose_image">Escolher imagem</string>
-	<string name="message_dawn_preview_over">Toque para fechar</string>
 	<string name="title_dawn_preview_duration">Duração da prévia</string>
 	<string name="description_dawn_preview_duration">A prévia do amanhecer dura %1$d segundos e depois espera um toque para fechar. Tocar enquanto ela roda mostra a tela normal, como num amanhecer de verdade.</string>
 	<string name="title_storage">Armazenamento</string>
@@ -691,11 +690,8 @@
 	<string name="title_dawn_show_media">Título da música</string>
 	<string name="message_dawn_no_image">Nenhuma imagem selecionada</string>
 	<string name="message_dawn_unable_to_read_image">Não foi possível ler a imagem selecionada</string>
-	<string name="action_dawn_stop">Parar</string>
-	<string name="message_dawn_snoozed">Alarme adiado em 5 minutos</string>
 	<string name="message_dawn_not_ringing_yet">Amanhecer em andamento. O alarme ainda não tocou.</string>
 	<string name="message_dawn_too_close">Alarme muito próximo: sem amanhecer desta vez. Ele vai rodar no próximo.</string>
-	<string name="message_dawn_no_more_snoozes">Não dá para adiar mais. Toque em Parar para desligar o alarme</string>
 	<string name="title_dawn_notification">Amanhecer</string>
 	<string name="description_dawn_notification">Mostrado enquanto a tela clareia aos poucos antes de um alarme.</string>
 	<string name="dawn_color_amber">Luz do sol</string>

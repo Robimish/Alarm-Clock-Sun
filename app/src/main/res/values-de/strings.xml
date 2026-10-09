@@ -646,7 +646,6 @@
 	<string name="title_dawn_use_image">Bild verwenden</string>
 	<string name="description_dawn_use_image">Ein Foto statt einer einfarbigen Fläche einblenden.</string>
 	<string name="action_dawn_choose_image">Bild auswählen</string>
-	<string name="message_dawn_preview_over">Zum Schließen tippen</string>
 	<string name="title_dawn_preview_duration">Länge der Vorschau</string>
 	<string name="description_dawn_preview_duration">Die Vorschau der Morgenröte läuft %1$d Sekunden und wartet dann auf einen Tipp zum Schließen. Ein Tipp währenddessen zeigt den Bildschirm wie gewohnt, genau wie bei einer echten Morgenröte.</string>
 	<string name="title_storage">Speicher</string>
@@ -671,11 +670,8 @@
 	<string name="title_dawn_show_media">Musiktitel</string>
 	<string name="message_dawn_no_image">Kein Bild ausgewählt</string>
 	<string name="message_dawn_unable_to_read_image">Das ausgewählte Bild kann nicht gelesen werden</string>
-	<string name="action_dawn_stop">Stopp</string>
-	<string name="message_dawn_snoozed">Wecker um 5 Minuten verschoben</string>
 	<string name="message_dawn_not_ringing_yet">Morgenröte läuft. Der Wecker ist noch nicht losgegangen.</string>
 	<string name="message_dawn_too_close">Wecker zu nah: diesmal keine Morgenröte. Beim nächsten Mal läuft sie.</string>
-	<string name="message_dawn_no_more_snoozes">Kein weiteres Verschieben. Zum Ausschalten auf Stopp drücken</string>
 	<string name="title_dawn_notification">Morgenröte</string>
 	<string name="description_dawn_notification">Wird angezeigt, während der Bildschirm vor einem Wecker langsam heller wird.</string>
 	<string name="dawn_color_amber">Sonnenlicht</string>

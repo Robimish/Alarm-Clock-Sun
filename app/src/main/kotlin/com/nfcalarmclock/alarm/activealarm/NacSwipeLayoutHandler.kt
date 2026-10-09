@@ -1259,11 +1259,6 @@ class NacSwipeLayoutHandler(
 		const val FLING_MIN_VALUE = 0f
 
 		/**
-		 * Share of the slider a button has to travel for its action to fire.
-		 */
-		const val ACTION_THRESHOLD = 0.97f
-
-		/**
 		 * Maximum fling value.
 		 */
 		const val FLING_MAX_VALUE = 4000f

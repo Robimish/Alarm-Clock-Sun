@@ -695,7 +695,6 @@
 	<string name="title_dawn_use_image">Usar una imagen</string>
 	<string name="description_dawn_use_image">Mostrar una foto en vez de un color liso.</string>
 	<string name="action_dawn_choose_image">Elegir imagen</string>
-	<string name="message_dawn_preview_over">Toca para cerrar</string>
 	<string name="title_dawn_preview_duration">Duración de la vista previa</string>
 	<string name="description_dawn_preview_duration">La vista previa del amanecer dura %1$d segundos y luego espera un toque para cerrarse. Tocarla mientras corre muestra la pantalla normal, como en un amanecer real.</string>
 	<string name="title_storage">Almacenamiento</string>
@@ -722,11 +721,8 @@
 	<string name="title_dawn_show_media">Título de la música</string>
 	<string name="message_dawn_no_image">Ninguna imagen seleccionada</string>
 	<string name="message_dawn_unable_to_read_image">No se puede leer la imagen seleccionada</string>
-	<string name="action_dawn_stop">Parar</string>
-	<string name="message_dawn_snoozed">Alarma aplazada 5 minutos</string>
 	<string name="message_dawn_not_ringing_yet">Amanecer en curso. La alarma aún no ha sonado.</string>
 	<string name="message_dawn_too_close">Alarma demasiado cerca: esta vez sin amanecer. Funcionará en la próxima.</string>
-	<string name="message_dawn_no_more_snoozes">No se puede aplazar más. Pulsa Parar para apagar la alarma</string>
 	<string name="title_dawn_notification">Amanecer</string>
 	<string name="description_dawn_notification">Se muestra mientras la pantalla se ilumina poco a poco antes de una alarma.</string>
 	<string name="dawn_color_amber">Luz de sol</string>
@@ -741,13 +737,9 @@
 
 	<!-- Ecrans ajoutes par le fork : dire l'heure, options de l'aube,
 	     permission plein ecran, reveil analogique, remise a zero -->
-	<string name="action_dawn_snooze">+5 min</string>
 	<string name="action_open_app_info">Info de la app</string>
-	<string name="action_say_time">Decir la hora</string>
 	<string name="cd_alarm_name_color">Color del nombre de la alarma</string>
 	<string name="description_analog_clock">Una esfera con agujas en vez de los dígitos, en la pantalla de esta alarma.</string>
-	<string name="description_app_language">El mismo ajuste que Android guarda para cada aplicación.</string>
-	<string name="description_dawn_reveal_duration">Tocar la pantalla durante un amanecer la muestra como de costumbre durante %1$d segundos, para que quede claro que la alarma aún no ha sonado.</string>
 	<string name="description_dismiss_options_auto_dismiss_alarm">Parar la alarma automáticamente tras un tiempo determinado.</string>
 	<string name="description_dismiss_options_auto_dismiss_timer">Parar el temporizador automáticamente tras un tiempo determinado.</string>
 	<string name="description_next_alarm_format_both">Próxima alarma el lun 7:00\nTiempo restante 7 horas 30 minutos</string>
@@ -777,7 +769,6 @@
 	<string name="title_analog_clock">Reloj analógico</string>
 	<string name="title_app_language">Idioma de la aplicación</string>
 	<string name="title_clock_style">Tipo de reloj</string>
-	<string name="title_dawn_reveal_duration">Tocar para ver la pantalla</string>
 	<string name="title_language_system">Idioma del teléfono</string>
 	<string name="title_reset_settings">Restablecer ajustes</string>
 	<string name="title_say_time_volume">Volumen de la voz</string>
@@ -792,10 +783,8 @@
 	<string name="message_proximity_none">No hay sensor de proximidad en este teléfono.</string>
 	<string name="title_say_time">Decir la hora</string>
 	<string name="title_say_time_format">Reloj que se dice</string>
-	<string name="title_say_time_from">Desde</string>
 	<string name="title_say_time_hours">Solo entre</string>
 	<string name="title_say_time_language">Idioma hablado</string>
-	<string name="title_say_time_to">Hasta</string>
 	<string name="title_say_time_voice">La voz en sí, alarmas incluidas</string>
 	<string name="title_setting_speak_time">Decir la hora</string>
 	<string name="title_shake_sensitivity">Fuerza de la sacudida</string>
@@ -832,9 +821,4 @@
 	<string name="message_button_used_by_other">Este botón ya detiene la alarma. Elija otro, o cambie primero el botón que detiene.</string>
 	<string name="message_button_used_by_other_snooze">Este botón ya pospone la alarma. Elija otro, o cambie primero el botón que pospone.</string>
 	<string name="message_power_button_note">El botón de encendido se lee como la pantalla que se apaga: cualquier otra cosa que la apague también cuenta.</string>
-	<string name="title_apply_to_all_alarms">¿Aplicar a todas las alarmas?</string>
-	<string name="message_apply_snooze_button_to_all">¿%1$s también posponer con el botón en todas las alarmas ya creadas?</string>
-	<string name="message_apply_dismiss_button_to_all">¿%1$s también detener con el botón en todas las alarmas ya creadas?</string>
-	<string name="word_on">Activar</string>
-	<string name="word_off">Desactivar</string>
 </resources>

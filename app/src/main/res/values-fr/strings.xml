@@ -487,8 +487,6 @@
 	<string name="title_dawn_use_image">Utiliser une image</string>
 	<string name="description_dawn_use_image">Faire apparaître une photo au lieu d\'une couleur unie.</string>
 	<string name="action_dawn_choose_image">Choisir une image</string>
-	<string name="title_dawn_reveal_duration">Appui pour voir l\'écran</string>
-	<string name="message_dawn_preview_over">Appuyez pour fermer</string>
 	<string name="title_dawn_preview_duration">Durée de l\'aperçu</string>
 	<string name="title_say_time_volume">Volume de la voix</string>
 	<string name="description_say_time_volume">Pourcentage du volume maximal du téléphone, quel que soit le volume des alarmes. Le volume des alarmes est remis juste après.</string>
@@ -505,8 +503,6 @@
 	<string name="description_say_time_hours">L\'heure n\'est dite qu\'entre %1$s et %2$s.</string>
 	<string name="title_say_time_voice">La voix elle-même, alarmes comprises</string>
 	<string name="title_say_time_language">Langue parlée</string>
-	<string name="title_say_time_from">De</string>
-	<string name="title_say_time_to">À</string>
 	<string name="title_clock_style">Type d\'horloge</string>
 	<string name="title_analog_clock">Horloge analogique</string>
 	<string name="description_analog_clock">Un cadran à aiguilles plutôt que les chiffres, sur l\'écran de cette alarme.</string>
@@ -524,10 +520,8 @@
 	<string name="description_shake_to_say_time_false">Secouer le téléphone ne fait rien.</string>
 	<string name="title_shake_sensitivity">Force de la secousse</string>
 	<string name="description_say_time_notification_channel">Une notification avec un bouton qui dit l\'heure à voix haute.</string>
-	<string name="action_say_time">Dire l\'heure</string>
 	<string name="title_app_language">Langue de l\'application</string>
 	<string name="title_language_system">Langue du téléphone</string>
-	<string name="description_app_language">Le même réglage que celui qu\'Android garde pour chaque application.</string>
 	<string name="title_reset_settings">Réinitialiser les réglages</string>
 	<string name="description_reset_settings">Remet tous les réglages tels qu\'ils étaient après l\'installation. Tes alarmes ne sont pas touchées.</string>
 	<string name="message_reset_settings_confirm">Tous les réglages reviennent à ce qu\'ils étaient après l\'installation. Tes alarmes sont gardées.</string>
@@ -555,17 +549,12 @@
 	<string name="title_dawn_show_clock">Horloge</string>
 	<string name="title_dawn_show_media">Titre de la musique (quand l\'alarme sonne)</string>
 	<string name="description_dawn_preview_duration">L\'aperçu de l\'aube reste immobile une seconde, monte pendant %1$d secondes, puis tient la pleine lumière quatre secondes et se ferme tout seul. Y toucher pendant qu\'il tourne affiche l\'écran normal, comme pendant une vraie aube.</string>
-	<string name="description_dawn_reveal_duration">Toucher l\'écran pendant une aube l\'affiche normalement pendant %1$d secondes, pour qu\'il soit clair que l\'alarme n\'a pas encore sonné.</string>
 	<string name="message_dawn_no_image">Aucune image choisie</string>
 	<string name="message_volume_value">%1$d%%</string>
 	<string name="message_dawn_in_progress">Le jour se lève\u2026</string>
 	<string name="message_dawn_unable_to_read_image">Impossible de lire l\'image choisie</string>
-	<string name="action_dawn_stop">Arrêter</string>
-	<string name="action_dawn_snooze">+5 min</string>
-	<string name="message_dawn_snoozed">Alarme reportée de 5 minutes</string>
 	<string name="message_dawn_not_ringing_yet">Aube en cours. L\'alarme n\'a pas encore sonné.</string>
 	<string name="message_dawn_too_close">Alarme trop proche : pas d\'aube cette fois. Elle aura lieu à la prochaine.</string>
-	<string name="message_dawn_no_more_snoozes">Plus de report possible. Appuyez sur Arrêter pour éteindre l\'alarme</string>
 	<string name="cd_alarm_name_color">Couleur du nom de l\'alarme</string>
 	<string name="title_dawn_notification">Aube</string>
 	<string name="description_dawn_notification">Affichée pendant que l\'écran s\'éclaire progressivement avant une alarme.</string>
@@ -764,9 +753,4 @@
 	<string name="message_button_used_by_other">Ce bouton arrête déjà l\'alarme. Choisissez-en un autre, ou changez d\'abord le bouton qui arrête.</string>
 	<string name="message_button_used_by_other_snooze">Ce bouton reporte déjà l\'alarme. Choisissez-en un autre, ou changez d\'abord le bouton qui reporte.</string>
 	<string name="message_power_button_note">Le bouton marche est lu comme l\'écran qui s\'éteint : tout ce qui éteint l\'écran compte aussi.</string>
-	<string name="title_apply_to_all_alarms">Appliquer à toutes les alarmes ?</string>
-	<string name="message_apply_snooze_button_to_all">%1$s aussi le report par bouton pour toutes les alarmes déjà créées ?</string>
-	<string name="message_apply_dismiss_button_to_all">%1$s aussi l\'arrêt par bouton pour toutes les alarmes déjà créées ?</string>
-	<string name="word_on">Activer</string>
-	<string name="word_off">Désactiver</string>
 </resources>
