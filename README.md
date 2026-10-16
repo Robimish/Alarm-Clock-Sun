@@ -27,6 +27,14 @@ since September 2026; the original NFC Alarm Clock remains the work of Gabriel G
 
 The detail of every version is in the app, under *What's new*.
 
+## Screenshots
+
+<p align="center">
+  <img src="docs/screenshots/alarms.jpg" width="250" alt="Alarm list">
+  <img src="docs/screenshots/sunrise-settings.jpg" width="250" alt="Sunrise settings">
+  <img src="docs/screenshots/speak-the-time.jpg" width="250" alt="Speak the time">
+</p>
+
 ## Build
 
 Open the project in Android Studio and build the `fossRelease` (or `fossDebug`)
