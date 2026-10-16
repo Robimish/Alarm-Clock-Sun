@@ -9,6 +9,10 @@ still there (NFC tag to dismiss, own music, gradual volume, text-to-speech, remi
 statistics…). Alarm Clock Sun is developed by **[Robimish](https://github.com/Robimish)**
 since September 2026; the original NFC Alarm Clock remains the work of Gabriel Gonzalez.
 
+## Download
+
+**[Download the latest APK](https://github.com/Robimish/Alarm-Clock-Sun/releases/latest)** (Android 7.0 or newer). Open the file on your phone to install it; you may have to allow installing apps from this source. Alarm Clock Sun installs alongside the original NFC Alarm Clock.
+
 ## What the fork adds
 
 * **Sunrise**: the screen goes from black to a colour or an image of your choice,
